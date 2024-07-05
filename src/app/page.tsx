@@ -1,3 +1,7 @@
 export default function Home() {
-	return <main>Rent Receipts</main>;
+	return (
+		<main>
+			<p>Rent Receipts</p>
+		</main>
+	);
 }
