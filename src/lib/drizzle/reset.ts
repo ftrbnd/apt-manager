@@ -1,10 +1,10 @@
 import { db } from './db';
-import { apartments, landlords, receipts } from './schema.js';
+import { buildings, apartments, receipts } from './schema';
 
-const main = async () => {
+export const reset = async () => {
 	try {
+		await db.delete(buildings);
 		await db.delete(apartments);
-		await db.delete(landlords);
 		await db.delete(receipts);
 
 		console.log('Successfully reset database');
@@ -14,4 +14,4 @@ const main = async () => {
 	}
 };
 
-main();
+reset();

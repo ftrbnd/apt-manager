@@ -9,8 +9,9 @@
 		"lint": "next lint",
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate:pg",
-		"db:migrate": "next ./src/db/migrate.ts",
-		"db:reset": "next ./src/db/reset.ts"
+		"db:migrate": "tsx ./src/lib/drizzle/migrate.ts",
+		"db:reset": "tsx ./src/lib/drizzle/reset.ts",
+		"db:seed": "tsx ./src/lib/drizzle/seed.ts"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^5.2.2",
@@ -36,6 +37,7 @@
 		"eslint-config-next": "14.2.4",
 		"postcss": "^8",
 		"tailwindcss": "^3.4.1",
+		"tsx": "^4.16.2",
 		"typescript": "^5"
 	}
 }
