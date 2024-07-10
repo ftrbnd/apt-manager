@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import './globals.css';
-import { ClerkProvider } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
+import Providers from '@/providers';
 
 const fontSans = FontSans({
 	subsets: ['latin'],
@@ -20,7 +20,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<ClerkProvider>
+		<Providers>
 			<html lang='en'>
 				<body
 					className={cn(
@@ -30,6 +30,6 @@ export default function RootLayout({
 					{children}
 				</body>
 			</html>
-		</ClerkProvider>
+		</Providers>
 	);
 }
