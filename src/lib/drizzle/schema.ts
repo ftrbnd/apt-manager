@@ -17,7 +17,7 @@ export const buildings = pgTable('buildings', {
 
 export const apartments = pgTable('apartments', {
 	id: serial('id').primaryKey(),
-	rent: text('rent').$type<number[]>().notNull(),
+	rent: text('rent').$type<string>().notNull(),
 	tenant: text('tenant').notNull(),
 	paymentMethod: paymentMethodEnum('payment_methods').notNull(),
 	buildingId: serial('building_id')
@@ -48,6 +48,9 @@ export const buildingsToManagers = pgTable('buildings_managers', {
 });
 
 export type Building = typeof buildings.$inferSelect;
-export type Apartment = typeof apartments.$inferSelect;
+
+export type Apartment = Omit<typeof apartments.$inferSelect, 'rent'> & {
+	rent: number[];
+};
 export type Receipt = typeof receipts.$inferSelect;
 export type Manager = typeof managers.$inferSelect;
