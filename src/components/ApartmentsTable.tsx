@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { Button } from './ui/button';
 import {
 	Card,
 	CardHeader,
@@ -17,7 +15,6 @@ import {
 	TableBody,
 	TableCell,
 } from './ui/table';
-import { ArrowUpRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getApartments } from '@/services/apartments';
 import { getBuildingById } from '@/services/buildings';
