@@ -2,7 +2,7 @@
 
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { completeOnboarding } from '@/actions';
+import { assignManagerToBuilding } from '@/actions';
 import { BuildingSelect } from '@/components/BuildingSelect';
 import { useState } from 'react';
 import {
@@ -17,8 +17,6 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export default function OnboardingComponent() {
-	// TODO: redirect user if they are already onboarded
-
 	const [buildingId, setBuildingId] = useState<string | null>(null);
 	const [error, setError] = useState('');
 
@@ -27,16 +25,10 @@ export default function OnboardingComponent() {
 
 	const handleSubmit = async () => {
 		if (!buildingId) return setError('Please select a building.');
+		if (!user) return setError('Invalid user.');
 
-		const res = await completeOnboarding(parseInt(buildingId));
-		if (res?.message) {
-			// Reloads the user's data from Clerk's API
-			await user?.reload();
-			router.push('/');
-		}
-		if (res?.error) {
-			setError(res?.error);
-		}
+		await assignManagerToBuilding(user.id, parseInt(buildingId));
+		router.push('/');
 	};
 
 	return (

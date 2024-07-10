@@ -4,6 +4,7 @@ import { WebhookEvent } from '@clerk/nextjs/server';
 import { env } from '@/lib/env';
 import { db } from '@/lib/drizzle/db';
 import { managers } from '@/lib/drizzle/schema';
+import { eq } from 'drizzle-orm';
 
 export async function POST(req: Request) {
 	// You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
 		}) as WebhookEvent;
 	} catch (err) {
 		console.error('Error verifying webhook:', err);
-		return new Response('Error occured', {
+		return new Response('Error occurred', {
 			status: 400,
 		});
 	}
@@ -57,17 +58,20 @@ export async function POST(req: Request) {
 
 	switch (eventType) {
 		case 'user.created':
-			const userId = evt.data.id;
+			console.log('USER CREATED');
 
-			await db.insert(managers).values({ id: userId });
+			await db.insert(managers).values({ id: evt.data.id });
 
 			break;
 		case 'user.updated':
 			console.log('TODO: implement update logic');
 			break;
 		case 'user.deleted':
-			console.log('TODO: implement delete logic');
-			break;
+			console.log('USER DELETED');
+			const id = evt.data.id;
+			if (!id) break;
+
+			await db.delete(managers).where(eq(managers.id, id));
 	}
 
 	return new Response('', { status: 200 });

@@ -35,19 +35,16 @@ export const receipts = pgTable('receipts', {
 
 export const managers = pgTable('managers', {
 	id: text('id').primaryKey(),
-	buildingId: serial('building_id').references(() => buildings.id, {
-		onDelete: 'cascade',
-	}),
 });
 
 export const buildingsToManagers = pgTable('buildings_managers', {
 	id: serial('id').primaryKey(),
-	managerId: text('manager_id')
-		.notNull()
-		.references(() => managers.id, { onDelete: 'cascade' }),
-	buildingId: serial('building_id')
-		.notNull()
-		.references(() => buildings.id, { onDelete: 'cascade' }),
+	managerId: text('manager_id').references(() => managers.id, {
+		onDelete: 'cascade',
+	}),
+	buildingId: serial('building_id').references(() => buildings.id, {
+		onDelete: 'cascade',
+	}),
 });
 
 export type Building = typeof buildings.$inferSelect;
