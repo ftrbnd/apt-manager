@@ -18,18 +18,23 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { getApartments } from '@/services/apartments';
 import { getBuildingById } from '@/services/buildings';
+import { Skeleton } from './ui/skeleton';
 
 const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0).toFixed(2);
 
 export function ApartmentsTable() {
-	const { data: apartments } = useQuery({
+	const { data: apartments, isLoading: apartmentsLoading } = useQuery({
 		queryKey: ['apartments'],
 		queryFn: getApartments,
 	});
 
 	const buildingId = apartments ? apartments[0].buildingId : null;
 
-	const { data: building } = useQuery({
+	const {
+		data: building,
+		isLoading: buildingLoading,
+		isPending: buildingPending,
+	} = useQuery({
 		queryKey: ['buildings', buildingId],
 		queryFn: () => getBuildingById(buildingId),
 		enabled: buildingId !== null,
@@ -42,7 +47,12 @@ export function ApartmentsTable() {
 			<CardHeader className='flex flex-row items-center'>
 				<div className='grid gap-2'>
 					<CardTitle>Apartments</CardTitle>
-					<CardDescription>{building?.street}</CardDescription>
+
+					{buildingLoading || buildingPending ? (
+						<Skeleton className='h-4 w-[150px]' />
+					) : (
+						<CardDescription>{building?.street}</CardDescription>
+					)}
 				</div>
 			</CardHeader>
 			<CardContent>
@@ -56,6 +66,24 @@ export function ApartmentsTable() {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
+						{apartmentsLoading &&
+							[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
+								<TableRow key={num}>
+									<TableCell>
+										<Skeleton className='h-6 w-[25px]' />
+									</TableCell>
+									<TableCell>
+										<Skeleton className='h-6 w-[300px]' />
+									</TableCell>
+									<TableCell>
+										<Skeleton className='h-6 w-[200px]' />
+									</TableCell>
+									<TableCell>
+										<Skeleton className='h-6 w-[200px]' />
+									</TableCell>
+								</TableRow>
+							))}
+
 						{apartments?.map((apartment) => (
 							<TableRow key={apartment.id}>
 								<TableCell>
