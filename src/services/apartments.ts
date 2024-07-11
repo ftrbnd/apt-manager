@@ -12,3 +12,18 @@ export const getApartments = async () => {
 		throw e;
 	}
 };
+
+export const getApartmentById = async (id: string | null) => {
+	try {
+		if (!id) throw new Error('Apartment id is required');
+
+		const res = await fetch(`/api/apartments/${id}`);
+		if (!res.ok) throw new Error(`Failed to get apartment with id ${id}`);
+
+		const { apartment }: { apartment: Apartment } = await res.json();
+		return apartment;
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
+};

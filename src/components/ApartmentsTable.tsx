@@ -19,6 +19,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getApartments } from '@/services/apartments';
 import { getBuildingById } from '@/services/buildings';
 import { Skeleton } from './ui/skeleton';
+import { useRouter } from 'next/navigation';
 
 const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0).toFixed(2);
 
@@ -39,6 +40,8 @@ export function ApartmentsTable() {
 		queryFn: () => getBuildingById(buildingId),
 		enabled: buildingId !== null,
 	});
+
+	const router = useRouter();
 
 	return (
 		<Card
@@ -85,7 +88,14 @@ export function ApartmentsTable() {
 							))}
 
 						{apartments?.map((apartment) => (
-							<TableRow key={apartment.id}>
+							<TableRow
+								className='cursor-pointer'
+								key={apartment.id}
+								onClick={() =>
+									router.push(
+										`/buildings/${apartment.buildingId}/apartments/${apartment.id}`
+									)
+								}>
 								<TableCell>
 									<div className='font-medium'>{apartment.id}</div>
 								</TableCell>
