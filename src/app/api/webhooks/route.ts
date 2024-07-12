@@ -1,14 +1,14 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { env } from '@/lib/env';
+import { serverEnv } from '@/lib/env';
 import { db } from '@/lib/drizzle/db';
 import { managers } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: Request) {
 	// You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
-	const WEBHOOK_SECRET = env.WEBHOOK_SECRET;
+	const WEBHOOK_SECRET = serverEnv.WEBHOOK_SECRET;
 
 	if (!WEBHOOK_SECRET) {
 		throw new Error(
