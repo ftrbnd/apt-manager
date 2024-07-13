@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
 import { RentFieldArray } from './RentFieldArray';
+import { updateApartment } from '@/actions';
 
 const formSchema = z.object({
 	rent: z
@@ -46,10 +47,18 @@ export function EditApartmentForm({ apartment }: Props) {
 		},
 	});
 
-	const onSubmit: SubmitHandler<FormValues> = (values: FormValues) => {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+	const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
+		const newValues = {
+			...values,
+			rent: values.rent.map((r) => r.value),
+		};
+
+		const newApartment: Apartment = {
+			...apartment,
+			...newValues,
+		};
+
+		await updateApartment(newApartment);
 	};
 
 	return (

@@ -1,7 +1,11 @@
 'use server';
 
 import { db } from '@/lib/drizzle/db';
-import { buildingsToManagers } from '@/lib/drizzle/schema';
+import {
+	Apartment,
+	apartments,
+	buildingsToManagers,
+} from '@/lib/drizzle/schema';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 
@@ -25,4 +29,14 @@ export async function userIsManager() {
 		.where(eq(buildingsToManagers.managerId, user.id));
 
 	return pairings.length > 0;
+}
+
+export async function updateApartment(apartment: Apartment) {
+	const updatedApartments = await db
+		.update(apartments)
+		.set(apartment)
+		.where(eq(apartments.id, apartment.id))
+		.returning();
+
+	return updatedApartments[0];
 }

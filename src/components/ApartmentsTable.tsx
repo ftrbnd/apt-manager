@@ -41,6 +41,8 @@ export function ApartmentsTable() {
 		enabled: buildingId !== null,
 	});
 
+	const sortedApartments = apartments?.sort((a, b) => a.id - b.id);
+
 	const router = useRouter();
 
 	return (
@@ -87,7 +89,7 @@ export function ApartmentsTable() {
 								</TableRow>
 							))}
 
-						{apartments?.map((apartment) => (
+						{sortedApartments?.map((apartment) => (
 							<TableRow
 								className='cursor-pointer'
 								key={apartment.id}
