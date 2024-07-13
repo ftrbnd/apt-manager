@@ -2,11 +2,11 @@ import { db } from '@/lib/drizzle/db';
 import { apartments, buildingsToManagers } from '@/lib/drizzle/schema';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic'; // defaults to auto
 
-export async function GET(request: NextRequest) {
+export async function GET() {
 	try {
 		const user = await currentUser();
 		if (!user)
@@ -23,19 +23,7 @@ export async function GET(request: NextRequest) {
 			.from(apartments)
 			.where(eq(apartments.buildingId, pairing.buildingId));
 
-		const correctlyTypedRents = allApartments.map((a) => {
-			const typedRent = a.rent
-				.replaceAll(/[^0-9,.]/g, '')
-				.split(',')
-				.map((r) => parseFloat(r));
-
-			return { ...a, rent: typedRent };
-		});
-
-		return NextResponse.json(
-			{ apartments: correctlyTypedRents },
-			{ status: 200 }
-		);
+		return NextResponse.json({ apartments: allApartments }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}

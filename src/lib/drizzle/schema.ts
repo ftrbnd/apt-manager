@@ -1,4 +1,11 @@
-import { date, pgEnum, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import {
+	date,
+	doublePrecision,
+	pgEnum,
+	pgTable,
+	serial,
+	text,
+} from 'drizzle-orm/pg-core';
 
 export const paymentMethodEnum = pgEnum('payment_method', [
 	'CHECK',
@@ -17,7 +24,7 @@ export const buildings = pgTable('buildings', {
 
 export const apartments = pgTable('apartments', {
 	id: serial('id').primaryKey(),
-	rent: text('rent').$type<string>().notNull(),
+	rent: doublePrecision('rent').array().notNull(),
 	tenant: text('tenant').notNull(),
 	paymentMethod: paymentMethodEnum('payment_methods').notNull(),
 	buildingId: serial('building_id')
@@ -48,9 +55,6 @@ export const buildingsToManagers = pgTable('buildings_managers', {
 });
 
 export type Building = typeof buildings.$inferSelect;
-
-export type Apartment = Omit<typeof apartments.$inferSelect, 'rent'> & {
-	rent: number[];
-};
+export type Apartment = typeof apartments.$inferSelect;
 export type Receipt = typeof receipts.$inferSelect;
 export type Manager = typeof managers.$inferSelect;
