@@ -60,6 +60,7 @@ export function EditApartmentForm({ apartment }: Props) {
 				<RentFieldArray
 					control={form.control}
 					register={form.register}
+					errors={form.formState.errors}
 				/>
 
 				<FormField

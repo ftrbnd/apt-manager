@@ -1,15 +1,21 @@
-import { useFieldArray, Control, UseFormRegister } from 'react-hook-form';
+import {
+	useFieldArray,
+	Control,
+	UseFormRegister,
+	FieldErrors,
+} from 'react-hook-form';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { FormDescription, FormLabel, FormMessage } from './ui/form';
+import { FormDescription, FormLabel } from './ui/form';
 import { FormValues } from './EditApartmentForm';
 
 interface Props {
 	control: Control<FormValues, any>;
 	register: UseFormRegister<FormValues>;
+	errors?: FieldErrors<FormValues>;
 }
 
-export function RentFieldArray({ control, register }: Props) {
+export function RentFieldArray({ control, register, errors }: Props) {
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: 'rent',
@@ -20,7 +26,7 @@ export function RentFieldArray({ control, register }: Props) {
 
 	return (
 		<div className='flex flex-col gap-2'>
-			<FormLabel>Rent</FormLabel>
+			<FormLabel className={errors?.rent && 'text-destructive'}>Rent</FormLabel>
 			<ul className='flex flex-col gap-4'>
 				{fields.map((field, index) => (
 					<li
@@ -43,11 +49,6 @@ export function RentFieldArray({ control, register }: Props) {
 					</li>
 				))}
 			</ul>
-			<FormDescription>
-				The apartment's monthly rent, split by check
-			</FormDescription>
-			<FormMessage />
-
 			<Button
 				type='button'
 				onClick={() => {
@@ -55,6 +56,15 @@ export function RentFieldArray({ control, register }: Props) {
 				}}>
 				Add
 			</Button>
+
+			<FormDescription>
+				The apartment's monthly rent, split by check
+			</FormDescription>
+			{errors?.rent && (
+				<p className='text-sm font-medium text-destructive'>
+					At least one value is required.
+				</p>
+			)}
 		</div>
 	);
 }
