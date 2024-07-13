@@ -23,8 +23,8 @@ export default function Page({ params }: { params: Params }) {
 	});
 
 	return (
-		<div className='flex min-h-screen w-full flex-col items-center justify-center bg-muted/40'>
-			<Card className='w-[350px]'>
+		<div className='flex w-full flex-col items-center bg-muted/40 md:p-16'>
+			<Card className='w-full h-full'>
 				<CardHeader>
 					<CardTitle>Edit apartment</CardTitle>
 					<CardDescription>Apartment #{apartment?.id ?? '#'}</CardDescription>

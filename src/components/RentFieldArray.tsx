@@ -31,7 +31,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 				{fields.map((field, index) => (
 					<li
 						key={field.id}
-						className='flex justify-between items-center gap-2'>
+						className='flex items-center gap-2'>
 						<Input
 							type='number'
 							step='.01'
@@ -50,6 +50,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 				))}
 			</ul>
 			<Button
+				className='w-full sm:w-min self-start'
 				type='button'
 				onClick={() => {
 					append({ value: 0 });
