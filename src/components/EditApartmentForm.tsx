@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,56 +14,54 @@ import {
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
+import { RentFieldArray } from './RentFieldArray';
 
 const formSchema = z.object({
-	rent: z.number().array(),
+	rent: z
+		.object({ value: z.number() })
+		.array()
+		.min(1, 'At least one value is required.'),
 	tenant: z.string(),
 	paymentMethod: z.enum(['CHECK', 'MONEY ORDER', 'OTHER'], {
 		required_error: 'You need to select a payment method type.',
 	}),
 });
 
+export type FormValues = z.infer<typeof formSchema>;
+
 interface Props {
 	apartment: Apartment;
 }
 
 export function EditApartmentForm({ apartment }: Props) {
-	const form = useForm<z.infer<typeof formSchema>>({
+	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			rent: apartment.rent,
+			// useFieldArray only accepts objects
+			rent: apartment.rent.map((v) => {
+				return { value: v };
+			}),
 			tenant: apartment.tenant,
 			paymentMethod: apartment.paymentMethod,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	const onSubmit: SubmitHandler<FormValues> = (values: FormValues) => {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
 		console.log(values);
-	}
+	};
 
 	return (
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
 				className='space-y-8'>
-				<FormField
+				<RentFieldArray
 					control={form.control}
-					name='rent'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Rent</FormLabel>
-							<FormControl>
-								{/* TODO: implement number array-compatible input*/}
-							</FormControl>
-							<FormDescription>
-								The apartment's monthly rent, split by check
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
+					register={form.register}
 				/>
+
 				<FormField
 					control={form.control}
 					name='tenant'
