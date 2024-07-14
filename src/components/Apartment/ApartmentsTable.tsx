@@ -20,8 +20,7 @@ import { getApartments } from '@/services/apartments';
 import { getBuildingById } from '@/services/buildings';
 import { Skeleton } from '../ui/skeleton';
 import { useRouter } from 'next/navigation';
-
-const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0).toFixed(2);
+import { sum, toCamelCase } from '@/lib/utils';
 
 export function ApartmentsTable() {
 	const { data: apartments, isLoading: apartmentsLoading } = useQuery({
@@ -73,7 +72,9 @@ export function ApartmentsTable() {
 					<TableBody>
 						{apartmentsLoading &&
 							[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
-								<TableRow key={num}>
+								<TableRow
+									key={num}
+									className='even:bg-muted'>
 									<TableCell>
 										<Skeleton className='h-6 w-[25px]' />
 									</TableCell>
@@ -91,7 +92,7 @@ export function ApartmentsTable() {
 
 						{sortedApartments?.map((apartment) => (
 							<TableRow
-								className='cursor-pointer'
+								className='cursor-pointer even:bg-muted'
 								key={apartment.id}
 								onClick={() =>
 									router.push(
@@ -103,7 +104,7 @@ export function ApartmentsTable() {
 								</TableCell>
 								<TableCell>{apartment.tenant}</TableCell>
 								<TableCell>${sum(apartment.rent)}</TableCell>
-								<TableCell>{apartment.paymentMethod}</TableCell>
+								<TableCell>{toCamelCase(apartment.paymentMethod)}</TableCell>
 							</TableRow>
 						))}
 					</TableBody>

@@ -8,6 +8,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Button } from '../ui/button';
+import { sum, toCamelCase } from '@/lib/utils';
 interface Props {
 	apartment: Apartment;
 	street?: string;
@@ -38,7 +39,7 @@ export function ApartmentDetails({ apartment, street, edit }: Props) {
 						))}
 						<tr className='m-0 border-t p-0 even:bg-muted'>
 							<td className='border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right'>
-								Total: ${apartment.rent.reduce((a, b) => a + b, 0).toFixed(2)}
+								Total: ${sum(apartment.rent)}
 							</td>
 						</tr>
 					</tbody>
@@ -62,7 +63,7 @@ export function ApartmentDetails({ apartment, street, edit }: Props) {
 				<h4 className='mt-4 text-xl font-semibold tracking-tight'>
 					Payment method
 				</h4>
-				<p className='leading-7'>{apartment.paymentMethod}</p>
+				<p className='leading-7'>{toCamelCase(apartment.paymentMethod)}</p>
 			</CardContent>
 			<CardFooter>
 				<Button onClick={edit}>Edit</Button>
