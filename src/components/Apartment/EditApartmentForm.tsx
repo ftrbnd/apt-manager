@@ -61,10 +61,14 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		const newApartment: Apartment = {
 			...apartment,
 			...values,
-			rent: values.rent.map((r) => r.value),
+			rent: values.rent.map((r) => r.value).filter((v) => v > 0),
+			tenant: values.tenant.trim(),
 		};
 
-		await update(newApartment);
+		if (JSON.stringify(newApartment) !== JSON.stringify(apartment)) {
+			await update(newApartment);
+		}
+
 		close();
 	};
 
