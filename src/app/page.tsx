@@ -1,4 +1,4 @@
-import { ApartmentsTable } from '@/components/ApartmentsTable';
+import { ApartmentsTable } from '@/components/Apartment/ApartmentsTable';
 
 export default function Dashboard() {
 	return (

@@ -6,7 +6,7 @@ import {
 	CardTitle,
 	CardDescription,
 	CardContent,
-} from './ui/card';
+} from '../ui/card';
 import {
 	Table,
 	TableHeader,
@@ -14,11 +14,11 @@ import {
 	TableHead,
 	TableBody,
 	TableCell,
-} from './ui/table';
+} from '../ui/table';
 import { useQuery } from '@tanstack/react-query';
 import { getApartments } from '@/services/apartments';
 import { getBuildingById } from '@/services/buildings';
-import { Skeleton } from './ui/skeleton';
+import { Skeleton } from '../ui/skeleton';
 import { useRouter } from 'next/navigation';
 
 const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0).toFixed(2);
@@ -102,7 +102,7 @@ export function ApartmentsTable() {
 									<div className='font-medium'>{apartment.id}</div>
 								</TableCell>
 								<TableCell>{apartment.tenant}</TableCell>
-								<TableCell>{sum(apartment.rent)}</TableCell>
+								<TableCell>${sum(apartment.rent)}</TableCell>
 								<TableCell>{apartment.paymentMethod}</TableCell>
 							</TableRow>
 						))}

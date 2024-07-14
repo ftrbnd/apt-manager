@@ -4,9 +4,9 @@ import {
 	UseFormRegister,
 	FieldErrors,
 } from 'react-hook-form';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { FormDescription, FormLabel } from './ui/form';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { FormDescription, FormLabel } from '../ui/form';
 import { FormValues } from './EditApartmentForm';
 
 interface Props {
