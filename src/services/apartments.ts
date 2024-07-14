@@ -13,7 +13,7 @@ export const getApartments = async () => {
 	}
 };
 
-export const getApartmentById = async (id: string | null) => {
+export const getApartmentById = async (id?: string | null) => {
 	try {
 		if (!id) throw new Error('Apartment id is required');
 

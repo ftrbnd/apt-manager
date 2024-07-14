@@ -15,32 +15,17 @@ import {
 	TableBody,
 	TableCell,
 } from '../ui/table';
-import { useQuery } from '@tanstack/react-query';
-import { getApartments } from '@/services/apartments';
-import { getBuildingById } from '@/services/buildings';
 import { Skeleton } from '../ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { sum, toCamelCase } from '@/lib/utils';
+import { useApartments } from '@/hooks/useApartments';
+import { useBuildings } from '@/hooks/useBuildings';
 
 export function ApartmentsTable() {
-	const { data: apartments, isLoading: apartmentsLoading } = useQuery({
-		queryKey: ['apartments'],
-		queryFn: getApartments,
-	});
-
-	const buildingId = apartments ? apartments[0].buildingId : null;
-
-	const {
-		data: building,
-		isLoading: buildingLoading,
-		isPending: buildingPending,
-	} = useQuery({
-		queryKey: ['buildings', buildingId],
-		queryFn: () => getBuildingById(buildingId),
-		enabled: buildingId !== null,
-	});
-
-	const sortedApartments = apartments?.sort((a, b) => a.id - b.id);
+	const { apartments, apartmentsLoading } = useApartments();
+	const { building, buildingLoading, buildingPending } = useBuildings(
+		apartments && apartments[0].buildingId
+	);
 
 	const router = useRouter();
 
@@ -90,7 +75,7 @@ export function ApartmentsTable() {
 								</TableRow>
 							))}
 
-						{sortedApartments?.map((apartment) => (
+						{apartments?.map((apartment) => (
 							<TableRow
 								className='cursor-pointer even:bg-muted'
 								key={apartment.id}

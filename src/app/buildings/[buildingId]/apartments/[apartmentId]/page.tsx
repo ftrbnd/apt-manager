@@ -1,11 +1,10 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { getApartmentById } from '@/services/apartments';
 import { EditApartmentForm } from '@/components//Apartment/EditApartmentForm';
 import { useState } from 'react';
 import { ApartmentDetails } from '@/components/Apartment/ApartmentDetails';
-import { getBuildingById } from '@/services/buildings';
+import { useApartments } from '@/hooks/useApartments';
+import { useBuildings } from '@/hooks/useBuildings';
 
 interface Params {
 	buildingId: string;
@@ -13,17 +12,10 @@ interface Params {
 }
 
 export default function Page({ params }: { params: Params }) {
+	const { apartment, apartmentLoading } = useApartments(params.apartmentId);
+	const { building } = useBuildings(parseInt(params.buildingId));
+
 	const [isEditing, setIsEditing] = useState(false);
-
-	const { data: apartment, isLoading: apartmentLoading } = useQuery({
-		queryKey: ['apartments', params.apartmentId],
-		queryFn: () => getApartmentById(params.apartmentId),
-	});
-
-	const { data: building } = useQuery({
-		queryKey: ['buildings', params.buildingId],
-		queryFn: () => getBuildingById(parseInt(params.buildingId)),
-	});
 
 	return (
 		<div className='flex w-full flex-col items-center bg-muted/40 p-2 md:p-16'>
