@@ -3,6 +3,7 @@ import {
 	doublePrecision,
 	pgEnum,
 	pgTable,
+	real,
 	serial,
 	text,
 } from 'drizzle-orm/pg-core';
@@ -25,7 +26,8 @@ export const buildings = pgTable('buildings', {
 
 export const apartments = pgTable('apartments', {
 	id: serial('id').primaryKey(),
-	rent: doublePrecision('rent').array().notNull(),
+	number: text('number').notNull(),
+	rent: real('rent').array().notNull(),
 	tenant: text('tenant').notNull(),
 	paymentMethod: paymentMethodEnum('payment_methods').notNull(),
 	buildingId: serial('building_id')

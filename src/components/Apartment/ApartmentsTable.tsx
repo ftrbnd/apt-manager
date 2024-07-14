@@ -79,11 +79,7 @@ export function ApartmentsTable() {
 							<TableRow
 								className='cursor-pointer even:bg-muted'
 								key={apartment.id}
-								onClick={() =>
-									router.push(
-										`/buildings/${apartment.buildingId}/apartments/${apartment.id}`
-									)
-								}>
+								onClick={() => router.push(`/apartments/${apartment.id}`)}>
 								<TableCell>
 									<div className='font-medium'>{apartment.id}</div>
 								</TableCell>

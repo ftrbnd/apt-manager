@@ -13,7 +13,7 @@ export const getBuildings = async () => {
 	}
 };
 
-export const getBuildingById = async (id?: number | null) => {
+export const getBuildingById = async (id?: string | null) => {
 	try {
 		if (!id) throw new Error('Building id is required');
 

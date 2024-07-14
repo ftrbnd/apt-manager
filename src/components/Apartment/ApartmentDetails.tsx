@@ -65,11 +65,7 @@ export function ApartmentDetails({
 }
 
 const RentDetails = ({ apartment }: { apartment?: Apartment }) => {
-	if (!apartment) {
-		console.log('zero');
-
-		return <p>$0</p>;
-	}
+	if (!apartment) return <p>$0</p>;
 
 	return apartment.rent.length > 1 ? (
 		<div className='my-6 w-full overflow-y-auto'>

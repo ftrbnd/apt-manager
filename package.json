@@ -9,10 +9,10 @@
 		"lint": "next lint",
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate:pg",
-		"db:migrate": "tsx ./src/lib/drizzle/migrate.ts",
-		"db:reset": "tsx ./src/lib/drizzle/reset.ts",
-		"db:seed": "tsx ./src/lib/drizzle/seed.ts",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"db:migrate": "tsx -r dotenv/config ./src/lib/drizzle/migrate.ts dotenv_config_path=.env",
+		"db:reset": "tsx -r dotenv/config ./src/lib/drizzle/reset.ts dotenv_config_path=.env",
+		"db:seed": "tsx -r dotenv/config ./src/lib/drizzle/seed.ts dotenv_config_path=.env"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^5.2.2",

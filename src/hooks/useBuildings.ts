@@ -1,7 +1,7 @@
 import { getBuildingById, getBuildings } from '@/services/buildings';
 import { useQuery } from '@tanstack/react-query';
 
-export function useBuildings(id?: number) {
+export function useBuildings(id?: string | number) {
 	const { data: buildings } = useQuery({
 		queryKey: ['buildings'],
 		queryFn: getBuildings,
@@ -13,7 +13,8 @@ export function useBuildings(id?: number) {
 		isPending: buildingPending,
 	} = useQuery({
 		queryKey: ['buildings', id],
-		queryFn: () => getBuildingById(id),
+		queryFn: () =>
+			getBuildingById(typeof id === 'string' ? id : id?.toString()),
 		enabled: id !== undefined,
 	});
 

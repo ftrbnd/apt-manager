@@ -7,13 +7,12 @@ import { useApartments } from '@/hooks/useApartments';
 import { useBuildings } from '@/hooks/useBuildings';
 
 interface Params {
-	buildingId: string;
-	apartmentId: string;
+	id: string;
 }
 
 export default function Page({ params }: { params: Params }) {
-	const { apartment, apartmentLoading } = useApartments(params.apartmentId);
-	const { building } = useBuildings(parseInt(params.buildingId));
+	const { apartment, apartmentLoading } = useApartments(params.id);
+	const { building } = useBuildings(apartment?.buildingId);
 
 	const [isEditing, setIsEditing] = useState(false);
 

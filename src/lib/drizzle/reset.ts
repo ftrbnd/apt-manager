@@ -1,11 +1,20 @@
+import { sql } from 'drizzle-orm';
 import { db } from './db';
-import { buildings, apartments, receipts } from './schema';
 
 export const reset = async () => {
 	try {
-		await db.delete(buildings);
-		await db.delete(apartments);
-		await db.delete(receipts);
+		const tables = db._.schema;
+		if (!tables) throw new Error('No schema found');
+
+		const queries = Object.values(tables).map((table) => {
+			return sql.raw(/* sql */ `DROP TABLE IF EXISTS ${table.dbName};`);
+		});
+
+		await db.transaction(async (tx) => {
+			for (const query of queries) {
+				await tx.execute(query);
+			}
+		});
 
 		console.log('Successfully reset database');
 	} catch (e) {
