@@ -23,6 +23,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
 import { RentFieldArray } from './RentFieldArray';
 import { updateApartment } from '@/actions';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
 	rent: z
@@ -56,18 +57,27 @@ export function EditApartmentForm({ apartment, close }: Props) {
 	});
 
 	const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
-		const newValues = {
-			...values,
-			rent: values.rent.map((r) => r.value),
-		};
+		try {
+			const newValues = {
+				...values,
+				rent: values.rent.map((r) => r.value),
+			};
 
-		const newApartment: Apartment = {
-			...apartment,
-			...newValues,
-		};
+			const newApartment: Apartment = {
+				...apartment,
+				...newValues,
+			};
 
-		await updateApartment(newApartment);
-		close();
+			await updateApartment(newApartment);
+			toast.success(`Successfully updated Apartment #${apartment.id}`);
+			close();
+		} catch (e) {
+			if (e instanceof Error)
+				toast.error(`Failed to update Apartment #${apartment.id}`, {
+					description: e.message,
+				});
+			console.error(e);
+		}
 	};
 
 	return (
