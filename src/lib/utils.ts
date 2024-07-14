@@ -6,8 +6,17 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export function sum(nums: number[]) {
-	return nums.reduce((a, b) => a + b, 0).toFixed(2);
+function sum(nums: number[]) {
+	return nums.reduce((a, b) => a + b, 0);
+}
+
+export function formatRentChecks(checks: number[]): string {
+	const s = sum(checks);
+
+	return new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+	}).format(s);
 }
 
 function camelize(str: string) {

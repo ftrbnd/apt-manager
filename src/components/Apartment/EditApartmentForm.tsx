@@ -22,8 +22,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
 import { RentFieldArray } from './RentFieldArray';
-import { updateApartment } from '@/actions';
-import { toast } from 'sonner';
+import { useApartments } from '@/hooks/useApartments';
 
 const formSchema = z.object({
 	rent: z
@@ -44,6 +43,8 @@ interface Props {
 }
 
 export function EditApartmentForm({ apartment, close }: Props) {
+	const { update } = useApartments(apartment.id.toString());
+
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -57,27 +58,14 @@ export function EditApartmentForm({ apartment, close }: Props) {
 	});
 
 	const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
-		try {
-			const newValues = {
-				...values,
-				rent: values.rent.map((r) => r.value),
-			};
+		const newApartment: Apartment = {
+			...apartment,
+			...values,
+			rent: values.rent.map((r) => r.value),
+		};
 
-			const newApartment: Apartment = {
-				...apartment,
-				...newValues,
-			};
-
-			await updateApartment(newApartment);
-			toast.success(`Successfully updated Apartment #${apartment.id}`);
-			close();
-		} catch (e) {
-			if (e instanceof Error)
-				toast.error(`Failed to update Apartment #${apartment.id}`, {
-					description: e.message,
-				});
-			console.error(e);
-		}
+		await update(newApartment);
+		close();
 	};
 
 	return (

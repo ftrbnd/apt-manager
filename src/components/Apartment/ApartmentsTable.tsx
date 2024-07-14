@@ -17,7 +17,7 @@ import {
 } from '../ui/table';
 import { Skeleton } from '../ui/skeleton';
 import { useRouter } from 'next/navigation';
-import { sum, toCamelCase } from '@/lib/utils';
+import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { useApartments } from '@/hooks/useApartments';
 import { useBuildings } from '@/hooks/useBuildings';
 
@@ -88,7 +88,7 @@ export function ApartmentsTable() {
 									<div className='font-medium'>{apartment.id}</div>
 								</TableCell>
 								<TableCell>{apartment.tenant}</TableCell>
-								<TableCell>${sum(apartment.rent)}</TableCell>
+								<TableCell>{formatRentChecks(apartment.rent)}</TableCell>
 								<TableCell>{toCamelCase(apartment.paymentMethod)}</TableCell>
 							</TableRow>
 						))}

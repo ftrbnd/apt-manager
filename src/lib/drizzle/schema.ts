@@ -6,6 +6,7 @@ import {
 	serial,
 	text,
 } from 'drizzle-orm/pg-core';
+import { createSelectSchema } from 'drizzle-zod';
 
 export const paymentMethodEnum = pgEnum('payment_method', [
 	'CHECK',
@@ -53,6 +54,8 @@ export const buildingsToManagers = pgTable('buildings_managers', {
 		onDelete: 'cascade',
 	}),
 });
+
+export const apartmentSchema = createSelectSchema(apartments);
 
 export type Building = typeof buildings.$inferSelect;
 export type Apartment = typeof apartments.$inferSelect;

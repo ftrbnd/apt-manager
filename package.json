@@ -31,6 +31,7 @@
 		"clsx": "^2.1.1",
 		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.31.2",
+		"drizzle-zod": "^0.5.1",
 		"jiti": "^1.21.6",
 		"lucide-react": "^0.400.0",
 		"next": "14.2.4",

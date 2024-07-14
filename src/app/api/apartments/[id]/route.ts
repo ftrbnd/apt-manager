@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { apartments } from '@/lib/drizzle/schema';
+import { apartmentSchema, apartments } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -29,6 +29,36 @@ export async function GET(
 
 		return NextResponse.json(
 			{ apartment: foundApartments[0] },
+			{ status: 200 }
+		);
+	} catch (error) {
+		return NextResponse.json({ error }, { status: 500 });
+	}
+}
+
+export async function PATCH(
+	request: NextRequest,
+	{ params }: { params: { id: number } }
+) {
+	try {
+		const { id } = params;
+		if (!id)
+			return NextResponse.json(
+				{ error: 'Apartment id is required' },
+				{ status: 400 }
+			);
+
+		const body = await request.json();
+		const apartment = apartmentSchema.parse(body.apartment);
+
+		const updatedApartments = await db
+			.update(apartments)
+			.set(apartment)
+			.where(eq(apartments.id, apartment.id))
+			.returning();
+
+		return NextResponse.json(
+			{ apartment: updatedApartments[0] },
 			{ status: 200 }
 		);
 	} catch (error) {

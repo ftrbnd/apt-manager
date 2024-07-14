@@ -8,7 +8,7 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Button } from '../ui/button';
-import { sum, toCamelCase } from '@/lib/utils';
+import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 interface Props {
 	apartment?: Apartment;
@@ -35,7 +35,11 @@ export function ApartmentDetails({
 			</CardHeader>
 			<CardContent>
 				<h4 className='text-xl font-semibold tracking-tight'>Rent</h4>
-				{isLoading ? <Skeleton className='h-6 w-12' /> : <RentDetails />}
+				{isLoading ? (
+					<Skeleton className='h-6 w-12' />
+				) : (
+					<RentDetails apartment={apartment} />
+				)}
 				<h4 className='mt-4 text-xl font-semibold tracking-tight'>Tenant</h4>
 				{isLoading ? (
 					<Skeleton className='h-6 w-36' />
@@ -61,7 +65,11 @@ export function ApartmentDetails({
 }
 
 const RentDetails = ({ apartment }: { apartment?: Apartment }) => {
-	if (!apartment) return <p>$0</p>;
+	if (!apartment) {
+		console.log('zero');
+
+		return <p>$0</p>;
+	}
 
 	return apartment.rent.length > 1 ? (
 		<div className='my-6 w-full overflow-y-auto'>
@@ -85,13 +93,13 @@ const RentDetails = ({ apartment }: { apartment?: Apartment }) => {
 					))}
 					<tr className='m-0 border-t p-0 even:bg-muted'>
 						<td className='border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right'>
-							Total: ${sum(apartment.rent)}
+							Total: {formatRentChecks(apartment.rent)}
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	) : (
-		<p>${apartment.rent[0]}</p>
+		<p>{formatRentChecks(apartment.rent)}</p>
 	);
 };

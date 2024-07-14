@@ -30,13 +30,3 @@ export async function userIsManager() {
 
 	return pairings.length > 0;
 }
-
-export async function updateApartment(apartment: Apartment) {
-	const updatedApartments = await db
-		.update(apartments)
-		.set(apartment)
-		.where(eq(apartments.id, apartment.id))
-		.returning();
-
-	return updatedApartments[0];
-}

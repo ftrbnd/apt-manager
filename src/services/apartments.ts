@@ -27,3 +27,23 @@ export const getApartmentById = async (id?: string | null) => {
 		throw e;
 	}
 };
+
+export const updateApartment = async (apartment: Apartment) => {
+	try {
+		if (!apartment) throw new Error('Apartment body is required');
+
+		const res = await fetch(`/api/apartments/${apartment.id}`, {
+			method: 'PATCH',
+			body: JSON.stringify({ apartment }),
+		});
+		if (!res.ok)
+			throw new Error(`Failed to update apartment with id ${apartment.id}`);
+
+		const { apartment: newApartment }: { apartment: Apartment } =
+			await res.json();
+		return newApartment;
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
+};
