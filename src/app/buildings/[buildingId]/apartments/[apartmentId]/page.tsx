@@ -15,7 +15,7 @@ interface Params {
 export default function Page({ params }: { params: Params }) {
 	const [isEditing, setIsEditing] = useState(false);
 
-	const { data: apartment } = useQuery({
+	const { data: apartment, isLoading: apartmentLoading } = useQuery({
 		queryKey: ['apartments', params.apartmentId],
 		queryFn: () => getApartmentById(params.apartmentId),
 	});
@@ -27,21 +27,18 @@ export default function Page({ params }: { params: Params }) {
 
 	return (
 		<div className='flex w-full flex-col items-center bg-muted/40 p-2 md:p-16'>
-			{apartment ? (
-				isEditing ? (
-					<EditApartmentForm
-						apartment={apartment}
-						close={() => setIsEditing(false)}
-					/>
-				) : (
-					<ApartmentDetails
-						apartment={apartment}
-						street={building?.street}
-						edit={() => setIsEditing(true)}
-					/>
-				)
+			{isEditing && apartment ? (
+				<EditApartmentForm
+					apartment={apartment}
+					close={() => setIsEditing(false)}
+				/>
 			) : (
-				<div>TODO: add skeleton</div>
+				<ApartmentDetails
+					apartment={apartment}
+					street={building?.street}
+					edit={() => setIsEditing(true)}
+					isLoading={apartmentLoading}
+				/>
 			)}
 		</div>
 	);
