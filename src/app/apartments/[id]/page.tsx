@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ApartmentDetails } from '@/components/Apartment/ApartmentDetails';
 import { useApartments } from '@/hooks/useApartments';
 import { useBuildings } from '@/hooks/useBuildings';
+import { Receipt } from '@/components/Receipt';
 
 interface Params {
 	id: string;
@@ -17,7 +18,7 @@ export default function Page({ params }: { params: Params }) {
 	const [isEditing, setIsEditing] = useState(false);
 
 	return (
-		<div className='flex w-full flex-col items-center bg-muted/40 p-2 md:p-16'>
+		<div className='w-full flex flex-col gap-4 items-center bg-muted/40 p-2 md:p-16'>
 			{isEditing && apartment ? (
 				<EditApartmentForm
 					apartment={apartment}
@@ -31,6 +32,7 @@ export default function Page({ params }: { params: Params }) {
 					isLoading={apartmentLoading}
 				/>
 			)}
+			{apartment && <Receipt apartment={apartment} />}
 		</div>
 	);
 }
