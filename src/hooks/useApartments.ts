@@ -35,13 +35,10 @@ export function useApartments(id?: string) {
 			]);
 
 			if (previousApartment) {
-				queryClient.setQueryData(
-					['apartments', newApartment.id],
-					previousApartment
-				);
+				queryClient.setQueryData(['apartments', newApartment.id], newApartment);
 			}
 
-			return { previousApartment };
+			return { previousApartment, newApartment };
 		},
 		onError: (error, newApartment) => {
 			toast.error(`Failed to update Apartment #${newApartment.id}`, {
