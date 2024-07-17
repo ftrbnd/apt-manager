@@ -24,7 +24,7 @@ import { useBuildings } from '@/hooks/useBuildings';
 export function ApartmentsTable() {
 	const { apartments, apartmentsLoading } = useApartments();
 	const { building, buildingLoading, buildingPending } = useBuildings(
-		apartments && apartments[0].buildingId
+		apartments.length > 0 ? apartments[0].buildingId : undefined
 	);
 
 	const router = useRouter();

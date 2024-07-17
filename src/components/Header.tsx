@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { UserMenu } from './UserMenu';
 import { auth } from '@clerk/nextjs/server';
+import { HeaderLinks } from './HeaderLinks';
 
 export function Header() {
 	const { userId } = auth();
@@ -20,18 +21,7 @@ export function Header() {
 					<span className='sr-only'>Rent Receipts</span>
 				</Link>
 				{userId ? (
-					<>
-						<Link
-							href='/'
-							className='text-foreground transition-colors hover:text-foreground'>
-							Dashboard
-						</Link>
-						<Link
-							href='/receipts'
-							className='text-muted-foreground transition-colors hover:text-foreground'>
-							Receipts
-						</Link>
-					</>
+					<HeaderLinks />
 				) : (
 					<p className='text-foreground transition-colors hover:text-foreground'>
 						Rent Receipts
@@ -60,16 +50,7 @@ export function Header() {
 								<Package2 className='h-6 w-6' />
 								<span className='sr-only'>Rent Receipts</span>
 							</Link>
-							<Link
-								href='/'
-								className='hover:text-foreground'>
-								Dashboard
-							</Link>
-							<Link
-								href='/receipts'
-								className='text-muted-foreground hover:text-foreground'>
-								Receipts
-							</Link>
+							<HeaderLinks />
 						</nav>
 					</SheetContent>
 				)}

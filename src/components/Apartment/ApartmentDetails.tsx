@@ -10,7 +10,9 @@ import {
 import { Button } from '../ui/button';
 import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
-import { Pencil, Receipt } from 'lucide-react';
+import { Loader2, Pencil, Receipt } from 'lucide-react';
+import { useReceipts } from '@/hooks/useReceipts';
+import { ApartmentReceipts } from './ApartmentReceipts';
 interface Props {
 	apartment?: Apartment;
 	street?: string;
@@ -24,53 +26,85 @@ export function ApartmentDetails({
 	edit,
 	isLoading,
 }: Props) {
+	const { receipts, create, createPending } = useReceipts();
+
+	const apartmentReceipts = receipts.filter(
+		(receipt) => receipt.apartmentId === apartment?.id
+	);
+
+	const latestReceipt = apartmentReceipts.at(-1);
+	const latestReceiptMonth = new Date(latestReceipt?.date ?? '').getMonth();
+	const receiptExistsForCurrentMonth =
+		latestReceiptMonth === new Date().getMonth();
+
+	const handleClick = async () => {
+		if (!receiptExistsForCurrentMonth) {
+			create(apartment);
+		}
+	};
+
 	return (
-		<Card className='w-full h-full'>
-			<CardHeader>
-				<CardTitle>Apartment #{isLoading ? '#' : apartment?.id}</CardTitle>
-				{isLoading ? (
-					<Skeleton className='h-4 w-[125px]' />
-				) : (
-					<CardDescription>{street}</CardDescription>
-				)}
-			</CardHeader>
-			<CardContent>
-				<h4 className='text-xl font-semibold tracking-tight'>Rent</h4>
-				{isLoading ? (
-					<Skeleton className='h-6 w-12' />
-				) : (
-					<RentDetails apartment={apartment} />
-				)}
-				<h4 className='mt-4 text-xl font-semibold tracking-tight'>Tenant</h4>
-				{isLoading ? (
-					<Skeleton className='h-6 w-36' />
-				) : (
-					<p className='leading-7'>{apartment?.tenant}</p>
-				)}
-				<h4 className='mt-4 text-xl font-semibold tracking-tight'>
-					Payment method
-				</h4>
-				{isLoading ? (
-					<Skeleton className='h-6 w-24' />
-				) : (
-					<p className='leading-7'>
-						{apartment ? toCamelCase(apartment.paymentMethod) : ''}
-					</p>
-				)}
-			</CardContent>
-			<CardFooter className='justify-between'>
-				<Button
-					variant='secondary'
-					onClick={edit}>
-					<Pencil className='mr-2 h-4 w-4' />
-					Edit
-				</Button>
-				<Button>
-					<Receipt className='mr-2 h-4 w-4' />
-					Get receipt
-				</Button>
-			</CardFooter>
-		</Card>
+		<div className='flex flex-col md:flex-row justify-between w-full gap-8'>
+			<Card className='min-w-fit md:w-1/4 h-full'>
+				<CardHeader>
+					<CardTitle>Apartment #{isLoading ? '#' : apartment?.id}</CardTitle>
+					{isLoading ? (
+						<Skeleton className='h-4 w-[125px]' />
+					) : (
+						<CardDescription>{street}</CardDescription>
+					)}
+				</CardHeader>
+				<CardContent>
+					<h4 className='text-xl font-semibold tracking-tight'>Rent</h4>
+					{isLoading ? (
+						<Skeleton className='h-6 w-12' />
+					) : (
+						<RentDetails apartment={apartment} />
+					)}
+					<h4 className='mt-4 text-xl font-semibold tracking-tight'>Tenant</h4>
+					{isLoading ? (
+						<Skeleton className='h-6 w-36' />
+					) : (
+						<p className='leading-7'>{apartment?.tenant}</p>
+					)}
+					<h4 className='mt-4 text-xl font-semibold tracking-tight'>
+						Payment method
+					</h4>
+					{isLoading ? (
+						<Skeleton className='h-6 w-24' />
+					) : (
+						<p className='leading-7'>
+							{apartment ? toCamelCase(apartment.paymentMethod) : ''}
+						</p>
+					)}
+				</CardContent>
+				<CardFooter className='justify-between gap-2'>
+					<Button
+						variant='secondary'
+						onClick={edit}>
+						<Pencil className='mr-2 h-4 w-4' />
+						Edit
+					</Button>
+					{!receiptExistsForCurrentMonth && (
+						<Button
+							onClick={handleClick}
+							disabled={createPending}>
+							{createPending ? (
+								<Loader2 className='mr-2 h-4 w-4 animate-spin' />
+							) : (
+								<Receipt className='mr-2 h-4 w-4' />
+							)}
+							Create receipt
+						</Button>
+					)}
+				</CardFooter>
+			</Card>
+
+			<ApartmentReceipts
+				receipts={apartmentReceipts}
+				apartmentId={apartment?.id}
+			/>
+		</div>
 	);
 }
 

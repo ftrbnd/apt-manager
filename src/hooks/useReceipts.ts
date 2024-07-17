@@ -30,7 +30,7 @@ export function useReceipts(id?: string) {
 		return aDate - bDate;
 	});
 
-	const { mutateAsync } = useMutation({
+	const { mutateAsync, isPending } = useMutation({
 		mutationFn: createReceipt,
 		onMutate: async (apartment) => {
 			await queryClient.cancelQueries({
@@ -81,5 +81,6 @@ export function useReceipts(id?: string) {
 		receipt,
 		receiptLoading,
 		create: mutateAsync,
+		createPending: isPending,
 	};
 }

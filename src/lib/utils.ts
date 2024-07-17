@@ -111,7 +111,9 @@ function convert_tens(num: number) {
 	}
 }
 
-export function spellOutRent(rent: number[]) {
+export function spellOutRent(rent?: number[]) {
+	if (!rent) return { dollars: 'Zero', cents: 0 };
+
 	const s = sum(rent);
 	const dollars = Math.floor(s);
 	const cents = Math.round((s % 1) * 100);
