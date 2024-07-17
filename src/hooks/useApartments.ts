@@ -6,16 +6,18 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+const APARTMENTS = 'apartments';
+
 export function useApartments(id?: string) {
 	const queryClient = useQueryClient();
 
 	const { data: apartments, isLoading: apartmentsLoading } = useQuery({
-		queryKey: ['apartments'],
+		queryKey: [APARTMENTS],
 		queryFn: getApartments,
 	});
 
 	const { data: apartment, isLoading: apartmentLoading } = useQuery({
-		queryKey: ['apartments', id],
+		queryKey: [APARTMENTS, id],
 		queryFn: () => getApartmentById(id),
 		enabled: id !== undefined,
 	});
@@ -26,16 +28,16 @@ export function useApartments(id?: string) {
 		mutationFn: updateApartment,
 		onMutate: async (newApartment) => {
 			await queryClient.cancelQueries({
-				queryKey: ['apartments', newApartment.id],
+				queryKey: [APARTMENTS, newApartment.id],
 			});
 
 			const previousApartment = queryClient.getQueryData([
-				'apartments',
+				APARTMENTS,
 				newApartment.id,
 			]);
 
 			if (previousApartment) {
-				queryClient.setQueryData(['apartments', newApartment.id], newApartment);
+				queryClient.setQueryData([APARTMENTS, newApartment.id], newApartment);
 			}
 
 			return { previousApartment, newApartment };
@@ -50,7 +52,7 @@ export function useApartments(id?: string) {
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({
-				queryKey: ['apartments', id],
+				queryKey: [APARTMENTS, id],
 			});
 		},
 	});

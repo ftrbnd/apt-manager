@@ -1,8 +1,10 @@
 import { Apartment } from '@/lib/drizzle/schema';
 
+const APARTMENTS = '/api/apartments';
+
 export const getApartments = async () => {
 	try {
-		const res = await fetch('/api/apartments');
+		const res = await fetch(APARTMENTS);
 		if (!res.ok) throw new Error('Failed to get apartments');
 
 		const { apartments }: { apartments: Apartment[] } = await res.json();
@@ -17,7 +19,7 @@ export const getApartmentById = async (id?: string | null) => {
 	try {
 		if (!id) throw new Error('Apartment id is required');
 
-		const res = await fetch(`/api/apartments/${id}`);
+		const res = await fetch(`${APARTMENTS}/${id}`);
 		if (!res.ok) throw new Error(`Failed to get apartment with id ${id}`);
 
 		const { apartment }: { apartment: Apartment } = await res.json();
@@ -32,7 +34,7 @@ export const updateApartment = async (apartment: Apartment) => {
 	try {
 		if (!apartment) throw new Error('Apartment body is required');
 
-		const res = await fetch(`/api/apartments/${apartment.id}`, {
+		const res = await fetch(`${APARTMENTS}/${apartment.id}`, {
 			method: 'PATCH',
 			body: JSON.stringify({ apartment }),
 		});
