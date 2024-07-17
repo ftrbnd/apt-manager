@@ -26,7 +26,7 @@ export function ApartmentDetails({
 	edit,
 	isLoading,
 }: Props) {
-	const { receipts, create, createPending } = useReceipts();
+	const { receipts, receiptsLoading, create, createPending } = useReceipts();
 
 	const apartmentReceipts = receipts.filter(
 		(receipt) => receipt.apartmentId === apartment?.id
@@ -103,6 +103,7 @@ export function ApartmentDetails({
 			<ApartmentReceipts
 				receipts={apartmentReceipts}
 				apartmentId={apartment?.id}
+				loading={receiptsLoading}
 			/>
 		</div>
 	);

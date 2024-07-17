@@ -1,12 +1,21 @@
 import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
 import { Receipt } from '../Receipt';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '../ui/card';
 
 interface Props {
 	receipts?: ReceiptType[];
 	apartmentId?: number;
+	loading: boolean;
 }
 
-export function ApartmentReceipts({ receipts, apartmentId }: Props) {
+export function ApartmentReceipts({ receipts, apartmentId, loading }: Props) {
 	const displayMonthYear = (receipt: ReceiptType) => {
 		const date = new Date(receipt.date);
 		return `${date.toLocaleDateString('en-US', {
@@ -20,6 +29,15 @@ export function ApartmentReceipts({ receipts, apartmentId }: Props) {
 			<h4 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
 				Receipts
 			</h4>
+			{loading &&
+				[1, 2, 3].map((num) => (
+					<div
+						key={num}
+						className='even:bg-muted'>
+						{/* TODO: add Receipt skeleton */}
+						loading...
+					</div>
+				))}
 			{receipts?.map((receipt) => (
 				<div
 					key={receipt.id}
@@ -33,6 +51,16 @@ export function ApartmentReceipts({ receipts, apartmentId }: Props) {
 					/>
 				</div>
 			))}
+			{receipts?.length === 0 && !loading && (
+				<Card>
+					<CardHeader>
+						<CardTitle>No receipts found.</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<p> This apartment has no receipts yet.</p>
+					</CardContent>
+				</Card>
+			)}
 		</div>
 	);
 }
