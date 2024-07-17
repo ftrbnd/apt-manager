@@ -23,6 +23,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
 import { RentFieldArray } from './RentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
+import { PencilOff, Save } from 'lucide-react';
 
 const formSchema = z.object({
 	rent: z
@@ -150,9 +151,13 @@ export function EditApartmentForm({ apartment, close }: Props) {
 								variant='secondary'
 								type='button'
 								onClick={close}>
+								<PencilOff className='mr-2 h-4 w-4' />
 								Cancel
 							</Button>
-							<Button type='submit'>Submit</Button>
+							<Button type='submit'>
+								<Save className='mr-2 h-4 w-4' />
+								Save
+							</Button>
 						</div>
 					</form>
 				</Form>

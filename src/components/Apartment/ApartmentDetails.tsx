@@ -10,6 +10,7 @@ import {
 import { Button } from '../ui/button';
 import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
+import { Pencil, Receipt } from 'lucide-react';
 interface Props {
 	apartment?: Apartment;
 	street?: string;
@@ -57,8 +58,17 @@ export function ApartmentDetails({
 					</p>
 				)}
 			</CardContent>
-			<CardFooter>
-				<Button onClick={edit}>Edit</Button>
+			<CardFooter className='justify-between'>
+				<Button
+					variant='secondary'
+					onClick={edit}>
+					<Pencil className='mr-2 h-4 w-4' />
+					Edit
+				</Button>
+				<Button>
+					<Receipt className='mr-2 h-4 w-4' />
+					Get receipt
+				</Button>
 			</CardFooter>
 		</Card>
 	);

@@ -43,6 +43,7 @@ export default function OnboardingComponent() {
 					{error && <p className='text-red-700'>{error}</p>}
 				</CardContent>
 				<CardFooter>
+					{/* TODO: add icon? */}
 					<Button onClick={handleSubmit}>Submit</Button>
 				</CardFooter>
 			</Card>

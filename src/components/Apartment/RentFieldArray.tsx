@@ -8,6 +8,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { FormDescription, FormLabel } from '../ui/form';
 import { FormValues } from './EditApartmentForm';
+import { Minus, Plus } from 'lucide-react';
 
 interface Props {
 	control: Control<FormValues, any>;
@@ -44,6 +45,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 						<Button
 							type='button'
 							onClick={() => remove(index)}>
+							<Minus className='mr-2 h-4 w-4' />
 							Remove
 						</Button>
 					</li>
@@ -55,6 +57,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 				onClick={() => {
 					append({ value: 0 });
 				}}>
+				<Plus className='mr-2 h-4 w-4' />
 				Add
 			</Button>
 
