@@ -21,7 +21,7 @@ export function useBuildings(id?: string | number) {
 	});
 
 	return {
-		buildings,
+		buildings: buildings ?? [],
 		building,
 		buildingLoading,
 		buildingPending,

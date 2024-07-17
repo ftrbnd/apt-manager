@@ -58,7 +58,7 @@ export function useApartments(id?: string) {
 	});
 
 	return {
-		apartments: sortedApartments,
+		apartments: sortedApartments ?? [],
 		apartmentsLoading,
 		apartment,
 		apartmentLoading,

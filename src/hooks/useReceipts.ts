@@ -76,7 +76,7 @@ export function useReceipts(id?: string) {
 	});
 
 	return {
-		receipts: sortedReceipts,
+		receipts: sortedReceipts ?? [],
 		receiptsLoading,
 		receipt,
 		receiptLoading,
