@@ -24,6 +24,7 @@ import { Apartment } from '@/lib/drizzle/schema';
 import { RentFieldArray } from './RentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
 import { PencilOff, Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
 	rent: z
@@ -67,7 +68,13 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		};
 
 		if (JSON.stringify(newApartment) !== JSON.stringify(apartment)) {
-			await update(newApartment);
+			const promise = () => update(newApartment);
+
+			toast.promise(promise, {
+				loading: 'Updating apartment...',
+				success: `Updated Apartment #${apartment.number}`,
+				error: `Failed to update Apartment #${apartment.number}`,
+			});
 		}
 
 		close();
@@ -151,11 +158,11 @@ export function EditApartmentForm({ apartment, close }: Props) {
 								variant='secondary'
 								type='button'
 								onClick={close}>
-								<PencilOff className='mr-2 h-4 w-4' />
+								<PencilOff className='w-4 h-4 mr-2' />
 								Cancel
 							</Button>
 							<Button type='submit'>
-								<Save className='mr-2 h-4 w-4' />
+								<Save className='w-4 h-4 mr-2' />
 								Save
 							</Button>
 						</div>

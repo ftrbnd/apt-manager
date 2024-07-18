@@ -5,7 +5,6 @@ import {
 	getReceipts,
 } from '@/services/receipts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 const RECEIPTS = 'receipts';
 
@@ -54,19 +53,6 @@ export function useReceipts(id?: string) {
 			}
 
 			return { previousReceipts };
-		},
-		onError: (error, apartment) => {
-			toast.error(
-				`Failed to create receipt for Apartment #${apartment?.number}`,
-				{
-					description: error.message,
-				}
-			);
-		},
-		onSuccess: (_newReceipt, apartment) => {
-			toast.success(
-				`Successfully created receipt for Apartment #${apartment?.number}`
-			);
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({

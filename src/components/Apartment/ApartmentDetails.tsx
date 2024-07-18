@@ -13,6 +13,7 @@ import { Skeleton } from '../ui/skeleton';
 import { Loader2, Pencil, Receipt } from 'lucide-react';
 import { useReceipts } from '@/hooks/useReceipts';
 import { Receipts } from '../Receipts';
+import { toast } from 'sonner';
 interface Props {
 	apartment?: Apartment;
 	street?: string;
@@ -39,13 +40,19 @@ export function ApartmentDetails({
 
 	const handleClick = async () => {
 		if (!receiptExistsForCurrentMonth) {
-			create(apartment);
+			const promise = () => create(apartment);
+
+			toast.promise(promise, {
+				loading: 'Creating receipt...',
+				success: `Created receipt for Apartment #${apartment?.number}`,
+				error: 'Failed to create receipt',
+			});
 		}
 	};
 
 	return (
-		<div className='flex flex-col md:flex-row justify-between w-full gap-8'>
-			<Card className='min-w-fit md:w-1/4 h-full'>
+		<div className='flex flex-col justify-between w-full gap-8 md:flex-row'>
+			<Card className='h-full min-w-fit md:w-1/4'>
 				<CardHeader>
 					<CardTitle>Apartment #{isLoading ? '#' : apartment?.id}</CardTitle>
 					{isLoading ? (
@@ -57,7 +64,7 @@ export function ApartmentDetails({
 				<CardContent>
 					<h4 className='text-xl font-semibold tracking-tight'>Rent</h4>
 					{isLoading ? (
-						<Skeleton className='h-6 w-12' />
+						<Skeleton className='w-12 h-6' />
 					) : (
 						<RentDetails apartment={apartment} />
 					)}
@@ -71,7 +78,7 @@ export function ApartmentDetails({
 						Payment method
 					</h4>
 					{isLoading ? (
-						<Skeleton className='h-6 w-24' />
+						<Skeleton className='w-24 h-6' />
 					) : (
 						<p className='leading-7'>
 							{apartment ? toCamelCase(apartment.paymentMethod) : ''}
@@ -83,7 +90,7 @@ export function ApartmentDetails({
 						variant='secondary'
 						disabled={receiptsLoading}
 						onClick={edit}>
-						<Pencil className='mr-2 h-4 w-4' />
+						<Pencil className='w-4 h-4 mr-2' />
 						Edit
 					</Button>
 					{!receiptExistsForCurrentMonth && !isLoading && (
@@ -91,9 +98,9 @@ export function ApartmentDetails({
 							onClick={handleClick}
 							disabled={createPending || receiptsLoading}>
 							{createPending ? (
-								<Loader2 className='mr-2 h-4 w-4 animate-spin' />
+								<Loader2 className='w-4 h-4 mr-2 animate-spin' />
 							) : (
-								<Receipt className='mr-2 h-4 w-4' />
+								<Receipt className='w-4 h-4 mr-2' />
 							)}
 							Create receipt
 						</Button>
@@ -101,8 +108,8 @@ export function ApartmentDetails({
 				</CardFooter>
 			</Card>
 
-			<div className='md:w-3/4 max-w-screen-lg flex flex-col gap-2'>
-				<h4 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
+			<div className='flex flex-col max-w-screen-lg gap-2 md:w-3/4'>
+				<h4 className='text-2xl font-semibold tracking-tight scroll-m-20'>
 					Receipts
 				</h4>
 				<Receipts
@@ -119,10 +126,10 @@ const RentDetails = ({ apartment }: { apartment?: Apartment }) => {
 	if (!apartment) return <p>$0</p>;
 
 	return apartment.rent.length > 1 ? (
-		<div className='my-6 w-full overflow-y-auto'>
+		<div className='w-full my-6 overflow-y-auto'>
 			<table className='w-full'>
 				<thead>
-					<tr className='m-0 border-t p-0 even:bg-muted'>
+					<tr className='p-0 m-0 border-t even:bg-muted'>
 						<th className='border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right'>
 							Splits
 						</th>
@@ -132,13 +139,13 @@ const RentDetails = ({ apartment }: { apartment?: Apartment }) => {
 					{apartment.rent.map((value, i) => (
 						<tr
 							key={i}
-							className='m-0 border-t p-0 even:bg-muted'>
+							className='p-0 m-0 border-t even:bg-muted'>
 							<td className='border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right'>
 								${value}
 							</td>
 						</tr>
 					))}
-					<tr className='m-0 border-t p-0 even:bg-muted'>
+					<tr className='p-0 m-0 border-t even:bg-muted'>
 						<td className='border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right'>
 							Total: {formatRentChecks(apartment.rent)}
 						</td>

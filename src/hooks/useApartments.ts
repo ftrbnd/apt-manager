@@ -4,7 +4,6 @@ import {
 	updateApartment,
 } from '@/services/apartments';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 
 const APARTMENTS = 'apartments';
 
@@ -41,14 +40,6 @@ export function useApartments(id?: string) {
 			}
 
 			return { previousApartment, newApartment };
-		},
-		onError: (error, newApartment) => {
-			toast.error(`Failed to update Apartment #${newApartment.id}`, {
-				description: error.message,
-			});
-		},
-		onSuccess: (newApartment) => {
-			toast.success(`Successfully updated Apartment #${newApartment.id}`);
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({
