@@ -28,14 +28,14 @@ export function RentMonthSelect({
 
 	const years = () => {
 		const receiptYears = receipts.map((r) => new Date(r.date).getFullYear());
-		const earliestYear = Math.min(...receiptYears);
-
 		const thisYear = today.getFullYear();
 
+		if (receiptYears.length === 0) receiptYears.push(thisYear);
+
+		const earliestYear = Math.min(...receiptYears);
+
 		const range: number[] = [];
-		for (let i = earliestYear; i <= thisYear; i++) {
-			range.push(i);
-		}
+		for (let i = earliestYear; i <= thisYear; i++) range.push(i);
 
 		return range;
 	};
