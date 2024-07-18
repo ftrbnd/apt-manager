@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { UserMenu } from './UserMenu';
 import { auth } from '@clerk/nextjs/server';
 import { HeaderLinks } from './HeaderLinks';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
 	const { userId } = auth();
@@ -15,7 +16,7 @@ export function Header() {
 		<header className='sticky top-0 flex h-16 justify-between items-center gap-4 border-b bg-background px-4 md:px-6'>
 			<nav className='hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
 				<Link
-					href='#'
+					href='/'
 					className='flex items-center gap-2 text-lg font-semibold md:text-base'>
 					<Package2 className='h-6 w-6' />
 					<span className='sr-only'>Rent Receipts</span>
@@ -23,9 +24,11 @@ export function Header() {
 				{userId ? (
 					<HeaderLinks />
 				) : (
-					<p className='text-foreground transition-colors hover:text-foreground'>
+					<Link
+						href='/'
+						className='text-foreground transition-colors hover:text-foreground'>
 						Rent Receipts
-					</p>
+					</Link>
 				)}
 			</nav>
 			<Sheet>
@@ -38,24 +41,31 @@ export function Header() {
 						<span className='sr-only'>Toggle navigation menu</span>
 					</Button>
 				</SheetTrigger>
-				<p className='text-foreground transition-colors hover:text-foreground md:hidden'>
+				<Link
+					href='/'
+					className='text-foreground transition-colors hover:text-foreground md:hidden'>
 					Rent Receipts
-				</p>
+				</Link>
 				{userId && (
 					<SheetContent side='left'>
 						<nav className='grid gap-6 text-lg font-medium'>
 							<Link
-								href='#'
+								href='/'
 								className='flex items-center gap-2 text-lg font-semibold'>
 								<Package2 className='h-6 w-6' />
 								<span className='sr-only'>Rent Receipts</span>
 							</Link>
 							<HeaderLinks />
+							<ThemeToggle onSheet />
 						</nav>
 					</SheetContent>
 				)}
 			</Sheet>
-			<UserMenu />
+
+			<div className='flex justify-between items-center gap-2'>
+				<ThemeToggle />
+				<UserMenu />
+			</div>
 		</header>
 	);
 }
