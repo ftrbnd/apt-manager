@@ -7,7 +7,7 @@ export const reset = async () => {
 		if (!tables) throw new Error('No schema found');
 
 		const queries = Object.values(tables).map((table) => {
-			return sql.raw(/* sql */ `DROP TABLE IF EXISTS ${table.dbName};`);
+			return sql.raw(/* sql */ `DROP TABLE IF EXISTS ${table.dbName} CASCADE;`);
 		});
 
 		await db.transaction(async (tx) => {
