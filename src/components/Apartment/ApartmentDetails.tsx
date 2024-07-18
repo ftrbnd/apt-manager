@@ -12,7 +12,7 @@ import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import { Loader2, Pencil, Receipt } from 'lucide-react';
 import { useReceipts } from '@/hooks/useReceipts';
-import { ApartmentReceipts } from './ApartmentReceipts';
+import { Receipts } from '../Receipts';
 interface Props {
 	apartment?: Apartment;
 	street?: string;
@@ -81,14 +81,15 @@ export function ApartmentDetails({
 				<CardFooter className='justify-between gap-2'>
 					<Button
 						variant='secondary'
+						disabled={receiptsLoading}
 						onClick={edit}>
 						<Pencil className='mr-2 h-4 w-4' />
 						Edit
 					</Button>
-					{!receiptExistsForCurrentMonth && (
+					{!receiptExistsForCurrentMonth && !isLoading && (
 						<Button
 							onClick={handleClick}
-							disabled={createPending}>
+							disabled={createPending || receiptsLoading}>
 							{createPending ? (
 								<Loader2 className='mr-2 h-4 w-4 animate-spin' />
 							) : (
@@ -100,11 +101,16 @@ export function ApartmentDetails({
 				</CardFooter>
 			</Card>
 
-			<ApartmentReceipts
-				receipts={apartmentReceipts}
-				apartmentId={apartment?.id}
-				loading={receiptsLoading}
-			/>
+			<div className='md:w-3/4 max-w-screen-lg flex flex-col gap-2'>
+				<h4 className='scroll-m-20 text-2xl font-semibold tracking-tight'>
+					Receipts
+				</h4>
+				<Receipts
+					receipts={apartmentReceipts}
+					loading={receiptsLoading}
+					filteredByApartment
+				/>
+			</div>
 		</div>
 	);
 }

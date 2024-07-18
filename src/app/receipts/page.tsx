@@ -1,10 +1,10 @@
 'use client';
 
-import { Receipt } from '@/components/Receipt';
+import { Receipts } from '@/components/Receipts';
 import { useReceipts } from '@/hooks/useReceipts';
 
 export default function Page() {
-	const { receipts } = useReceipts();
+	const { receipts, receiptsLoading } = useReceipts();
 
 	return (
 		<div className='flex min-h-screen w-full flex-col items-center bg-muted/40 p-4 md:p-8 gap-4 md:gap-8'>
@@ -12,13 +12,10 @@ export default function Page() {
 				All Receipts
 			</h2>
 			<div className='flex flex-col gap-4 w-full max-w-screen-lg'>
-				{receipts?.map((receipt) => (
-					<Receipt
-						key={receipt.id}
-						receipt={receipt}
-						apartmentId={receipt.apartmentId}
-					/>
-				))}
+				<Receipts
+					receipts={receipts}
+					loading={receiptsLoading}
+				/>
 			</div>
 		</div>
 	);
