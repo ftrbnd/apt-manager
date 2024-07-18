@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+import { CircleCheck } from 'lucide-react';
 
 export default function OnboardingComponent() {
 	const [buildingId, setBuildingId] = useState<string | null>(null);
@@ -27,12 +29,21 @@ export default function OnboardingComponent() {
 		if (!buildingId) return setError('Please select a building.');
 		if (!user) return setError('Invalid user.');
 
-		await assignManagerToBuilding(user.id, parseInt(buildingId));
-		router.push('/');
+		const promise = () =>
+			assignManagerToBuilding(user.id, parseInt(buildingId));
+
+		toast.promise(promise, {
+			loading: 'Assigning...',
+			success: () => {
+				router.push('/');
+				return `You have been assigned your building!`;
+			},
+			error: 'Failed to assign your building',
+		});
 	};
 
 	return (
-		<div className='flex min-h-screen w-full flex-col items-center justify-center bg-muted/40'>
+		<div className='flex flex-col items-center justify-center w-full min-h-screen bg-muted/40'>
 			<Card className={cn('w-[380px]')}>
 				<CardHeader>
 					<CardTitle>Welcome!</CardTitle>
@@ -43,8 +54,10 @@ export default function OnboardingComponent() {
 					{error && <p className='text-red-700'>{error}</p>}
 				</CardContent>
 				<CardFooter>
-					{/* TODO: add icon? */}
-					<Button onClick={handleSubmit}>Submit</Button>
+					<Button onClick={handleSubmit}>
+						<CircleCheck className='w-4 h-4 mr-2' />
+						Submit
+					</Button>
 				</CardFooter>
 			</Card>
 		</div>

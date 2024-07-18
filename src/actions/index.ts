@@ -1,11 +1,7 @@
 'use server';
 
 import { db } from '@/lib/drizzle/db';
-import {
-	Apartment,
-	apartments,
-	buildingsToManagers,
-} from '@/lib/drizzle/schema';
+import { buildingsToManagers } from '@/lib/drizzle/schema';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 

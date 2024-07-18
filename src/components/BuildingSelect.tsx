@@ -18,7 +18,7 @@ export const BuildingSelect = ({ setBuildingId }: Props) => {
 
 	return (
 		<Select onValueChange={(id) => setBuildingId(id)}>
-			<SelectTrigger className='w-[180px]'>
+			<SelectTrigger>
 				<SelectValue placeholder='Select your building' />
 			</SelectTrigger>
 			<SelectContent>
