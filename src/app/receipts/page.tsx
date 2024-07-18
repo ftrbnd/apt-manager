@@ -2,6 +2,7 @@
 
 import { Receipts } from '@/components/Receipts';
 import { useReceipts } from '@/hooks/useReceipts';
+import { RentCollection } from '@/components/RentCollection';
 
 export default function Page() {
 	const { receipts, receiptsLoading } = useReceipts();
@@ -11,11 +12,14 @@ export default function Page() {
 			<h2 className='scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0'>
 				All Receipts
 			</h2>
-			<div className='flex flex-col gap-4 w-full max-w-screen-lg'>
-				<Receipts
-					receipts={receipts}
-					loading={receiptsLoading}
-				/>
+			<div className='flex flex-col md:flex-row gap-8 w-full justify-center items-start'>
+				<RentCollection receipts={receipts} />
+				<div className='flex flex-col gap-4 w-full max-w-screen-lg'>
+					<Receipts
+						receipts={receipts}
+						loading={receiptsLoading}
+					/>
+				</div>
 			</div>
 		</div>
 	);

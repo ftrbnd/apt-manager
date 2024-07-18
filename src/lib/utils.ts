@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { Apartment } from './drizzle/schema';
+import { Apartment, Receipt } from './drizzle/schema';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -125,4 +125,11 @@ export function spellOutRent(rent?: number[]) {
 			cents,
 		};
 	}
+}
+
+export function displayMonthYear(date: Date) {
+	return `${date.toLocaleDateString('en-US', {
+		month: 'long',
+		year: 'numeric',
+	})}`;
 }

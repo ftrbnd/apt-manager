@@ -2,6 +2,7 @@ import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Receipt, ReceiptSkeleton } from './Receipt';
 import { Skeleton } from './ui/skeleton';
+import { displayMonthYear } from '@/lib/utils';
 
 interface Props {
 	receipts: ReceiptType[];
@@ -36,21 +37,13 @@ export function Receipts({ receipts, loading, filteredByApartment }: Props) {
 			</Card>
 		);
 
-	const displayMonthYear = (receipt: ReceiptType) => {
-		const date = new Date(receipt.date);
-		return `${date.toLocaleDateString('en-US', {
-			month: 'long',
-			year: 'numeric',
-		})}`;
-	};
-
 	return receipts.map((receipt) => (
 		<div
 			key={receipt.id}
 			className='max-w-5xl flex flex-col items-center gap-4'>
 			{filteredByApartment && (
 				<h5 className='scroll-m-20 text-xl self-end text-right font-semibold tracking-tight'>
-					{displayMonthYear(receipt)}
+					{displayMonthYear(new Date(receipt.date))}
 				</h5>
 			)}
 			<Receipt
