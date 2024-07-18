@@ -1,15 +1,10 @@
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-} from './ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { formatRentChecks, spellOutRent } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import { useApartments } from '@/hooks/useApartments';
 import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
+import { useBuildings } from '@/hooks/useBuildings';
 
 interface Props {
 	receipt: ReceiptType;
@@ -18,47 +13,83 @@ interface Props {
 
 export function Receipt({ receipt, apartmentId }: Props) {
 	const { apartment } = useApartments(apartmentId?.toString());
+	const { building } = useBuildings(apartment?.buildingId);
 
 	const { dollars, cents } = spellOutRent(apartment?.rent);
 
+	const receiptDate = new Date(receipt.date);
+	const month = receiptDate.getMonth() + 1;
+	const nextMonth = (month + 1) % 12;
+	const year = receiptDate.getFullYear();
+
 	return (
-		<Card>
-			<CardHeader>
+		<Card className='w-full'>
+			<CardHeader className='flex-row items-center justify-between'>
 				<CardTitle>Receipt</CardTitle>
-				<CardDescription>Date</CardDescription>
+				<div className='text-sm text-muted-foreground flex flex-row items-center justify-between gap-2 '>
+					<p className='font-bold'>
+						DATE
+						<span className='ml-1 font-normal underline'>
+							{month}-1-{year}
+						</span>
+					</p>
+					<p className='font-bold'>
+						No. <span className='ml-1 font-normal'>{receipt.id}</span>
+					</p>
+				</div>
 			</CardHeader>
-			<CardContent>
-				<div>
-					<div className='flex items-center space-x-4'>
-						<div className='flex justify-between items-center gap-4'>
-							<p className='font-bold underline'>
-								RECEIVED FROM
-								<span className='font-normal'>{'   ' + apartment?.tenant}</span>
-							</p>
-						</div>
-						<p className='rounded-md border p-4'>
+			<CardContent className='flex flex-col gap-4'>
+				<div className='flex flex-col gap-4'>
+					<div className='flex justify-between items-center gap-2'>
+						<p className='flex-1 font-bold border rounded-md p-4 bg-muted/80'>
+							RECEIVED FROM
+							<span className='ml-1 font-normal underline'>
+								{apartment?.tenant}
+							</span>
+						</p>
+						<p className='border rounded-md p-4 bg-muted/80'>
 							{formatRentChecks(apartment?.rent ?? [])}
 						</p>
 					</div>
-					<div className='flex items-center justify-between'>
+					<div className='flex items-center justify-between gap-2 border rounded-md p-4 bg-muted/80'>
 						<p className='underline'>
 							{dollars}
 							{cents > 0 && (
-								<span className='diagonal-fractions'>{cents}/100</span>
+								<span className='ml-1 diagonal-fractions'>{cents}/100</span>
 							)}
 						</p>
 						<p className='font-bold'>DOLLARS</p>
 					</div>
-					<div className='flex items-center justify-between w-full'>
+					<div className='flex items-center justify-between w-full border rounded-md p-4 bg-muted/80'>
 						<p className='font-bold'>FOR RENT</p>
 						<p className='underline flex-1 text-right'>#{apartment?.number}</p>
 					</div>
 				</div>
-				<div className='flex gap-2 justify-between'>
-					{/* TODO: account payment bal.due table */}
+				<div className='flex flex-col md:flex-row gap-2 justify-between'>
+					<div className='my-6 overflow-y-auto'>
+						<table className='w-full'>
+							<tbody>
+								<tr className='m-0 border-t p-0'>
+									<td className='border px-2 py-2 font-bold'>ACCOUNT</td>
+									<td className='border px-4 py-2 text-left'></td>
+									<td className='border px-4 py-2 text-left'></td>
+								</tr>
+								<tr className='m-0 border-t p-0'>
+									<td className='border px-2 py-2 font-bold'>PAYMENT</td>
+									<td className='border px-4 py-2 text-left'></td>
+									<td className='border px-4 py-2 text-left'></td>
+								</tr>
+								<tr className='m-0 border-t p-0'>
+									<td className='border px-2 py-2 font-bold'>BAL. DUE</td>
+									<td className='border px-4 py-2 text-left'></td>
+									<td className='border px-4 py-2 text-left'></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
 					<RadioGroup
-						className='rounded-md border p-4'
+						className='rounded-md border p-4 bg-muted/80'
 						defaultValue={apartment?.paymentMethod}>
 						<div className='flex items-center space-x-2'>
 							<RadioGroupItem
@@ -96,16 +127,20 @@ export function Receipt({ receipt, apartmentId }: Props) {
 						</div>
 					</RadioGroup>
 
-					<div>
-						<div className='flex items-center justify-between'>
+					<div className='flex-1 flex flex-col gap-2 justify-center'>
+						<div className='flex items-center justify-between border rounded-md p-2 gap-2 bg-muted/80'>
 							<p className='font-bold'>FROM</p>
-							<p className='underline'>{'START OF MONTH'}</p>
+							<p className='underline'>
+								{month}-1-{year}
+							</p>
 							<p className='font-bold'>TO</p>
-							<p className='underline'>{'END OF MONTH'}</p>
+							<p className='underline'>
+								{nextMonth}-1-{year}
+							</p>
 						</div>
-						<div className='flex items-center'>
+						<div className='flex items-center border rounded-md p-2 gap-2 bg-muted/80'>
 							<p className='font-bold'>BY</p>
-							<p className='underline'>{'BUILDING OWNER'}</p>
+							<p className='underline'>{building?.landlord}</p>
 						</div>
 					</div>
 				</div>

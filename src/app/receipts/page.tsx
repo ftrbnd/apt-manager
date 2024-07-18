@@ -11,13 +11,15 @@ export default function Page() {
 			<h2 className='scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0'>
 				All Receipts
 			</h2>
-			{receipts?.map((receipt) => (
-				<Receipt
-					key={receipt.id}
-					receipt={receipt}
-					apartmentId={receipt.apartmentId}
-				/>
-			))}
+			<div className='flex flex-col gap-4 w-full max-w-screen-lg'>
+				{receipts?.map((receipt) => (
+					<Receipt
+						key={receipt.id}
+						receipt={receipt}
+						apartmentId={receipt.apartmentId}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }
