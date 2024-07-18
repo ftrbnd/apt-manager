@@ -44,6 +44,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 
 						<Button
 							type='button'
+							variant='destructive'
 							onClick={() => remove(index)}>
 							<Minus className='mr-2 h-4 w-4' />
 							Remove
@@ -54,6 +55,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 			<Button
 				className='w-full sm:w-min self-start'
 				type='button'
+				variant='secondary'
 				onClick={() => {
 					append({ value: 0 });
 				}}>
