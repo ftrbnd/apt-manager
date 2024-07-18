@@ -1,5 +1,4 @@
 import { Apartment, Receipt } from '@/lib/drizzle/schema';
-import { displayMonthYear } from '@/lib/utils';
 import {
 	Accordion,
 	AccordionItem,
@@ -10,27 +9,29 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useApartments } from '@/hooks/useApartments';
 import Link from 'next/link';
+import { monthNames } from '@/lib/utils';
 
 interface Props {
 	receipts: Receipt[];
+	month: number;
+	year: number;
 }
 
-export function RentCollection({ receipts }: Props) {
+export function RentCollection({ receipts, month, year }: Props) {
 	const { apartments } = useApartments();
 
-	const today = new Date();
-
 	const apartmentPaidRent = (apartment: Apartment) => {
-		const aptReceipts = receipts.filter(
-			(receipt) => receipt.apartmentId === apartment.id
-		);
+		const aptReceipts = receipts.filter((receipt) => {
+			const receiptDate = new Date(receipt.date);
 
-		const lastReceipt = aptReceipts.at(-1);
-		if (!lastReceipt) return false;
+			return (
+				receipt.apartmentId === apartment.id &&
+				receiptDate.getMonth() + 1 === month &&
+				receiptDate.getFullYear() === year
+			);
+		});
 
-		const lastReceiptMonth = new Date(lastReceipt.date).getMonth();
-
-		return today.getMonth() === lastReceiptMonth;
+		return aptReceipts.length > 0;
 	};
 
 	return (
@@ -45,7 +46,7 @@ export function RentCollection({ receipts }: Props) {
 							<CardTitle className='font-normal'>
 								Rent collected for
 								<span className='mx-2 font-bold'>
-									{displayMonthYear(today)}
+									{monthNames.get(month.toString())} {year}
 								</span>
 							</CardTitle>
 						</AccordionTrigger>
