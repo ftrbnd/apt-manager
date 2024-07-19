@@ -10,10 +10,10 @@ import {
 import { Button } from '../ui/button';
 import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
-import { Loader2, Pencil, Receipt } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { useReceipts } from '@/hooks/useReceipts';
 import { Receipts } from '../Receipts';
-import { toast } from 'sonner';
+import { CreateReceiptMenu } from '../CreateReceiptMenu';
 interface Props {
 	apartment?: Apartment;
 	street?: string;
@@ -27,27 +27,16 @@ export function ApartmentDetails({
 	edit,
 	isLoading,
 }: Props) {
-	const { receipts, receiptsLoading, create, createPending } = useReceipts();
+	const { receipts, receiptsLoading } = useReceipts();
 
-	const apartmentReceipts = receipts.filter(
-		(receipt) => receipt.apartmentId === apartment?.id
-	);
+	const apartmentReceipts = receipts
+		.filter((receipt) => receipt.apartmentId === apartment?.id)
+		.sort((a, b) => {
+			const aDate = new Date(`${a.month + 1}-01-${a.year}`);
+			const bDate = new Date(`${b.month + 1}-01-${b.year}`);
 
-	const latestReceipt = apartmentReceipts.at(-1);
-	const receiptExistsForCurrentMonth =
-		latestReceipt?.month === new Date().getMonth();
-
-	const handleClick = async () => {
-		if (!receiptExistsForCurrentMonth) {
-			const promise = () => create(apartment);
-
-			toast.promise(promise, {
-				loading: 'Creating receipt...',
-				success: `Created receipt for Apartment #${apartment?.number}`,
-				error: 'Failed to create receipt',
-			});
-		}
-	};
+			return bDate.getTime() - aDate.getTime();
+		});
 
 	return (
 		<div className='flex flex-col justify-between w-full gap-8 md:flex-row'>
@@ -92,23 +81,16 @@ export function ApartmentDetails({
 						<Pencil className='w-4 h-4 mr-2' />
 						Edit
 					</Button>
-					{!receiptExistsForCurrentMonth && !isLoading && (
-						<Button
-							onClick={handleClick}
-							disabled={createPending || receiptsLoading}>
-							{createPending ? (
-								<Loader2 className='w-4 h-4 mr-2 animate-spin' />
-							) : (
-								<Receipt className='w-4 h-4 mr-2' />
-							)}
-							Create
-							{(apartment?.rent.length ?? 1) > 1 ? ' receipts' : ' receipt'}
-						</Button>
+					{!isLoading && apartment && (
+						<CreateReceiptMenu
+							apartment={apartment}
+							aptReceipts={apartmentReceipts}
+						/>
 					)}
 				</CardFooter>
 			</Card>
 
-			<div className='flex flex-col max-w-screen-lg gap-2 md:w-3/4'>
+			<div className='flex flex-col max-w-screen-lg gap-4 md:w-3/4'>
 				<h4 className='text-2xl font-semibold tracking-tight scroll-m-20'>
 					Receipts
 				</h4>

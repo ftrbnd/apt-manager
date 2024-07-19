@@ -2,13 +2,19 @@ import { Apartment, Receipt } from '@/lib/drizzle/schema';
 
 const RECEIPTS = '/api/receipts';
 
-export const createReceipt = async (apartment?: Apartment) => {
+interface CreateReceiptBody {
+	apartment?: Apartment;
+	month: number;
+	year: number;
+}
+
+export const createReceipt = async (body: CreateReceiptBody) => {
 	try {
-		if (!apartment) throw new Error('Apartment is required');
+		if (!body.apartment) throw new Error('Apartment is required');
 
 		const res = await fetch(RECEIPTS, {
 			method: 'POST',
-			body: JSON.stringify({ apartment }),
+			body: JSON.stringify(body),
 		});
 		if (!res.ok) throw new Error('Failed to get receipts');
 

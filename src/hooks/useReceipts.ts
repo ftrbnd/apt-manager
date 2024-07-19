@@ -26,27 +26,26 @@ export function useReceipts(id?: string) {
 
 	const { mutateAsync, isPending } = useMutation({
 		mutationFn: createReceipt,
-		onMutate: async (apartment) => {
+		onMutate: async (body) => {
 			await queryClient.cancelQueries({
 				queryKey: [RECEIPTS],
 			});
 
 			const previousReceipts = queryClient.getQueryData<Receipt[]>([RECEIPTS]);
 
-			if (previousReceipts) {
-				const newReceipts: Receipt[] =
-					apartment?.rent.map((value) => {
-						return {
-							id: Math.random(),
-							apartmentId: apartment.id,
-							month: new Date().getMonth(),
-							year: new Date().getFullYear(),
-							value,
-							tenant: apartment.tenant,
-							paymentMethod: apartment.paymentMethod,
-							createdAt: new Date().toLocaleDateString(),
-						};
-					}) ?? [];
+			if (previousReceipts && body.apartment) {
+				const newReceipts: Receipt[] = body.apartment.rent.map((value) => {
+					return {
+						id: Math.random(),
+						apartmentId: body.apartment?.id ?? Math.random(),
+						month: new Date().getMonth(),
+						year: new Date().getFullYear(),
+						value,
+						tenant: body.apartment?.tenant ?? 'Tenant',
+						paymentMethod: body.apartment?.paymentMethod ?? 'OTHER',
+						createdAt: new Date().toLocaleDateString(),
+					};
+				});
 
 				queryClient.setQueryData<Receipt[]>(
 					[RECEIPTS],

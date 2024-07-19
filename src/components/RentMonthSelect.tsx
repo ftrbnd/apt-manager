@@ -51,10 +51,14 @@ export function RentMonthSelect({
 					<SelectValue placeholder='Month' />
 				</SelectTrigger>
 				<SelectContent>
-					{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+					{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((month) => (
 						<SelectItem
 							key={month}
-							value={month.toString()}>
+							value={month.toString()}
+							disabled={
+								month > today.getMonth() &&
+								parseInt(year) === today.getFullYear()
+							}>
 							{monthNames.get(month.toString())}
 						</SelectItem>
 					))}
