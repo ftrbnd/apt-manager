@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { apartmentSchema, apartments } from '@/lib/drizzle/schema';
+import { selectApartmentSchema, apartments } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -49,7 +49,7 @@ export async function PATCH(
 			);
 
 		const body = await request.json();
-		const apartment = apartmentSchema.parse(body.apartment);
+		const apartment = selectApartmentSchema.parse(body.apartment);
 
 		const updatedApartments = await db
 			.update(apartments)

@@ -22,12 +22,7 @@ export function useReceipts(id?: string) {
 		enabled: id !== undefined,
 	});
 
-	const sortedReceipts = receipts?.sort((a, b) => {
-		const aDate = new Date(a.date).getTime();
-		const bDate = new Date(b.date).getTime();
-
-		return aDate - bDate;
-	});
+	const sortedReceipts = receipts?.sort((a, b) => a.month - b.month);
 
 	const { mutateAsync, isPending } = useMutation({
 		mutationFn: createReceipt,
@@ -39,20 +34,35 @@ export function useReceipts(id?: string) {
 			const previousReceipts = queryClient.getQueryData<Receipt[]>([RECEIPTS]);
 
 			if (previousReceipts) {
+				const newReceipts: Receipt[] =
+					apartment?.rent.map((value) => {
+						return {
+							id: Math.random(),
+							apartmentId: apartment.id,
+							month: new Date().getMonth(),
+							year: new Date().getFullYear(),
+							value,
+							tenant: apartment.tenant,
+							paymentMethod: apartment.paymentMethod,
+							createdAt: new Date().toLocaleDateString(),
+						};
+					}) ?? [];
+
 				queryClient.setQueryData<Receipt[]>(
 					[RECEIPTS],
-					[
-						...previousReceipts,
-						{
-							id: Math.random(),
-							apartmentId: parseInt(apartment?.id.toString() ?? ''),
-							date: new Date().toLocaleDateString(),
-						},
-					]
+					[...previousReceipts, ...newReceipts]
 				);
 			}
 
 			return { previousReceipts };
+		},
+		onError: (_err, _variables, context) => {
+			if (context?.previousReceipts) {
+				queryClient.setQueryData<Receipt[]>(
+					[RECEIPTS],
+					context.previousReceipts
+				);
+			}
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({

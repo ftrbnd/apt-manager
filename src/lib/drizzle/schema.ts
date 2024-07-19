@@ -1,13 +1,12 @@
 import {
-	date,
-	doublePrecision,
 	pgEnum,
 	pgTable,
 	real,
 	serial,
 	text,
+	timestamp,
 } from 'drizzle-orm/pg-core';
-import { createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const paymentMethodEnum = pgEnum('payment_method', [
 	'CHECK',
@@ -37,10 +36,20 @@ export const apartments = pgTable('apartments', {
 
 export const receipts = pgTable('receipts', {
 	id: serial('id').primaryKey(),
-	date: date('date').notNull(),
 	apartmentId: serial('apartment_id')
 		.notNull()
 		.references(() => apartments.id, { onDelete: 'cascade' }),
+	month: real('month').notNull(),
+	year: real('year').notNull(),
+	value: real('value').notNull(),
+	tenant: text('tenant').notNull(),
+	paymentMethod: paymentMethodEnum('payment_methods').notNull(),
+	createdAt: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'string',
+	})
+		.defaultNow()
+		.notNull(),
 });
 
 export const managers = pgTable('managers', {
@@ -57,7 +66,10 @@ export const buildingsToManagers = pgTable('buildings_managers', {
 	}),
 });
 
-export const apartmentSchema = createSelectSchema(apartments);
+export const selectApartmentSchema = createSelectSchema(apartments);
+export const insertApartmentSchema = createInsertSchema(apartments);
+
+export const selectReceiptSchema = createSelectSchema(receipts);
 
 export type Building = typeof buildings.$inferSelect;
 export type Apartment = typeof apartments.$inferSelect;

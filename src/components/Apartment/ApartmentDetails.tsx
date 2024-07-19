@@ -34,9 +34,8 @@ export function ApartmentDetails({
 	);
 
 	const latestReceipt = apartmentReceipts.at(-1);
-	const latestReceiptMonth = new Date(latestReceipt?.date ?? '').getMonth();
 	const receiptExistsForCurrentMonth =
-		latestReceiptMonth === new Date().getMonth();
+		latestReceipt?.month === new Date().getMonth();
 
 	const handleClick = async () => {
 		if (!receiptExistsForCurrentMonth) {
@@ -102,7 +101,8 @@ export function ApartmentDetails({
 							) : (
 								<Receipt className='w-4 h-4 mr-2' />
 							)}
-							Create receipt
+							Create
+							{(apartment?.rent.length ?? 1) > 1 ? ' receipts' : ' receipt'}
 						</Button>
 					)}
 				</CardFooter>

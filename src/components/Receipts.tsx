@@ -2,7 +2,7 @@ import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Receipt, ReceiptSkeleton } from './Receipt';
 import { Skeleton } from './ui/skeleton';
-import { displayMonthYear } from '@/lib/utils';
+import { displayMonthYear, monthNames } from '@/lib/utils';
 
 interface Props {
 	receipts: ReceiptType[];
@@ -13,7 +13,7 @@ interface Props {
 export function Receipts({ receipts, loading, filteredByApartment }: Props) {
 	if (loading)
 		return (
-			<div className='max-w-5xl flex flex-col items-center gap-4'>
+			<div className='flex flex-col items-center max-w-5xl gap-4'>
 				{filteredByApartment && <Skeleton className='h-8 w-[150px] self-end' />}
 				{[1, 2, 3].map((i) => (
 					<ReceiptSkeleton key={i} />
@@ -40,10 +40,10 @@ export function Receipts({ receipts, loading, filteredByApartment }: Props) {
 	return receipts.map((receipt) => (
 		<div
 			key={receipt.id}
-			className='max-w-5xl flex flex-col items-center gap-4'>
+			className='flex flex-col items-center max-w-5xl gap-4'>
 			{filteredByApartment && (
-				<h5 className='scroll-m-20 text-xl self-end text-right font-semibold tracking-tight'>
-					{displayMonthYear(new Date(receipt.date))}
+				<h5 className='self-end text-xl font-semibold tracking-tight text-right scroll-m-20'>
+					{monthNames.get(receipt.month.toString())} {receipt.year}
 				</h5>
 			)}
 			<Receipt

@@ -16,22 +16,18 @@ export function Receipt({ receipt, apartmentId }: Props) {
 	const { apartment } = useApartments(apartmentId?.toString());
 	const { building } = useBuildings(apartment?.buildingId);
 
-	const { dollars, cents } = spellOutRent(apartment?.rent);
-
-	const receiptDate = new Date(receipt.date);
-	const month = receiptDate.getMonth() + 1;
-	const nextMonth = (month + 1) % 12;
-	const year = receiptDate.getFullYear();
+	const { dollars, cents } = spellOutRent([receipt.value]);
+	const nextMonth = ((receipt.month + 1) % 12) + 1;
 
 	return (
 		<Card className='w-full'>
 			<CardHeader className='flex-row items-center justify-between'>
 				<CardTitle>Receipt</CardTitle>
-				<div className='text-sm text-muted-foreground flex flex-row items-center justify-between gap-2 '>
+				<div className='flex flex-row items-center justify-between gap-2 text-sm text-muted-foreground '>
 					<p className='font-bold'>
 						DATE
 						<span className='ml-1 font-normal underline'>
-							{month}-1-{year}
+							{receipt.month + 1}-1-{receipt.year}
 						</span>
 					</p>
 					<p className='font-bold'>
@@ -41,18 +37,18 @@ export function Receipt({ receipt, apartmentId }: Props) {
 			</CardHeader>
 			<CardContent className='flex flex-col gap-4'>
 				<div className='flex flex-col gap-4'>
-					<div className='flex justify-between items-center gap-2'>
-						<p className='flex-1 font-bold border rounded-md p-4 bg-muted/80'>
+					<div className='flex items-center justify-between gap-2'>
+						<p className='flex-1 p-4 font-bold border rounded-md bg-muted/80'>
 							RECEIVED FROM
 							<span className='ml-1 font-normal underline'>
 								{apartment?.tenant}
 							</span>
 						</p>
-						<p className='border rounded-md p-4 bg-muted/80'>
-							{formatRentChecks(apartment?.rent ?? [])}
+						<p className='p-4 border rounded-md bg-muted/80'>
+							{formatRentChecks([receipt.value])}
 						</p>
 					</div>
-					<div className='flex items-center justify-between gap-2 border rounded-md p-4 bg-muted/80'>
+					<div className='flex items-center justify-between gap-2 p-4 border rounded-md bg-muted/80'>
 						<p className='underline'>
 							{dollars}
 							{cents > 0 && (
@@ -61,36 +57,36 @@ export function Receipt({ receipt, apartmentId }: Props) {
 						</p>
 						<p className='font-bold'>DOLLARS</p>
 					</div>
-					<div className='flex items-center justify-between w-full border rounded-md p-4 bg-muted/80'>
+					<div className='flex items-center justify-between w-full p-4 border rounded-md bg-muted/80'>
 						<p className='font-bold'>FOR RENT</p>
-						<p className='underline flex-1 text-right'>#{apartment?.number}</p>
+						<p className='flex-1 text-right underline'>#{apartment?.number}</p>
 					</div>
 				</div>
-				<div className='flex flex-col md:flex-row gap-2 justify-between'>
+				<div className='flex flex-col justify-between gap-2 md:flex-row'>
 					<div className='my-6 overflow-y-auto'>
 						<table className='w-full'>
 							<tbody>
-								<tr className='m-0 border-t p-0 even:bg-muted'>
-									<td className='border px-2 py-2 font-bold'>ACCOUNT</td>
-									<td className='border px-4 py-2 text-left'></td>
-									<td className='border px-4 py-2 text-left'></td>
+								<tr className='p-0 m-0 border-t even:bg-muted'>
+									<td className='px-2 py-2 font-bold border'>ACCOUNT</td>
+									<td className='px-4 py-2 text-left border'></td>
+									<td className='px-4 py-2 text-left border'></td>
 								</tr>
-								<tr className='m-0 border-t p-0 even:bg-muted'>
-									<td className='border px-2 py-2 font-bold'>PAYMENT</td>
-									<td className='border px-4 py-2 text-left'></td>
-									<td className='border px-4 py-2 text-left'></td>
+								<tr className='p-0 m-0 border-t even:bg-muted'>
+									<td className='px-2 py-2 font-bold border'>PAYMENT</td>
+									<td className='px-4 py-2 text-left border'></td>
+									<td className='px-4 py-2 text-left border'></td>
 								</tr>
-								<tr className='m-0 border-t p-0 even:bg-muted'>
-									<td className='border px-2 py-2 font-bold'>BAL. DUE</td>
-									<td className='border px-4 py-2 text-left'></td>
-									<td className='border px-4 py-2 text-left'></td>
+								<tr className='p-0 m-0 border-t even:bg-muted'>
+									<td className='px-2 py-2 font-bold border'>BAL. DUE</td>
+									<td className='px-4 py-2 text-left border'></td>
+									<td className='px-4 py-2 text-left border'></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 
 					<RadioGroup
-						className='rounded-md border p-4 bg-muted/80'
+						className='p-4 border rounded-md bg-muted/80'
 						defaultValue={apartment?.paymentMethod}>
 						<div className='flex items-center space-x-2'>
 							<RadioGroupItem
@@ -128,18 +124,18 @@ export function Receipt({ receipt, apartmentId }: Props) {
 						</div>
 					</RadioGroup>
 
-					<div className='flex-1 flex flex-col gap-2 justify-center'>
-						<div className='flex items-center justify-between border rounded-md p-2 gap-2 bg-muted/80'>
+					<div className='flex flex-col justify-center flex-1 gap-2'>
+						<div className='flex items-center justify-between gap-2 p-2 border rounded-md bg-muted/80'>
 							<p className='font-bold'>FROM</p>
 							<p className='underline'>
-								{month}-1-{year}
+								{receipt.month + 1}-1-{receipt.year}
 							</p>
 							<p className='font-bold'>TO</p>
 							<p className='underline'>
-								{nextMonth}-1-{year}
+								{nextMonth}-1-{receipt.year}
 							</p>
 						</div>
-						<div className='flex items-center border rounded-md p-2 gap-2 bg-muted/80'>
+						<div className='flex items-center gap-2 p-2 border rounded-md bg-muted/80'>
 							<p className='font-bold'>BY</p>
 							<p className='underline'>{building?.landlord}</p>
 						</div>
@@ -155,12 +151,12 @@ export function ReceiptSkeleton() {
 		<Card className='w-full'>
 			<CardHeader className='flex-row items-center justify-between'>
 				<CardTitle>Receipt</CardTitle>
-				<div className='text-sm text-muted-foreground flex flex-row items-center justify-between gap-2 '>
-					<div className='font-bold flex items-center'>
+				<div className='flex flex-row items-center justify-between gap-2 text-sm text-muted-foreground '>
+					<div className='flex items-center font-bold'>
 						DATE
 						<Skeleton className='ml-1 underline h-4 w-[100px]' />
 					</div>
-					<div className='font-bold flex items-center'>
+					<div className='flex items-center font-bold'>
 						No.
 						<Skeleton className='ml-1 h-4 w-[32px]' />
 					</div>
@@ -169,49 +165,49 @@ export function ReceiptSkeleton() {
 			<CardContent className='flex flex-col gap-4'>
 				<div className='flex flex-col gap-4'>
 					<div className='flex justify-between gap-2'>
-						<div className='font-bold border rounded-md p-4 w-3/5'>
+						<div className='w-3/5 p-4 font-bold border rounded-md'>
 							<div className='flex items-center w-full'>
 								RECEIVED FROM
 								<Skeleton className='ml-1 h-6 w-full md:w-[200px]' />
 							</div>
 						</div>
-						<div className='border rounded-md p-4 w-2/5 flex items-center'>
+						<div className='flex items-center w-2/5 p-4 border rounded-md'>
 							<Skeleton className='h-6 w-full md:w-[125px]' />
 						</div>
 					</div>
-					<div className='flex items-center justify-between gap-2 border rounded-md p-4'>
-						<Skeleton className='h-6 w-full' />
+					<div className='flex items-center justify-between gap-2 p-4 border rounded-md'>
+						<Skeleton className='w-full h-6' />
 						<p className='font-bold'>DOLLARS</p>
 					</div>
-					<div className='flex items-center justify-between w-full border rounded-md p-4'>
+					<div className='flex items-center justify-between w-full p-4 border rounded-md'>
 						<p className='font-bold'>FOR RENT</p>
 						<Skeleton className='h-6 w-[32px]' />
 					</div>
 				</div>
-				<div className='flex flex-col md:flex-row gap-2 justify-between'>
+				<div className='flex flex-col justify-between gap-2 md:flex-row'>
 					<div className='my-6 overflow-y-auto'>
 						<table className='w-full'>
 							<tbody>
-								<tr className='m-0 border-t p-0 even:bg-muted'>
-									<td className='border px-2 py-2 font-bold'>ACCOUNT</td>
-									<td className='border px-4 py-2 text-left'></td>
-									<td className='border px-4 py-2 text-left'></td>
+								<tr className='p-0 m-0 border-t even:bg-muted'>
+									<td className='px-2 py-2 font-bold border'>ACCOUNT</td>
+									<td className='px-4 py-2 text-left border'></td>
+									<td className='px-4 py-2 text-left border'></td>
 								</tr>
-								<tr className='m-0 border-t p-0 even:bg-muted'>
-									<td className='border px-2 py-2 font-bold'>PAYMENT</td>
-									<td className='border px-4 py-2 text-left'></td>
-									<td className='border px-4 py-2 text-left'></td>
+								<tr className='p-0 m-0 border-t even:bg-muted'>
+									<td className='px-2 py-2 font-bold border'>PAYMENT</td>
+									<td className='px-4 py-2 text-left border'></td>
+									<td className='px-4 py-2 text-left border'></td>
 								</tr>
-								<tr className='m-0 border-t p-0 even:bg-muted'>
-									<td className='border px-2 py-2 font-bold'>BAL. DUE</td>
-									<td className='border px-4 py-2 text-left'></td>
-									<td className='border px-4 py-2 text-left'></td>
+								<tr className='p-0 m-0 border-t even:bg-muted'>
+									<td className='px-2 py-2 font-bold border'>BAL. DUE</td>
+									<td className='px-4 py-2 text-left border'></td>
+									<td className='px-4 py-2 text-left border'></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 
-					<RadioGroup className='rounded-md border p-4 bg-muted/80'>
+					<RadioGroup className='p-4 border rounded-md bg-muted/80'>
 						<div className='flex items-center space-x-2'>
 							<RadioGroupItem
 								value='CASH'
@@ -246,14 +242,14 @@ export function ReceiptSkeleton() {
 						</div>
 					</RadioGroup>
 
-					<div className='flex-1 flex flex-col gap-2 justify-center'>
-						<div className='flex items-center justify-between border rounded-md p-2 gap-2'>
+					<div className='flex flex-col justify-center flex-1 gap-2'>
+						<div className='flex items-center justify-between gap-2 p-2 border rounded-md'>
 							<p className='font-bold'>FROM</p>
 							<Skeleton className='h-6 w-[100px]' />
 							<p className='font-bold'>TO</p>
 							<Skeleton className='h-6 w-[100px]' />
 						</div>
-						<div className='flex items-center border rounded-md p-2 gap-2'>
+						<div className='flex items-center gap-2 p-2 border rounded-md'>
 							<p className='font-bold'>BY</p>
 							<Skeleton className='h-6 w-[200px]' />
 						</div>

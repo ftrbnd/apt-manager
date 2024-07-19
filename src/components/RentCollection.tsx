@@ -21,15 +21,12 @@ export function RentCollection({ receipts, month, year }: Props) {
 	const { apartments } = useApartments();
 
 	const apartmentPaidRent = (apartment: Apartment) => {
-		const aptReceipts = receipts.filter((receipt) => {
-			const receiptDate = new Date(receipt.date);
-
-			return (
+		const aptReceipts = receipts.filter(
+			(receipt) =>
 				receipt.apartmentId === apartment.id &&
-				receiptDate.getMonth() + 1 === month &&
-				receiptDate.getFullYear() === year
-			);
-		});
+				receipt.month === month &&
+				receipt.year === year
+		);
 
 		return aptReceipts.length > 0;
 	};

@@ -27,7 +27,9 @@ export function RentMonthSelect({
 	const today = new Date();
 
 	const years = () => {
-		const receiptYears = receipts.map((r) => new Date(r.date).getFullYear());
+		const receiptYears = receipts.map((r) =>
+			new Date(r.createdAt).getFullYear()
+		);
 		const thisYear = today.getFullYear();
 
 		if (receiptYears.length === 0) receiptYears.push(thisYear);

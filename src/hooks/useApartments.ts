@@ -1,3 +1,4 @@
+import { Apartment } from '@/lib/drizzle/schema';
 import {
 	getApartmentById,
 	getApartments,
@@ -30,16 +31,27 @@ export function useApartments(id?: string) {
 				queryKey: [APARTMENTS, newApartment.id],
 			});
 
-			const previousApartment = queryClient.getQueryData([
+			const previousApartment = queryClient.getQueryData<Apartment>([
 				APARTMENTS,
 				newApartment.id,
 			]);
 
 			if (previousApartment) {
-				queryClient.setQueryData([APARTMENTS, newApartment.id], newApartment);
+				queryClient.setQueryData<Apartment>(
+					[APARTMENTS, newApartment.id],
+					newApartment
+				);
 			}
 
 			return { previousApartment, newApartment };
+		},
+		onError: (_err, _variables, context) => {
+			if (context?.previousApartment) {
+				queryClient.setQueryData<Apartment>(
+					[APARTMENTS, context.previousApartment.id],
+					context.previousApartment
+				);
+			}
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({

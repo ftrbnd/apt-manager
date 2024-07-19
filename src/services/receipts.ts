@@ -8,12 +8,12 @@ export const createReceipt = async (apartment?: Apartment) => {
 
 		const res = await fetch(RECEIPTS, {
 			method: 'POST',
-			body: JSON.stringify({ apartmentId: apartment.id }),
+			body: JSON.stringify({ apartment }),
 		});
 		if (!res.ok) throw new Error('Failed to get receipts');
 
-		const { receipt }: { receipt: Receipt } = await res.json();
-		return receipt;
+		const { receipts }: { receipts: Receipt[] } = await res.json();
+		return receipts;
 	} catch (e) {
 		console.error(e);
 		throw e;
