@@ -34,7 +34,9 @@ export function ThemeToggle({ onSheet }: Props) {
 				type='single'
 				collapsible>
 				<AccordionItem value='item-1'>
-					<AccordionTrigger>Toggle theme</AccordionTrigger>
+					<AccordionTrigger className='hover:no-underline'>
+						Toggle theme
+					</AccordionTrigger>
 					<AccordionContent>
 						<RadioGroup
 							defaultValue={theme}

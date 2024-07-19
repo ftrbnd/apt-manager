@@ -1,24 +1,22 @@
 import Link from 'next/link';
-import { Menu, Package2 } from 'lucide-react';
+import { Receipt } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { UserMenu } from './UserMenu';
 import { auth } from '@clerk/nextjs/server';
 import { HeaderLinks } from './HeaderLinks';
 import { ThemeToggle } from './ThemeToggle';
+import { NavSheet } from './NavSheet';
 
 export function Header() {
 	const { userId } = auth();
 
 	return (
-		<header className='sticky top-0 flex h-16 justify-between items-center gap-4 border-b bg-background px-4 md:px-6'>
-			<nav className='hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
+		<header className='sticky top-0 flex items-center justify-between h-16 gap-4 px-4 border-b bg-background md:px-6'>
+			<nav className='flex-col hidden gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
 				<Link
 					href='/'
 					className='flex items-center gap-2 text-lg font-semibold md:text-base'>
-					<Package2 className='h-6 w-6' />
+					<Receipt className='w-6 h-6' />
 					<span className='sr-only'>Rent Receipts</span>
 				</Link>
 				{userId ? (
@@ -26,43 +24,15 @@ export function Header() {
 				) : (
 					<Link
 						href='/'
-						className='text-foreground transition-colors hover:text-foreground'>
+						className='transition-colors text-foreground hover:text-foreground'>
 						Rent Receipts
 					</Link>
 				)}
 			</nav>
-			<Sheet>
-				<SheetTrigger asChild>
-					<Button
-						variant='outline'
-						size='icon'
-						className='shrink-0 md:hidden'>
-						<Menu className='h-5 w-5' />
-						<span className='sr-only'>Toggle navigation menu</span>
-					</Button>
-				</SheetTrigger>
-				<Link
-					href='/'
-					className='text-foreground transition-colors hover:text-foreground md:hidden'>
-					Rent Receipts
-				</Link>
-				{userId && (
-					<SheetContent side='left'>
-						<nav className='grid gap-6 text-lg font-medium'>
-							<Link
-								href='/'
-								className='flex items-center gap-2 text-lg font-semibold'>
-								<Package2 className='h-6 w-6' />
-								<span className='sr-only'>Rent Receipts</span>
-							</Link>
-							<HeaderLinks />
-							<ThemeToggle onSheet />
-						</nav>
-					</SheetContent>
-				)}
-			</Sheet>
 
-			<div className='flex justify-between items-center gap-2'>
+			<NavSheet />
+
+			<div className='flex items-center justify-between gap-2'>
 				<ThemeToggle />
 				<UserMenu />
 			</div>
