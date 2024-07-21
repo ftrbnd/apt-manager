@@ -17,14 +17,17 @@ export async function GET(
 				{ status: 400 }
 			);
 
-		const foundReceipts = await db
+		const [receipt] = await db
 			.select()
 			.from(receipts)
 			.where(eq(receipts.id, id));
-		if (foundReceipts.length === 0)
-			return NextResponse.json({ error: 'No receipts found' }, { status: 404 });
+		if (!receipt)
+			return NextResponse.json(
+				{ error: 'Receipt not found found' },
+				{ status: 404 }
+			);
 
-		return NextResponse.json({ receipt: foundReceipts[0] }, { status: 200 });
+		return NextResponse.json({ receipt }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}

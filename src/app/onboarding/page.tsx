@@ -1,7 +1,6 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { sendManagerRequest } from '@/actions';
 import { BuildingSelect } from '@/components/BuildingSelect';
 import { useState } from 'react';
 import {
@@ -13,44 +12,88 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, Undo } from 'lucide-react';
+import { useManagerRequests } from '@/hooks/useManagerRequests';
+import { useBuildings } from '@/hooks/useBuildings';
 
-export default function OnboardingComponent() {
-	const [buildingId, setBuildingId] = useState<string | null>(null);
-	const [error, setError] = useState('');
+export default function Page() {
+	const { sendRequest, undoRequest, userSentRequest, requestFromUser } =
+		useManagerRequests();
+	const { building } = useBuildings(requestFromUser?.buildingId);
 
 	const { user } = useUser();
 
+	const [buildingId, setBuildingId] = useState<string | null>(null);
+	const [error, setError] = useState('');
+
 	const handleSubmit = async () => {
-		if (!buildingId) return setError('Please select a building.');
-		if (!user) return setError('Invalid user.');
+		if (!user) return setError('Unauthorized');
 
-		const promise = () => sendManagerRequest(user.id, parseInt(buildingId));
+		if (userSentRequest) {
+			const promise = () => undoRequest(requestFromUser?.id);
 
-		toast.promise(promise, {
-			loading: 'Assigning...',
-			success: () => `Sent your request`,
-			error: 'Failed to send your request',
-		});
+			toast.promise(promise, {
+				loading: 'Removing...',
+				success: `Removed your request`,
+				error: 'Failed to remove your request',
+			});
+
+			setError('');
+		} else {
+			if (!buildingId) return setError('Please select a building.');
+
+			const promise = () =>
+				sendRequest({
+					clerkUserId: user.id,
+					buildingId: parseInt(buildingId),
+				});
+
+			toast.promise(promise, {
+				loading: 'Assigning...',
+				success: `Sent your request`,
+				error: 'Failed to send your request',
+			});
+		}
+
+		setBuildingId(null);
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-center w-full min-h-screen bg-muted/40'>
-			<Card className={cn('w-[380px]')}>
+		<div className='flex flex-col items-center justify-center w-full min-h-screen p-4 bg-muted/40'>
+			<Card className='w-full sm:max-w-sm'>
 				<CardHeader>
-					<CardTitle>Welcome!</CardTitle>
-					<CardDescription>Let's get started.</CardDescription>
+					<CardTitle>
+						{userSentRequest ? 'Your request was sent' : 'Welcome!'}
+					</CardTitle>
+					<CardDescription>
+						{userSentRequest
+							? 'Awaiting approval from another manager'
+							: "Let's get started"}
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<BuildingSelect setBuildingId={setBuildingId} />
-					{error && <p className='text-red-700'>{error}</p>}
+					{userSentRequest ? (
+						<p>
+							{building?.street} ({building?.city}, {building?.state})
+						</p>
+					) : (
+						<>
+							<BuildingSelect setBuildingId={setBuildingId} />
+							{error && <p className='text-red-700'>{error}</p>}
+						</>
+					)}
 				</CardContent>
 				<CardFooter>
-					<Button onClick={handleSubmit}>
-						<CircleCheck className='w-4 h-4 mr-2' />
-						Submit
+					<Button
+						onClick={handleSubmit}
+						variant={userSentRequest ? 'destructive' : 'default'}>
+						{userSentRequest ? (
+							<Undo className='w-4 h-4 mr-2' />
+						) : (
+							<CircleCheck className='w-4 h-4 mr-2' />
+						)}
+						{userSentRequest ? 'Undo' : 'Submit'}
 					</Button>
 				</CardFooter>
 			</Card>

@@ -8,6 +8,7 @@ import {
 	timestamp,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 export const paymentMethodEnum = pgEnum('payment_method', [
 	'CHECK',
@@ -69,6 +70,12 @@ export const selectApartmentSchema = createSelectSchema(apartments);
 export const insertApartmentSchema = createInsertSchema(apartments);
 
 export const selectReceiptSchema = createSelectSchema(receipts);
+export const insertReceiptSchema = createInsertSchema(receipts);
+
+export const insertManagerRequestSchema = createInsertSchema(managerRequests);
+
+export type NewReceipt = z.infer<typeof insertReceiptSchema>;
+export type NewManagerRequest = z.infer<typeof insertManagerRequestSchema>;
 
 export type Building = typeof buildings.$inferSelect;
 export type Apartment = typeof apartments.$inferSelect;
