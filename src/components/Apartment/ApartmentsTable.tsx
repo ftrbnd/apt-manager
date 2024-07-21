@@ -35,12 +35,10 @@ export function ApartmentsTable() {
 			x-chunk='dashboard-01-chunk-4'>
 			<CardHeader className='flex flex-row items-center'>
 				<div className='grid gap-2'>
-					<CardTitle>Apartments</CardTitle>
-
 					{buildingLoading || buildingPending ? (
-						<Skeleton className='h-4 w-[150px]' />
+						<Skeleton className='h-6 w-[150px]' />
 					) : (
-						<CardDescription>{building?.street}</CardDescription>
+						<CardTitle>{building?.street}</CardTitle>
 					)}
 				</div>
 			</CardHeader>

@@ -11,7 +11,10 @@ export function HeaderLinks({ closeSheet }: Props) {
 	const pathname = usePathname();
 
 	const textForeground = (path: string) =>
-		pathname === path ? 'text-foreground' : 'text-muted-foreground';
+		(pathname === '/' && path === '/') ||
+		(path !== '/' && pathname.startsWith(path)
+			? 'text-foreground'
+			: 'text-muted-foreground');
 
 	return (
 		<>
@@ -22,6 +25,14 @@ export function HeaderLinks({ closeSheet }: Props) {
 					'/'
 				)} transition-colors hover:text-foreground`}>
 				Dashboard
+			</Link>
+			<Link
+				href='/apartments'
+				onClick={closeSheet}
+				className={`${textForeground(
+					'/apartments'
+				)} transition-colors hover:text-foreground`}>
+				Apartments
 			</Link>
 			<Link
 				href='/receipts'

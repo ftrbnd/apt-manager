@@ -100,7 +100,9 @@ export default function Page() {
 					<CardContent>
 						{userSentRequest ? (
 							<p>
-								{building?.street} ({building?.city}, {building?.state})
+								{building
+									? `${building.street} (${building.city}, ${building.state})`
+									: ''}
 							</p>
 						) : (
 							<>
