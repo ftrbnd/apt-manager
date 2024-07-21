@@ -1,4 +1,5 @@
 import {
+	boolean,
 	pgEnum,
 	pgTable,
 	real,
@@ -52,18 +53,16 @@ export const receipts = pgTable('receipts', {
 		.notNull(),
 });
 
-export const managers = pgTable('managers', {
-	id: text('id').primaryKey(),
-});
-
-export const buildingsToManagers = pgTable('buildings_managers', {
+export const managerRequests = pgTable('manager_requests', {
 	id: serial('id').primaryKey(),
-	managerId: text('manager_id').references(() => managers.id, {
-		onDelete: 'cascade',
-	}),
-	buildingId: serial('building_id').references(() => buildings.id, {
-		onDelete: 'cascade',
-	}),
+	clerkUserId: text('clerk_user_id').notNull().unique(),
+	buildingId: serial('building_id')
+		.references(() => buildings.id, {
+			onDelete: 'cascade',
+		})
+		.notNull()
+		.unique(),
+	approved: boolean('approved').default(false),
 });
 
 export const selectApartmentSchema = createSelectSchema(apartments);
@@ -74,4 +73,4 @@ export const selectReceiptSchema = createSelectSchema(receipts);
 export type Building = typeof buildings.$inferSelect;
 export type Apartment = typeof apartments.$inferSelect;
 export type Receipt = typeof receipts.$inferSelect;
-export type Manager = typeof managers.$inferSelect;
+export type ManagerRequest = typeof managerRequests.$inferSelect;

@@ -1,8 +1,7 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { assignManagerToBuilding } from '@/actions';
+import { sendManagerRequest } from '@/actions';
 import { BuildingSelect } from '@/components/BuildingSelect';
 import { useState } from 'react';
 import {
@@ -23,22 +22,17 @@ export default function OnboardingComponent() {
 	const [error, setError] = useState('');
 
 	const { user } = useUser();
-	const router = useRouter();
 
 	const handleSubmit = async () => {
 		if (!buildingId) return setError('Please select a building.');
 		if (!user) return setError('Invalid user.');
 
-		const promise = () =>
-			assignManagerToBuilding(user.id, parseInt(buildingId));
+		const promise = () => sendManagerRequest(user.id, parseInt(buildingId));
 
 		toast.promise(promise, {
 			loading: 'Assigning...',
-			success: () => {
-				router.push('/');
-				return `You have been assigned your building!`;
-			},
-			error: 'Failed to assign your building',
+			success: () => `Sent your request`,
+			error: 'Failed to send your request',
 		});
 	};
 

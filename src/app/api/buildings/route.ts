@@ -1,10 +1,10 @@
 import { db } from '@/lib/drizzle/db';
 import { buildings } from '@/lib/drizzle/schema';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic'; // defaults to auto
 
-export async function GET(request: NextRequest) {
+export async function GET() {
 	try {
 		const allBuildings = await db.select().from(buildings);
 

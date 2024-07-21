@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { apartments, buildingsToManagers } from '@/lib/drizzle/schema';
+import { apartments, managerRequests } from '@/lib/drizzle/schema';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
@@ -10,18 +10,17 @@ export async function GET() {
 	try {
 		const user = await currentUser();
 		if (!user)
-			return NextResponse.json({ error: 'No user found' }, { status: 401 });
+			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-		const pairings = await db
+		const [request] = await db
 			.select()
-			.from(buildingsToManagers)
-			.where(eq(buildingsToManagers.managerId, user.id));
-		const pairing = pairings[0];
+			.from(managerRequests)
+			.where(eq(managerRequests.clerkUserId, user.id));
 
 		const allApartments = await db
 			.select()
 			.from(apartments)
-			.where(eq(apartments.buildingId, pairing.buildingId));
+			.where(eq(apartments.buildingId, request.buildingId));
 
 		return NextResponse.json({ apartments: allApartments }, { status: 200 });
 	} catch (error) {

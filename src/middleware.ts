@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { db } from './lib/drizzle/db';
-import { buildingsToManagers } from './lib/drizzle/schema';
+import { managerRequests } from './lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 const isPublicRoute = createRouteMatcher([
@@ -11,29 +11,41 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
+const isAccountRoute = createRouteMatcher(['/account(.*)']);
 
 export default clerkMiddleware(async (auth, request) => {
 	const { protect, userId, redirectToSignIn } = auth();
 
-	if (isOnboardingRoute(request)) {
-		if (!userId) {
-			redirectToSignIn();
-		} else {
-			const userBuildings = await db
-				.select()
-				.from(buildingsToManagers)
-				.where(eq(buildingsToManagers.managerId, userId));
+	const onOnboardingPage = isOnboardingRoute(request);
+	const onPrivatePage = !isPublicRoute(request) && !onOnboardingPage;
+	const onAccountPage = isAccountRoute(request);
 
-			if (userBuildings.length > 0) {
-				const homeUrl = new URL('/', request.url);
-				return NextResponse.redirect(homeUrl);
+	if (userId) {
+		const [managerRequest] = await db
+			.select()
+			.from(managerRequests)
+			.where(eq(managerRequests.clerkUserId, userId));
+
+		if (!managerRequest) {
+			if (!onOnboardingPage && !onAccountPage) {
+				const onboardingUrl = new URL('/onboarding', request.url);
+
+				return NextResponse.redirect(onboardingUrl);
 			}
+			return NextResponse.next();
+		} else if (onPrivatePage && !managerRequest.approved) {
+			const onboardingUrl = new URL('/onboarding', request.url);
+			return NextResponse.redirect(onboardingUrl);
+		} else if (onOnboardingPage && managerRequest.approved) {
+			const homeUrl = new URL('/', request.url);
+			return NextResponse.redirect(homeUrl);
 		}
-	} else if (!isPublicRoute(request)) {
-		protect();
+	} else {
+		if (isOnboardingRoute(request)) redirectToSignIn();
+		else if (!isPublicRoute(request)) protect();
 	}
 });
 
 export const config = {
-	matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+	matcher: ['/((?!.*\\..*|_next|api).*)', '/(trpc)(.*)'],
 };

@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { serverEnv } from '@/lib/env';
 import { db } from '@/lib/drizzle/db';
-import { managers } from '@/lib/drizzle/schema';
+import { managerRequests } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: Request) {
@@ -59,19 +59,18 @@ export async function POST(req: Request) {
 	switch (eventType) {
 		case 'user.created':
 			console.log('USER CREATED');
-
-			await db.insert(managers).values({ id: evt.data.id });
-
 			break;
 		case 'user.updated':
-			console.log('TODO: implement update logic');
+			console.log('USER UPDATED');
 			break;
 		case 'user.deleted':
 			console.log('USER DELETED');
 			const id = evt.data.id;
 			if (!id) break;
 
-			await db.delete(managers).where(eq(managers.id, id));
+			await db
+				.delete(managerRequests)
+				.where(eq(managerRequests.clerkUserId, id));
 	}
 
 	return new Response('', { status: 200 });
