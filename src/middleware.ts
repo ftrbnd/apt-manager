@@ -12,6 +12,7 @@ const isPublicRoute = createRouteMatcher([
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
 const isAccountRoute = createRouteMatcher(['/account(.*)']);
+const isApiRoute = createRouteMatcher('/api(.*)');
 
 export default clerkMiddleware(async (auth, request) => {
 	const { protect, userId, redirectToSignIn } = auth();
@@ -19,6 +20,11 @@ export default clerkMiddleware(async (auth, request) => {
 	const onOnboardingPage = isOnboardingRoute(request);
 	const onPrivatePage = !isPublicRoute(request) && !onOnboardingPage;
 	const onAccountPage = isAccountRoute(request);
+	const onApiRoute = isApiRoute(request);
+
+	if (onApiRoute) {
+		return NextResponse.next();
+	}
 
 	if (userId) {
 		const [managerRequest] = await db
@@ -47,5 +53,5 @@ export default clerkMiddleware(async (auth, request) => {
 });
 
 export const config = {
-	matcher: ['/((?!.*\\..*|_next|api).*)', '/(trpc)(.*)'],
+	matcher: ['/((?!.*\\..*|_next).*)', '/(trpc|api)(.*)'],
 };

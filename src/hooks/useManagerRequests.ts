@@ -15,7 +15,7 @@ export function useManagerRequests(id?: string) {
 	const queryClient = useQueryClient();
 	const { user } = useUser();
 
-	const { data: managerRequests } = useQuery({
+	const { data: managerRequests, isLoading: requestsLoading } = useQuery({
 		queryKey: [MANAGER_REQUESTS],
 		queryFn: getManagerRequests,
 	});
@@ -150,6 +150,7 @@ export function useManagerRequests(id?: string) {
 
 	return {
 		managerRequests,
+		requestsLoading,
 		managerRequest,
 		sendRequest,
 		acceptRequest,
