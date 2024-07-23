@@ -26,6 +26,10 @@ export function useManagerRequests(id?: string) {
 		enabled: id !== undefined,
 	});
 
+	const myRequest = managerRequests?.find(
+		(req) => req.clerkUserId === user?.id
+	);
+
 	const { mutateAsync: sendRequest } = useMutation({
 		mutationFn: sendManagerRequest,
 		onMutate: async (newRequest) => {
@@ -152,6 +156,7 @@ export function useManagerRequests(id?: string) {
 		managerRequests,
 		requestsLoading,
 		managerRequest,
+		myRequest,
 		sendRequest,
 		acceptRequest,
 		undoRequest,
