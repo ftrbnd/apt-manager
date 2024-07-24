@@ -62,6 +62,14 @@ export async function POST(req: Request) {
 			break;
 		case 'user.updated':
 			console.log('USER UPDATED');
+
+			const firstName = evt.data.first_name;
+			const lastName = evt.data.last_name;
+			const email = evt.data.email_addresses[0].email_address;
+			const avatar = evt.data.image_url;
+
+			await db.update(managers).set({ firstName, lastName, email, avatar });
+
 			break;
 		case 'user.deleted':
 			console.log('USER DELETED');

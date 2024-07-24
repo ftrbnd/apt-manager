@@ -38,18 +38,24 @@ export function ManagersCard() {
 							key={manager.id}
 							className='flex items-center gap-4'>
 							<Avatar className='hidden h-9 w-9 sm:flex'>
-								<AvatarImage
-									src='/avatars/01.png'
-									alt='Avatar'
-								/>
-								<AvatarFallback>OM</AvatarFallback>
+								{manager.avatar ? (
+									<AvatarImage
+										src={manager.avatar}
+										alt='Avatar'
+									/>
+								) : (
+									<AvatarFallback>
+										{manager.firstName ? manager.firstName[0] : ''}
+										{manager.lastName ? manager.lastName[0] : ''}
+									</AvatarFallback>
+								)}
 							</Avatar>
 							<div className='grid gap-1'>
 								<p className='text-sm font-medium leading-none'>
-									Olivia Martin
+									{manager.firstName} {manager.lastName}
 								</p>
 								<p className='text-sm text-muted-foreground'>
-									olivia.martin@email.com
+									Joined {new Date(manager.createdAt ?? '').toDateString()}
 								</p>
 							</div>
 						</div>

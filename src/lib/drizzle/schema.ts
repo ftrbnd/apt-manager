@@ -64,6 +64,7 @@ export const managers = pgTable('managers', {
 	firstName: text('first_name'),
 	lastName: text('last_name'),
 	email: text('email'),
+	avatar: text('avatar'),
 	createdAt: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'string',

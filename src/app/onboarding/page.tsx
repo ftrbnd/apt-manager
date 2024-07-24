@@ -47,9 +47,10 @@ export default function Page() {
 				create({
 					clerkUserId: user.id,
 					buildingId: parseInt(buildingId),
-					email: user.primaryEmailAddress?.emailAddress,
 					firstName: user.firstName,
 					lastName: user.lastName,
+					email: user.primaryEmailAddress?.emailAddress,
+					avatar: user.imageUrl,
 				});
 
 			toast.promise(promise, {
