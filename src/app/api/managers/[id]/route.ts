@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { managerRequests } from '@/lib/drizzle/schema';
+import { managers } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -16,21 +16,18 @@ export async function GET(_request: NextRequest, { params }: Params) {
 		const { id } = params;
 		if (!id)
 			return NextResponse.json(
-				{ error: 'Manager request id is required' },
+				{ error: 'Manager id is required' },
 				{ status: 400 }
 			);
 
-		const [managerRequest] = await db
+		const [manager] = await db
 			.select()
-			.from(managerRequests)
-			.where(eq(managerRequests.id, id));
-		if (!managerRequest)
-			return NextResponse.json(
-				{ error: 'Manager request not found' },
-				{ status: 404 }
-			);
+			.from(managers)
+			.where(eq(managers.id, id));
+		if (!manager)
+			return NextResponse.json({ error: 'Manager not found' }, { status: 404 });
 
-		return NextResponse.json({ managerRequest }, { status: 200 });
+		return NextResponse.json({ manager }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}
@@ -41,25 +38,22 @@ export async function PATCH(_request: NextRequest, { params }: Params) {
 		const { id } = params;
 		if (!id)
 			return NextResponse.json(
-				{ error: 'Manager request id is required' },
+				{ error: 'Manager id is required' },
 				{ status: 400 }
 			);
 
-		const [managerRequest] = await db
-			.update(managerRequests)
+		const [manager] = await db
+			.update(managers)
 			.set({
 				approved: true,
 			})
-			.where(eq(managerRequests.id, id))
+			.where(eq(managers.id, id))
 			.returning();
 
-		if (!managerRequest)
-			return NextResponse.json(
-				{ error: 'Manager request not found' },
-				{ status: 404 }
-			);
+		if (!manager)
+			return NextResponse.json({ error: 'Manager not found' }, { status: 404 });
 
-		return NextResponse.json({ managerRequest }, { status: 200 });
+		return NextResponse.json({ manager }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}
@@ -70,11 +64,11 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
 		const { id } = params;
 		if (!id)
 			return NextResponse.json(
-				{ error: 'Manager request id is required' },
+				{ error: 'Manager id is required' },
 				{ status: 400 }
 			);
 
-		await db.delete(managerRequests).where(eq(managerRequests.id, params.id));
+		await db.delete(managers).where(eq(managers.id, params.id));
 
 		return NextResponse.json({ message: 'Deleted' }, { status: 200 });
 	} catch (error) {

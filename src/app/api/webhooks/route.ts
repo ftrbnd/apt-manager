@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { serverEnv } from '@/lib/env';
 import { db } from '@/lib/drizzle/db';
-import { managerRequests } from '@/lib/drizzle/schema';
+import { managers } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: Request) {
@@ -68,9 +68,7 @@ export async function POST(req: Request) {
 			const id = evt.data.id;
 			if (!id) break;
 
-			await db
-				.delete(managerRequests)
-				.where(eq(managerRequests.clerkUserId, id));
+			await db.delete(managers).where(eq(managers.clerkUserId, id));
 	}
 
 	return new Response('', { status: 200 });

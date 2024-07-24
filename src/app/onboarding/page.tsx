@@ -14,19 +14,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { CircleCheck, Loader2, Undo } from 'lucide-react';
-import { useManagerRequests } from '@/hooks/useManagerRequests';
+import { useManagers } from '@/hooks/useManagers';
 import { useBuildings } from '@/hooks/useBuildings';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Page() {
-	const {
-		sendRequest,
-		undoRequest,
-		requestsLoading,
-		userSentRequest,
-		requestFromUser,
-	} = useManagerRequests();
-	const { building } = useBuildings(requestFromUser?.buildingId);
+	const { create, remove, managersLoading, me } = useManagers();
+	const { building } = useBuildings(me?.buildingId);
 
 	const { user } = useUser();
 
@@ -36,8 +30,8 @@ export default function Page() {
 	const handleSubmit = async () => {
 		if (!user) return setError('Unauthorized');
 
-		if (userSentRequest) {
-			const promise = () => undoRequest(requestFromUser?.id);
+		if (me) {
+			const promise = () => remove(me?.id);
 
 			toast.promise(promise, {
 				loading: 'Removing...',
@@ -50,7 +44,7 @@ export default function Page() {
 			if (!buildingId) return setError('Please select a building.');
 
 			const promise = () =>
-				sendRequest({
+				create({
 					clerkUserId: user.id,
 					buildingId: parseInt(buildingId),
 					email: user.primaryEmailAddress?.emailAddress,
@@ -70,7 +64,7 @@ export default function Page() {
 
 	return (
 		<div className='flex flex-col items-center justify-center w-full min-h-screen p-4 bg-muted/40'>
-			{requestsLoading ? (
+			{managersLoading ? (
 				<Card className='w-full sm:max-w-sm'>
 					<CardHeader>
 						<Skeleton className='ml-1 underline h-6 w-[200px]' />
@@ -91,17 +85,15 @@ export default function Page() {
 			) : (
 				<Card className='w-full sm:max-w-sm'>
 					<CardHeader>
-						<CardTitle>
-							{userSentRequest ? 'Your request was sent' : 'Welcome!'}
-						</CardTitle>
+						<CardTitle>{me ? 'Your request was sent' : 'Welcome!'}</CardTitle>
 						<CardDescription>
-							{userSentRequest
+							{me
 								? 'Awaiting approval from another manager'
 								: "Let's get started"}
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						{userSentRequest ? (
+						{me ? (
 							<p>
 								{building
 									? `${building.street} (${building.city}, ${building.state})`
@@ -117,13 +109,13 @@ export default function Page() {
 					<CardFooter>
 						<Button
 							onClick={handleSubmit}
-							variant={userSentRequest ? 'destructive' : 'default'}>
-							{userSentRequest ? (
+							variant={me ? 'destructive' : 'default'}>
+							{me ? (
 								<Undo className='w-4 h-4 mr-2' />
 							) : (
 								<CircleCheck className='w-4 h-4 mr-2' />
 							)}
-							{userSentRequest ? 'Undo' : 'Submit'}
+							{me ? 'Undo' : 'Submit'}
 						</Button>
 					</CardFooter>
 				</Card>

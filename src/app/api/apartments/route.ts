@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { apartments, managerRequests } from '@/lib/drizzle/schema';
+import { apartments, managers } from '@/lib/drizzle/schema';
 import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
@@ -12,15 +12,15 @@ export async function GET() {
 		if (!user)
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-		const [request] = await db
+		const [manager] = await db
 			.select()
-			.from(managerRequests)
-			.where(eq(managerRequests.clerkUserId, user.id));
+			.from(managers)
+			.where(eq(managers.clerkUserId, user.id));
 
 		const allApartments = await db
 			.select()
 			.from(apartments)
-			.where(eq(apartments.buildingId, request.buildingId));
+			.where(eq(apartments.buildingId, manager.buildingId));
 
 		return NextResponse.json({ apartments: allApartments }, { status: 200 });
 	} catch (error) {

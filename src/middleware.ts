@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { db } from './lib/drizzle/db';
-import { managerRequests } from './lib/drizzle/schema';
+import { managers } from './lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 
 const isPublicRoute = createRouteMatcher([
@@ -27,22 +27,22 @@ export default clerkMiddleware(async (auth, request) => {
 	}
 
 	if (userId) {
-		const [managerRequest] = await db
+		const [manager] = await db
 			.select()
-			.from(managerRequests)
-			.where(eq(managerRequests.clerkUserId, userId));
+			.from(managers)
+			.where(eq(managers.clerkUserId, userId));
 
-		if (!managerRequest) {
+		if (!manager) {
 			if (!onOnboardingPage && !onAccountPage) {
 				const onboardingUrl = new URL('/onboarding', request.url);
 
 				return NextResponse.redirect(onboardingUrl);
 			}
 			return NextResponse.next();
-		} else if (onPrivatePage && !managerRequest.approved) {
+		} else if (onPrivatePage && !manager.approved) {
 			const onboardingUrl = new URL('/onboarding', request.url);
 			return NextResponse.redirect(onboardingUrl);
-		} else if (onOnboardingPage && managerRequest.approved) {
+		} else if (onOnboardingPage && manager.approved) {
 			const homeUrl = new URL('/', request.url);
 			return NextResponse.redirect(homeUrl);
 		}
