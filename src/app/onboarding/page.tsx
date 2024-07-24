@@ -53,6 +53,9 @@ export default function Page() {
 				sendRequest({
 					clerkUserId: user.id,
 					buildingId: parseInt(buildingId),
+					email: user.primaryEmailAddress?.emailAddress,
+					firstName: user.firstName,
+					lastName: user.lastName,
 				});
 
 			toast.promise(promise, {
