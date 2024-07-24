@@ -36,7 +36,7 @@ export default function Page() {
 				/>
 			</div>
 
-			<div className='flex flex-col items-start justify-center w-full gap-8 md:flex-row'>
+			<div className='grid items-start justify-center w-full grid-cols-1 gap-8 md:flex '>
 				<RentCollection
 					receipts={receipts}
 					month={parseInt(month)}

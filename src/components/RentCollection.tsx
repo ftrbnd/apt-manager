@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { formatRentChecks, monthNames, toCamelCase } from '@/lib/utils';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
 import { Avatar, AvatarFallback } from './ui/avatar';
+import { Skeleton } from './ui/skeleton';
 
 interface Props {
 	receipts: Receipt[];
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export function RentCollection({ receipts, month, year }: Props) {
-	const { apartments } = useApartments();
+	const { apartments, apartmentsLoading } = useApartments();
 
 	const apartmentPaidRent = (apartment: Apartment) => {
 		const aptReceipts = receipts.filter(
@@ -51,51 +52,66 @@ export function RentCollection({ receipts, month, year }: Props) {
 						</AccordionTrigger>
 						<AccordionContent>
 							<div className='flex flex-col gap-4'>
-								{apartments.map((apartment) => (
-									<HoverCard key={apartment.id}>
-										<HoverCardTrigger asChild>
-											<div
-												key={apartment.id}
-												className='flex items-center space-x-2'>
-												<Checkbox
-													id='paid_rent'
-													checked={apartmentPaidRent(apartment)}
-												/>
-												<Link
-													href={`/apartments/${apartment.id}`}
-													className='text-sm font-medium hover:underline'>
-													Apartment #{apartment.number}
-												</Link>
-											</div>
-										</HoverCardTrigger>
-										<HoverCardContent className='w-80'>
-											<div className='flex space-x-4'>
-												<Avatar>
-													<AvatarFallback>{apartment.number}</AvatarFallback>
-												</Avatar>
-												<div className='space-y-1'>
-													<h4 className='text-sm font-semibold'>
-														{apartment.tenant}
-													</h4>
-													<p className='text-sm'>
-														Rent: {formatRentChecks(apartment.rent)}
-													</p>
-													<div className='flex items-center pt-2'>
-														<span className='text-xs text-muted-foreground'>
-															Payment method:{' '}
-															{toCamelCase(apartment.paymentMethod)}
-														</span>
+								{apartmentsLoading || apartments.length === 0
+									? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
+											<CheckboxSkeleton key={v} />
+									  ))
+									: apartments.map((apartment) => (
+											<HoverCard key={apartment.id}>
+												<HoverCardTrigger asChild>
+													<div
+														key={apartment.id}
+														className='flex items-center space-x-2'>
+														<Checkbox
+															id='paid_rent'
+															checked={apartmentPaidRent(apartment)}
+														/>
+														<Link
+															href={`/apartments/${apartment.id}`}
+															className='text-sm font-medium hover:underline'>
+															Apartment #{apartment.number}
+														</Link>
 													</div>
-												</div>
-											</div>
-										</HoverCardContent>
-									</HoverCard>
-								))}
+												</HoverCardTrigger>
+												<HoverCardContent className='w-80'>
+													<div className='flex space-x-4'>
+														<Avatar>
+															<AvatarFallback>
+																{apartment.number}
+															</AvatarFallback>
+														</Avatar>
+														<div className='space-y-1'>
+															<h4 className='text-sm font-semibold'>
+																{apartment.tenant}
+															</h4>
+															<p className='text-sm'>
+																Rent: {formatRentChecks(apartment.rent)}
+															</p>
+															<div className='flex items-center pt-2'>
+																<span className='text-xs text-muted-foreground'>
+																	Payment method:{' '}
+																	{toCamelCase(apartment.paymentMethod)}
+																</span>
+															</div>
+														</div>
+													</div>
+												</HoverCardContent>
+											</HoverCard>
+									  ))}
 							</div>
 						</AccordionContent>
 					</CardContent>
 				</AccordionItem>
 			</Accordion>
 		</Card>
+	);
+}
+
+function CheckboxSkeleton() {
+	return (
+		<div className='flex items-center space-x-2'>
+			<Checkbox checked={false} />
+			<Skeleton className='w-24 h-5' />
+		</div>
 	);
 }

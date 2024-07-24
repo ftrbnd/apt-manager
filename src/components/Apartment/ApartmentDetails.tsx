@@ -43,8 +43,8 @@ export function ApartmentDetails({
 			<Card className='h-full min-w-fit md:w-1/4'>
 				<CardHeader>
 					<CardTitle>Apartment #{isLoading ? '#' : apartment?.id}</CardTitle>
-					{isLoading ? (
-						<Skeleton className='h-4 w-[125px]' />
+					{isLoading || !street ? (
+						<Skeleton className='h-5 w-[125px]' />
 					) : (
 						<CardDescription>{street}</CardDescription>
 					)}

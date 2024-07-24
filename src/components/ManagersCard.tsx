@@ -15,10 +15,11 @@ import { Button } from './ui/button';
 import { Manager } from '@/lib/drizzle/schema';
 import { toast } from 'sonner';
 import { Badge } from './ui/badge';
+import { Skeleton } from './ui/skeleton';
 
 export function ManagersCard() {
-	const { myBuilding } = useBuildings();
-	const { managers, accept, remove } = useManagers();
+	const { myBuilding, buildingLoading } = useBuildings();
+	const { managers, managersLoading, accept, remove } = useManagers();
 
 	const acceptedManagers = managers?.filter((manager) => manager.approved);
 	const pendingManagers = managers?.filter((manager) => !manager.approved);
@@ -50,7 +51,11 @@ export function ManagersCard() {
 					<CardTitle>Managers</CardTitle>
 					<Users className='w-5 h-5' />
 				</div>
-				<CardDescription>{myBuilding?.street}</CardDescription>
+				{buildingLoading || !myBuilding ? (
+					<Skeleton className='w-24 h-5' />
+				) : (
+					<CardDescription>{myBuilding.street}</CardDescription>
+				)}
 			</CardHeader>
 			<CardContent className='grid gap-8'>
 				<div className='p-4 border rounded-md'>
@@ -62,13 +67,21 @@ export function ManagersCard() {
 					</div>
 
 					<div className='flex flex-col gap-4'>
-						{acceptedManagers?.map((manager) => (
-							<div
-								key={manager.id}
-								className='flex flex-col gap-4 sm:flex-row'>
-								<ManagerDetails manager={manager} />
-							</div>
-						))}
+						{managersLoading || !acceptedManagers
+							? [1, 2, 3].map((v) => (
+									<div
+										key={v}
+										className='flex flex-col gap-4 sm:flex-row'>
+										<ManagerDetailsSkeleton />
+									</div>
+							  ))
+							: acceptedManagers.map((manager) => (
+									<div
+										key={manager.id}
+										className='flex flex-col gap-4 sm:flex-row'>
+										<ManagerDetails manager={manager} />
+									</div>
+							  ))}
 					</div>
 				</div>
 
@@ -86,8 +99,16 @@ export function ManagersCard() {
 					</div>
 
 					<div className='flex flex-col gap-4'>
-						{(pendingManagers?.length ?? 0) > 0 ? (
-							pendingManagers?.map((manager) => (
+						{managersLoading || !pendingManagers ? (
+							[1, 2, 3].map((v) => (
+								<div
+									key={v}
+									className='flex flex-col gap-4 sm:flex-row'>
+									<ManagerDetailsSkeleton />
+								</div>
+							))
+						) : pendingManagers.length > 0 ? (
+							pendingManagers.map((manager) => (
 								<div
 									key={manager.id}
 									className='flex flex-col gap-4 sm:flex-row'>
@@ -143,6 +164,19 @@ function ManagerDetails({ manager }: { manager: Manager }) {
 				<p className='text-sm text-muted-foreground'>
 					Joined {new Date(manager.createdAt ?? '').toDateString()}
 				</p>
+			</div>
+		</div>
+	);
+}
+
+function ManagerDetailsSkeleton() {
+	return (
+		<div className='flex items-center gap-4'>
+			<Skeleton className='rounded-full w-9 h-9' />
+
+			<div className='grid gap-1'>
+				<Skeleton className='w-24 h-5 ' />
+				<Skeleton className='w-40 h-5 ' />
 			</div>
 		</div>
 	);
