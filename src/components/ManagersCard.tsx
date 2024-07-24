@@ -44,7 +44,7 @@ export function ManagersCard() {
 	};
 
 	return (
-		<Card x-chunk='dashboard-01-chunk-5'>
+		<Card>
 			<CardHeader>
 				<div className='flex flex-row items-center gap-4'>
 					<CardTitle>Managers</CardTitle>

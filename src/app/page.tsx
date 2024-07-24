@@ -1,4 +1,5 @@
 import { ManagersCard } from '@/components/ManagersCard';
+import { MonthlyRent } from '@/components/MonthlyRent';
 
 export default function Page() {
 	return (
@@ -7,7 +8,11 @@ export default function Page() {
 				<h2 className='self-center pb-2 text-3xl font-semibold tracking-tight border-b scroll-m-20 first:mt-0 w-min'>
 					Dashboard
 				</h2>
-				<ManagersCard />
+
+				<div className='grid items-start justify-center w-full grid-cols-1 gap-8 md:grid-cols-2 '>
+					<MonthlyRent />
+					<ManagersCard />
+				</div>
 			</main>
 		</div>
 	);

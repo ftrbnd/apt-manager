@@ -42,9 +42,9 @@ export function RentCollection({ receipts, month, year }: Props) {
 				<AccordionItem value='item-1'>
 					<CardContent className='pt-6'>
 						<AccordionTrigger className='hover:no-underline'>
-							<CardTitle className='font-normal'>
-								Rent collected for
-								<span className='mx-2 font-bold'>
+							<CardTitle>
+								Rent for
+								<span className='mx-2 font-normal text-muted-foreground'>
 									{monthNames.get(month.toString())} {year}
 								</span>
 							</CardTitle>
