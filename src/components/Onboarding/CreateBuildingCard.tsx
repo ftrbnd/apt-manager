@@ -12,16 +12,42 @@ import { CreateBuildingForm } from './CreateBuildingForm';
 import { NewBuilding } from '@/lib/drizzle/schema';
 import { useBuildings } from '@/hooks/useBuildings';
 import { toast } from 'sonner';
+import { useManagers } from '@/hooks/useManagers';
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 
 interface Props {
 	close: () => void;
 }
 
 export function CreateBuildingCard({ close }: Props) {
-	const { create } = useBuildings();
+	const { create: createBuilding } = useBuildings();
+	const { create: createManager } = useManagers();
+
+	const { user } = useUser();
+	const router = useRouter();
+
+	const createBuildingAndAssignManager = async (building: NewBuilding) => {
+		if (!user) throw new Error('Unauthorized');
+
+		const newBuilding = await createBuilding(building);
+
+		await createManager({
+			clerkUserId: user.id,
+			buildingId: newBuilding.id,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.primaryEmailAddress?.emailAddress,
+			avatar: user.imageUrl,
+			approved: true,
+		});
+
+		// TODO: add FieldArray form to add apartments
+		router.push('/');
+	};
 
 	const handleSubmit = async (newBuilding: NewBuilding) => {
-		const promise = () => create(newBuilding);
+		const promise = () => createBuildingAndAssignManager(newBuilding);
 
 		toast.promise(promise, {
 			loading: 'Creating...',
