@@ -74,15 +74,18 @@ export const managers = pgTable('managers', {
 export const selectApartmentSchema = createSelectSchema(apartments);
 export const insertApartmentSchema = createInsertSchema(apartments);
 
-export const selectReceiptSchema = createSelectSchema(receipts);
-export const insertReceiptSchema = createInsertSchema(receipts);
+export const insertBuildingSchema = createInsertSchema(buildings);
 
 export const insertManagerSchema = createInsertSchema(managers);
 
-export type NewReceipt = z.infer<typeof insertReceiptSchema>;
-export type NewManager = z.infer<typeof insertManagerSchema>;
+export const selectReceiptSchema = createSelectSchema(receipts);
+export const insertReceiptSchema = createInsertSchema(receipts);
 
-export type Building = typeof buildings.$inferSelect;
+export type NewBuilding = z.infer<typeof insertBuildingSchema>;
+export type NewManager = z.infer<typeof insertManagerSchema>;
+export type NewReceipt = z.infer<typeof insertReceiptSchema>;
+
 export type Apartment = typeof apartments.$inferSelect;
-export type Receipt = typeof receipts.$inferSelect;
+export type Building = typeof buildings.$inferSelect;
 export type Manager = typeof managers.$inferSelect;
+export type Receipt = typeof receipts.$inferSelect;
