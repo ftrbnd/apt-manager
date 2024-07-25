@@ -10,15 +10,25 @@ import { Button } from '@/components/ui/button';
 import { PencilOff, Save } from 'lucide-react';
 import { CreateBuildingForm } from './CreateBuildingForm';
 import { NewBuilding } from '@/lib/drizzle/schema';
+import { useBuildings } from '@/hooks/useBuildings';
+import { toast } from 'sonner';
 
 interface Props {
 	close: () => void;
 }
 
 export function CreateBuildingCard({ close }: Props) {
-	function handleSubmit(values: NewBuilding) {
-		console.log(values);
-	}
+	const { create } = useBuildings();
+
+	const handleSubmit = async (newBuilding: NewBuilding) => {
+		const promise = () => create(newBuilding);
+
+		toast.promise(promise, {
+			loading: 'Creating...',
+			success: `Created ${newBuilding.street} (${newBuilding.city}, ${newBuilding.state})`,
+			error: `Failed to create new building`,
+		});
+	};
 
 	return (
 		<Card className='w-full sm:max-w-sm'>

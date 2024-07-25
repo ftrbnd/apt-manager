@@ -1,4 +1,4 @@
-import { Building } from '@/lib/drizzle/schema';
+import { Building, NewBuilding } from '@/lib/drizzle/schema';
 
 const BUILDINGS = '/api/buildings';
 
@@ -21,6 +21,22 @@ export const getBuildingById = async (id?: string | null) => {
 
 		const res = await fetch(`${BUILDINGS}/${id}`);
 		if (!res.ok) throw new Error(`Failed to get building with id ${id}`);
+
+		const { building }: { building: Building } = await res.json();
+		return building;
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
+};
+
+export const createBuilding = async (newBuilding: NewBuilding) => {
+	try {
+		const res = await fetch(`${BUILDINGS}`, {
+			method: 'POST',
+			body: JSON.stringify({ building: newBuilding }),
+		});
+		if (!res.ok) throw new Error(`Failed to create new building`);
 
 		const { building }: { building: Building } = await res.json();
 		return building;
