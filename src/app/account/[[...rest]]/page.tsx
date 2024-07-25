@@ -1,4 +1,4 @@
-import { Footer } from '@/components/Footer';
+import { Footer } from '@/components/Layout/Footer';
 import { UserProfile } from '@clerk/nextjs';
 
 export default function Home() {

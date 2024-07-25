@@ -7,13 +7,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { formatRentChecks, toCamelCase } from '@/lib/utils';
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Pencil } from 'lucide-react';
 import { useReceipts } from '@/hooks/useReceipts';
-import { Receipts } from '../Receipts';
-import { CreateReceiptMenu } from '../CreateReceiptMenu';
+import { Receipts } from '../Receipt/Receipts';
+import { CreateReceiptMenu } from '../Receipt/CreateReceiptMenu';
 interface Props {
 	apartment?: Apartment;
 	street?: string;

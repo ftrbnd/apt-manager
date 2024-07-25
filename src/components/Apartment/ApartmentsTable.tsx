@@ -1,12 +1,6 @@
 'use client';
 
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-} from '../ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import {
 	Table,
 	TableHeader,
@@ -14,8 +8,8 @@ import {
 	TableHead,
 	TableBody,
 	TableCell,
-} from '../ui/table';
-import { Skeleton } from '../ui/skeleton';
+} from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { formatRentChecks, toCamelCase } from '@/lib/utils';
 import { useApartments } from '@/hooks/useApartments';

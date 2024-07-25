@@ -1,5 +1,5 @@
 import { ManagersCard } from '@/components/ManagersCard';
-import { MonthlyRent } from '@/components/MonthlyRent';
+import { MonthlyRent } from '@/components/Receipt/MonthlyRent';
 
 export default function Page() {
 	return (

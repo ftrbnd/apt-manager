@@ -1,10 +1,10 @@
 'use client';
 
-import { Receipts } from '@/components/Receipts';
+import { Receipts } from '@/components/Receipt/Receipts';
 import { useReceipts } from '@/hooks/useReceipts';
-import { RentCollection } from '@/components/RentCollection';
+import { RentCollection } from '@/components/Receipt/RentCollection';
 import { useState } from 'react';
-import { RentMonthSelect } from '@/components/RentMonthSelect';
+import { RentMonthSelect } from '@/components/Receipt/RentMonthSelect';
 
 export default function Page() {
 	const { receipts, receiptsLoading } = useReceipts();

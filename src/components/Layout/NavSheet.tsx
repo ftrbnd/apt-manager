@@ -3,7 +3,7 @@
 import { Menu, Receipt } from 'lucide-react';
 import { HeaderLinks } from './HeaderLinks';
 import { ThemeToggle } from './ThemeToggle';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import {
 	Sheet,
 	SheetContent,
@@ -11,7 +11,7 @@ import {
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
-} from './ui/sheet';
+} from '../ui/sheet';
 import { useAuth } from '@clerk/nextjs';
 import { useState } from 'react';
 import Link from 'next/link';

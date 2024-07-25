@@ -4,9 +4,9 @@ import {
 	UseFormRegister,
 	FieldErrors,
 } from 'react-hook-form';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { FormDescription, FormLabel } from '../ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { FormDescription, FormLabel } from '@/components/ui/form';
 import { FormValues } from './EditApartmentForm';
 import { Minus, Plus } from 'lucide-react';
 
@@ -46,20 +46,20 @@ export function RentFieldArray({ control, register, errors }: Props) {
 							type='button'
 							variant='destructive'
 							onClick={() => remove(index)}>
-							<Minus className='mr-2 h-4 w-4' />
+							<Minus className='w-4 h-4 mr-2' />
 							Remove
 						</Button>
 					</li>
 				))}
 			</ul>
 			<Button
-				className='w-full sm:w-min self-start'
+				className='self-start w-full sm:w-min'
 				type='button'
 				variant='secondary'
 				onClick={() => {
 					append({ value: 0 });
 				}}>
-				<Plus className='mr-2 h-4 w-4' />
+				<Plus className='w-4 h-4 mr-2' />
 				Add
 			</Button>
 

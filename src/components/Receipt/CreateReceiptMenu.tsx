@@ -1,5 +1,5 @@
 import { useReceipts } from '@/hooks/useReceipts';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Apartment, Receipt as ReceiptType } from '@/lib/drizzle/schema';
 import { Check, Loader2, Receipt } from 'lucide-react';
@@ -10,7 +10,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { RentMonthSelect } from './RentMonthSelect';
 import { useState } from 'react';
 

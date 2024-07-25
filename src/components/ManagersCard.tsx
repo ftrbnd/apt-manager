@@ -7,15 +7,15 @@ import {
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from './ui/card';
+} from '@/components/ui/card';
 import { useManagers } from '@/hooks/useManagers';
 import { Check, Users, X } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
-import { Button } from './ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { Manager } from '@/lib/drizzle/schema';
 import { toast } from 'sonner';
-import { Badge } from './ui/badge';
-import { Skeleton } from './ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function ManagersCard() {
 	const { myBuilding, buildingLoading } = useBuildings();

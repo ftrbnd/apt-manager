@@ -1,11 +1,11 @@
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatRentChecks, spellOutRent } from '@/lib/utils';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { Label } from './ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { useApartments } from '@/hooks/useApartments';
 import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
 import { useBuildings } from '@/hooks/useBuildings';
-import { Skeleton } from './ui/skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Props {
 	receipt: ReceiptType;

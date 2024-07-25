@@ -8,10 +8,10 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useAuth, useUser } from '@clerk/nextjs';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CircleUser } from 'lucide-react';
 
 export function UserMenu() {
@@ -34,7 +34,7 @@ export function UserMenu() {
 							</AvatarFallback>
 						</Avatar>
 					) : (
-						<CircleUser className='h-5 w-5' />
+						<CircleUser className='w-5 h-5' />
 					)}
 
 					<span className='sr-only'>Toggle user menu</span>

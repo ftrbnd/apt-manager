@@ -10,9 +10,13 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useApartments } from '@/hooks/useApartments';
 import Link from 'next/link';
 import { formatRentChecks, monthNames, toCamelCase } from '@/lib/utils';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
-import { Avatar, AvatarFallback } from './ui/avatar';
-import { Skeleton } from './ui/skeleton';
+import {
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
+} from '@/components/ui/hover-card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Props {
 	receipts: Receipt[];

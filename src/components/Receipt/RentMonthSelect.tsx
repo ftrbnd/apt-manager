@@ -5,7 +5,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from './ui/select';
+} from '@/components/ui/select';
 import { Dispatch, SetStateAction } from 'react';
 import { Receipt } from '@/lib/drizzle/schema';
 
@@ -28,7 +28,7 @@ export function RentMonthSelect({
 
 	const years = () => {
 		const receiptYears = receipts.map((r) =>
-			new Date(r.createdAt).getFullYear()
+			new Date(r.createdAt ?? '').getFullYear()
 		);
 		const thisYear = today.getFullYear();
 
