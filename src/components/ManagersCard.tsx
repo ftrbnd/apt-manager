@@ -16,13 +16,18 @@ import { Manager } from '@/lib/drizzle/schema';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useUser } from '@clerk/nextjs';
 
 export function ManagersCard() {
 	const { myBuilding, buildingLoading } = useBuildings();
 	const { managers, managersLoading, accept, remove } = useManagers();
 
-	const acceptedManagers = managers?.filter((manager) => manager.approved);
-	const pendingManagers = managers?.filter((manager) => !manager.approved);
+	const acceptedManagers = managers?.filter(
+		(manager) => manager.approved && myBuilding?.id === manager.buildingId
+	);
+	const pendingManagers = managers?.filter(
+		(manager) => !manager.approved && myBuilding?.id === manager.buildingId
+	);
 
 	const handleAccept = async (manager: Manager) => {
 		const promise = () => accept(manager);
@@ -142,6 +147,8 @@ export function ManagersCard() {
 }
 
 function ManagerDetails({ manager }: { manager: Manager }) {
+	const { user } = useUser();
+
 	return (
 		<div className='flex items-center gap-4'>
 			<Avatar className='flex h-9 w-9'>
@@ -160,6 +167,9 @@ function ManagerDetails({ manager }: { manager: Manager }) {
 			<div className='grid gap-1'>
 				<p className='text-sm font-medium leading-none'>
 					{manager.firstName} {manager.lastName}
+					{manager.clerkUserId === user?.id && (
+						<span className='text-muted-foreground'> (me)</span>
+					)}
 				</p>
 				<p className='text-sm text-muted-foreground'>
 					Joined {new Date(manager.createdAt ?? '').toDateString()}
