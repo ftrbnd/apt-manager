@@ -13,7 +13,11 @@ export function useBuildings(id?: string | number) {
 	const queryClient = useQueryClient();
 	const { me } = useManagers();
 
-	const { data: buildings } = useQuery({
+	const {
+		data: buildings,
+		isLoading: buildingsLoading,
+		isPending: buildingsPending,
+	} = useQuery({
 		queryKey: [BUILDINGS],
 		queryFn: getBuildings,
 	});
@@ -73,10 +77,12 @@ export function useBuildings(id?: string | number) {
 
 	return {
 		buildings: buildings ?? [],
-		building,
-		myBuilding,
 		buildingLoading,
 		buildingPending,
+		building,
+		buildingsLoading,
+		buildingsPending,
+		myBuilding,
 		create,
 	};
 }

@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/hover-card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface Props {
 	receipts: Receipt[];
@@ -56,52 +58,62 @@ export function RentCollection({ receipts, month, year }: Props) {
 						</AccordionTrigger>
 						<AccordionContent>
 							<div className='flex flex-col gap-4'>
-								{apartmentsLoading || apartments.length === 0
-									? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
-											<CheckboxSkeleton key={v} />
-									  ))
-									: apartments.map((apartment) => (
-											<HoverCard key={apartment.id}>
-												<HoverCardTrigger asChild>
-													<div
-														key={apartment.id}
-														className='flex items-center space-x-2'>
-														<Checkbox
-															id='paid_rent'
-															checked={apartmentPaidRent(apartment)}
-														/>
-														<Link
-															href={`/apartments/${apartment.id}`}
-															className='text-sm font-medium hover:underline'>
-															Apartment #{apartment.number}
-														</Link>
-													</div>
-												</HoverCardTrigger>
-												<HoverCardContent className='w-80'>
-													<div className='flex space-x-4'>
-														<Avatar>
-															<AvatarFallback>
-																{apartment.number}
-															</AvatarFallback>
-														</Avatar>
-														<div className='space-y-1'>
-															<h4 className='text-sm font-semibold'>
-																{apartment.tenant}
-															</h4>
-															<p className='text-sm'>
-																Rent: {formatRentChecks(apartment.rent)}
-															</p>
-															<div className='flex items-center pt-2'>
-																<span className='text-xs text-muted-foreground'>
-																	Payment method:{' '}
-																	{toCamelCase(apartment.paymentMethod)}
-																</span>
-															</div>
+								{apartmentsLoading ? (
+									[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => (
+										<CheckboxSkeleton key={v} />
+									))
+								) : apartments.length === 0 ? (
+									<div className='flex items-center justify-between space-x-2 border rounded-md p-4'>
+										<p className='text-muted-foreground'>
+											No apartments registered.
+										</p>
+										<Button className='text-xs'>
+											<Plus className='w-4 h-4 mr-2' />
+											New apartment
+										</Button>
+									</div>
+								) : (
+									apartments.map((apartment) => (
+										<HoverCard key={apartment.id}>
+											<HoverCardTrigger asChild>
+												<div
+													key={apartment.id}
+													className='flex items-center space-x-2'>
+													<Checkbox
+														id='paid_rent'
+														checked={apartmentPaidRent(apartment)}
+													/>
+													<Link
+														href={`/apartments/${apartment.id}`}
+														className='text-sm font-medium hover:underline'>
+														Apartment #{apartment.number}
+													</Link>
+												</div>
+											</HoverCardTrigger>
+											<HoverCardContent className='w-80'>
+												<div className='flex space-x-4'>
+													<Avatar>
+														<AvatarFallback>{apartment.number}</AvatarFallback>
+													</Avatar>
+													<div className='space-y-1'>
+														<h4 className='text-sm font-semibold'>
+															{apartment.tenant}
+														</h4>
+														<p className='text-sm'>
+															Rent: {formatRentChecks(apartment.rent)}
+														</p>
+														<div className='flex items-center pt-2'>
+															<span className='text-xs text-muted-foreground'>
+																Payment method:{' '}
+																{toCamelCase(apartment.paymentMethod)}
+															</span>
 														</div>
 													</div>
-												</HoverCardContent>
-											</HoverCard>
-									  ))}
+												</div>
+											</HoverCardContent>
+										</HoverCard>
+									))
+								)}
 							</div>
 						</AccordionContent>
 					</CardContent>
