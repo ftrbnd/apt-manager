@@ -5,11 +5,13 @@ import {
 	getReceipts,
 } from '@/services/receipts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useApartments } from './useApartments';
 
 const RECEIPTS = 'receipts';
 
 export function useReceipts(id?: string) {
 	const queryClient = useQueryClient();
+	const { apartments } = useApartments();
 
 	const { data: receipts, isLoading: receiptsLoading } = useQuery({
 		queryKey: [RECEIPTS],
@@ -22,7 +24,11 @@ export function useReceipts(id?: string) {
 		enabled: id !== undefined,
 	});
 
-	const sortedReceipts = receipts?.sort((a, b) => a.month - b.month);
+	const sortedReceipts = receipts
+		?.filter((receipt) =>
+			apartments.some((apt) => apt.id === receipt.apartmentId)
+		)
+		.sort((a, b) => a.month - b.month);
 
 	const { mutateAsync, isPending } = useMutation({
 		mutationFn: createReceipt,

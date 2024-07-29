@@ -17,7 +17,7 @@ export default function Page({ params }: { params: Params }) {
 	const [isEditing, setIsEditing] = useState(false);
 
 	return (
-		<div className='min-h-screen bg-muted/40 w-full flex flex-col gap-4 items-center p-2 md:p-16 '>
+		<div className='min-h-screen bg-muted/40 w-full flex flex-col gap-4 items-center p-4 md:p-16 '>
 			{isEditing && apartment ? (
 				<EditApartmentForm
 					apartment={apartment}

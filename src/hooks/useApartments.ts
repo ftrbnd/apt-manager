@@ -6,11 +6,13 @@ import {
 	updateApartment,
 } from '@/services/apartments';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useBuildings } from './useBuildings';
 
 const APARTMENTS = 'apartments';
 
 export function useApartments(id?: string) {
 	const queryClient = useQueryClient();
+	const { myBuilding } = useBuildings();
 
 	const { data: apartments, isLoading: apartmentsLoading } = useQuery({
 		queryKey: [APARTMENTS],
@@ -23,7 +25,9 @@ export function useApartments(id?: string) {
 		enabled: id !== undefined,
 	});
 
-	const sortedApartments = apartments?.sort((a, b) => a.id - b.id);
+	const sortedApartments = apartments
+		?.filter((a) => a.buildingId === myBuilding?.id)
+		.sort((a, b) => a.id - b.id);
 
 	const { mutateAsync: create } = useMutation({
 		mutationFn: createApartment,
