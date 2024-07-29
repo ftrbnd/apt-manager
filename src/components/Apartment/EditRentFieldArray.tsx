@@ -7,16 +7,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormDescription, FormLabel } from '@/components/ui/form';
-import { FormValues } from './EditApartmentForm';
+import { EditedApartment } from './EditApartmentForm';
 import { Minus, Plus } from 'lucide-react';
 
 interface Props {
-	control: Control<FormValues, any>;
-	register: UseFormRegister<FormValues>;
-	errors?: FieldErrors<FormValues>;
+	control: Control<EditedApartment, any>;
+	register: UseFormRegister<EditedApartment>;
+	errors?: FieldErrors<EditedApartment>;
 }
 
-export function RentFieldArray({ control, register, errors }: Props) {
+export function EditRentFieldArray({ control, register, errors }: Props) {
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: 'rent',
@@ -64,7 +64,7 @@ export function RentFieldArray({ control, register, errors }: Props) {
 			</Button>
 
 			<FormDescription>
-				The apartment's monthly rent, split by check
+				{"The apartment's monthly rent, split by check"}
 			</FormDescription>
 			{errors?.rent && (
 				<p className='text-sm font-medium text-destructive'>

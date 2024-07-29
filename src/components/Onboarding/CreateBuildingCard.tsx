@@ -42,7 +42,6 @@ export function CreateBuildingCard({ close }: Props) {
 			approved: true,
 		});
 
-		// TODO: add FieldArray form to add apartments
 		router.push('/');
 	};
 

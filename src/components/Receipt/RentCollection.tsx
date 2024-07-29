@@ -17,8 +17,7 @@ import {
 } from '@/components/ui/hover-card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { CreateApartmentButton } from '../Apartment/CreateApartmentButton';
 
 interface Props {
 	receipts: Receipt[];
@@ -63,15 +62,7 @@ export function RentCollection({ receipts, month, year }: Props) {
 										<CheckboxSkeleton key={v} />
 									))
 								) : apartments.length === 0 ? (
-									<div className='flex items-center justify-between space-x-2 border rounded-md p-4'>
-										<p className='text-muted-foreground'>
-											No apartments registered.
-										</p>
-										<Button className='text-xs'>
-											<Plus className='w-4 h-4 mr-2' />
-											New apartment
-										</Button>
-									</div>
+									<CreateApartmentButton buildingEmpty />
 								) : (
 									apartments.map((apartment) => (
 										<HoverCard key={apartment.id}>

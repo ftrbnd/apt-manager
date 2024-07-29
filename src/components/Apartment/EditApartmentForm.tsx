@@ -21,12 +21,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
-import { RentFieldArray } from './RentFieldArray';
+import { EditRentFieldArray } from './EditRentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
 import { PencilOff, Save } from 'lucide-react';
 import { toast } from 'sonner';
 
-const formSchema = z.object({
+const editApartmentSchema = z.object({
 	rent: z
 		.object({ value: z.number() })
 		.array()
@@ -37,7 +37,7 @@ const formSchema = z.object({
 	}),
 });
 
-export type FormValues = z.infer<typeof formSchema>;
+export type EditedApartment = z.infer<typeof editApartmentSchema>;
 
 interface Props {
 	apartment: Apartment;
@@ -47,8 +47,8 @@ interface Props {
 export function EditApartmentForm({ apartment, close }: Props) {
 	const { update } = useApartments(apartment.id.toString());
 
-	const form = useForm<FormValues>({
-		resolver: zodResolver(formSchema),
+	const form = useForm<EditedApartment>({
+		resolver: zodResolver(editApartmentSchema),
 		defaultValues: {
 			// useFieldArray only accepts objects
 			rent: apartment.rent.map((v) => {
@@ -59,7 +59,9 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		},
 	});
 
-	const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
+	const onSubmit: SubmitHandler<EditedApartment> = async (
+		values: EditedApartment
+	) => {
 		const newApartment: Apartment = {
 			...apartment,
 			...values,
@@ -91,7 +93,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
 						className='space-y-8'>
-						<RentFieldArray
+						<EditRentFieldArray
 							control={form.control}
 							register={form.register}
 							errors={form.formState.errors}
@@ -110,7 +112,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 										/>
 									</FormControl>
 									<FormDescription>
-										The tenant's first and last name
+										{"The tenant's first and last name"}
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
