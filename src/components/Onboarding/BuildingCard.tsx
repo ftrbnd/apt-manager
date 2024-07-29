@@ -15,7 +15,7 @@ import { useBuildings } from '@/hooks/useBuildings';
 import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Separator } from '../ui/separator';
+import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 
 interface Props {

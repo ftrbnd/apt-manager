@@ -1,8 +1,8 @@
 import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Receipt, ReceiptSkeleton } from './Receipt';
-import { Skeleton } from '../ui/skeleton';
-import { displayMonthYear, monthNames } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
+import { monthNames } from '@/lib/utils';
 
 interface Props {
 	receipts: ReceiptType[];

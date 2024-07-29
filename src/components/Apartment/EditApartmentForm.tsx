@@ -23,9 +23,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
 import { EditRentFieldArray } from './EditRentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
-import { PencilOff, Save, Trash } from 'lucide-react';
+import { PencilOff, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { DeleteApartmentButton } from './DeleteApartmentButton';
 
 const editApartmentSchema = z.object({
 	rent: z
@@ -82,18 +83,6 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		}
 
 		close();
-	};
-
-	const handleDelete = async () => {
-		const promise = () => remove(apartment.id);
-
-		toast.promise(promise, {
-			loading: 'Deleting apartment...',
-			success: `Deleted Apartment #${apartment.number}`,
-			error: `Failed to delete Apartment #${apartment.number}`,
-		});
-
-		router.replace('/apartments');
 	};
 
 	return (
@@ -178,13 +167,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 								Cancel
 							</Button>
 							<div className='grid grid-cols-2 gap-2'>
-								<Button
-									className='justify-self-end'
-									variant='destructive'
-									onClick={handleDelete}>
-									<Trash className='w-4 h-4 mr-2' />
-									Delete
-								</Button>
+								<DeleteApartmentButton apartment={apartment} />
 								<Button type='submit'>
 									<Save className='w-4 h-4 mr-2' />
 									Save
