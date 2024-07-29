@@ -86,7 +86,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		<Card className='w-full h-full'>
 			<CardHeader>
 				<CardTitle>Edit apartment</CardTitle>
-				<CardDescription>Apartment #{apartment.id}</CardDescription>
+				<CardDescription>Apartment #{apartment.number}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<Form {...form}>

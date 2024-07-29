@@ -42,7 +42,9 @@ export function ApartmentDetails({
 		<div className='flex flex-col justify-between w-full gap-8 md:flex-row'>
 			<Card className='h-full min-w-fit md:w-1/4'>
 				<CardHeader>
-					<CardTitle>Apartment #{isLoading ? '#' : apartment?.id}</CardTitle>
+					<CardTitle>
+						Apartment #{isLoading ? '#' : apartment?.number}
+					</CardTitle>
 					{isLoading || !street ? (
 						<Skeleton className='h-5 w-[125px]' />
 					) : (

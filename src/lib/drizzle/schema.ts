@@ -81,6 +81,7 @@ export const insertManagerSchema = createInsertSchema(managers);
 export const selectReceiptSchema = createSelectSchema(receipts);
 export const insertReceiptSchema = createInsertSchema(receipts);
 
+export type NewApartment = z.infer<typeof insertApartmentSchema>;
 export type NewBuilding = z.infer<typeof insertBuildingSchema>;
 export type NewManager = z.infer<typeof insertManagerSchema>;
 export type NewReceipt = z.infer<typeof insertReceiptSchema>;

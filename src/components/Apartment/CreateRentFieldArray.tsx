@@ -8,12 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormDescription, FormLabel } from '@/components/ui/form';
 import { Minus, Plus } from 'lucide-react';
-import { NewApartment } from './CreateApartmentForm';
+import { CreatedApartment } from './CreateApartmentForm';
 
 interface Props {
-	control: Control<NewApartment, any>;
-	register: UseFormRegister<NewApartment>;
-	errors?: FieldErrors<NewApartment>;
+	control: Control<CreatedApartment, any>;
+	register: UseFormRegister<CreatedApartment>;
+	errors?: FieldErrors<CreatedApartment>;
 }
 
 export function CreateRentFieldArray({ control, register, errors }: Props) {

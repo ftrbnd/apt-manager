@@ -1,5 +1,6 @@
 import { Apartment } from '@/lib/drizzle/schema';
 import {
+	createApartment,
 	getApartmentById,
 	getApartments,
 	updateApartment,
@@ -24,7 +25,48 @@ export function useApartments(id?: string) {
 
 	const sortedApartments = apartments?.sort((a, b) => a.id - b.id);
 
-	const { mutateAsync } = useMutation({
+	const { mutateAsync: create } = useMutation({
+		mutationFn: createApartment,
+		onMutate: async (newApartment) => {
+			await queryClient.cancelQueries({
+				queryKey: [APARTMENTS],
+			});
+
+			const previousApartments = queryClient.getQueryData<Apartment[]>([
+				APARTMENTS,
+			]);
+
+			if (previousApartments) {
+				const tempApartment: Apartment = {
+					...newApartment,
+					id: Math.random(),
+					buildingId: Math.random(),
+				};
+
+				queryClient.setQueryData<Apartment[]>(
+					[APARTMENTS],
+					[...previousApartments, tempApartment]
+				);
+			}
+
+			return { previousApartments, newApartment };
+		},
+		onError: (_err, _variables, context) => {
+			if (context?.previousApartments) {
+				queryClient.setQueryData<Apartment[]>(
+					[APARTMENTS],
+					context.previousApartments
+				);
+			}
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				queryKey: [APARTMENTS],
+			});
+		},
+	});
+
+	const { mutateAsync: update } = useMutation({
 		mutationFn: updateApartment,
 		onMutate: async (newApartment) => {
 			await queryClient.cancelQueries({
@@ -65,6 +107,7 @@ export function useApartments(id?: string) {
 		apartmentsLoading,
 		apartment,
 		apartmentLoading,
-		update: mutateAsync,
+		create,
+		update,
 	};
 }

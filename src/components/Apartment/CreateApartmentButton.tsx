@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { CreateApartmentForm } from './CreateApartmentForm';
 
 interface Props {
-	buildingEmpty: boolean;
+	buildingEmpty?: boolean;
 }
 
 export function CreateApartmentButton({ buildingEmpty }: Props) {
 	const [showForm, setShowForm] = useState(false);
 
 	return (
-		<div className='flex flex-col gap-4 justify-between p-4 border rounded-md'>
+		<div className='flex flex-col gap-4 justify-between p-4 border rounded-md mt-4'>
 			<div className='flex items-center justify-between space-x-2'>
 				{buildingEmpty && (
 					<p className='text-muted-foreground'>No apartments registered.</p>

@@ -1,4 +1,8 @@
-import { insertApartmentSchema } from '@/lib/drizzle/schema';
+import {
+	Apartment,
+	insertApartmentSchema,
+	NewApartment,
+} from '@/lib/drizzle/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -15,8 +19,11 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CreateRentFieldArray } from './CreateRentFieldArray';
 import { z } from 'zod';
+import { useApartments } from '@/hooks/useApartments';
+import { toast } from 'sonner';
+import { useBuildings } from '@/hooks/useBuildings';
 
-const newApartmentSchema = insertApartmentSchema.extend({
+const createApartmentSchema = insertApartmentSchema.extend({
 	rent: z
 		.object({ value: z.number() })
 		.array()
@@ -25,16 +32,37 @@ const newApartmentSchema = insertApartmentSchema.extend({
 	tenant: z.string().trim().min(1, 'Required'),
 });
 
-export type NewApartment = z.infer<typeof newApartmentSchema>;
+export type CreatedApartment = z.infer<typeof createApartmentSchema>;
 
 export function CreateApartmentForm() {
-	const form = useForm<NewApartment>({
-		resolver: zodResolver(newApartmentSchema),
+	const { create } = useApartments();
+	const { myBuilding } = useBuildings();
+
+	const form = useForm<CreatedApartment>({
+		resolver: zodResolver(createApartmentSchema),
 	});
 
-	function onSubmit(values: NewApartment) {
-		console.log(values);
-	}
+	const onSubmit = async (apartment: CreatedApartment) => {
+		if (!myBuilding) toast.error('A building is required');
+
+		const newApartment: NewApartment = {
+			...apartment,
+			buildingId: myBuilding?.id,
+			rent: apartment.rent.map((r) => r.value).filter((v) => v > 0),
+		};
+
+		const withoutId = insertApartmentSchema
+			.omit({ id: true })
+			.parse(newApartment);
+
+		const promise = () => create(withoutId);
+
+		toast.promise(promise, {
+			loading: 'Creating apartment...',
+			success: `Created Apartment #${newApartment.number}`,
+			error: `Failed to create Apartment #${newApartment.number}`,
+		});
+	};
 
 	return (
 		<Form {...form}>

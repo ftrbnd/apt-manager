@@ -1,6 +1,23 @@
-import { Apartment } from '@/lib/drizzle/schema';
+import { Apartment, NewApartment } from '@/lib/drizzle/schema';
 
 const APARTMENTS = '/api/apartments';
+
+export const createApartment = async (apartment: NewApartment) => {
+	try {
+		const res = await fetch(`${APARTMENTS}`, {
+			method: 'POST',
+			body: JSON.stringify({ apartment }),
+		});
+		if (!res.ok) throw new Error('Failed to create new apartment');
+
+		const { apartment: createdApartment }: { apartment: Apartment } =
+			await res.json();
+		return createdApartment;
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
+};
 
 export const getApartments = async () => {
 	try {
