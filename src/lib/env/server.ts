@@ -14,8 +14,6 @@ export const serverEnv = createEnv({
 		POSTGRES_URL_NON_POOLING: z.string(),
 		POSTGRES_URL_NO_SSL: z.string(),
 		POSTGRES_USER: z.string(),
-
-		ADMIN_EMAIL: z.string().email(),
 	},
 	runtimeEnv: {
 		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
@@ -29,7 +27,5 @@ export const serverEnv = createEnv({
 		POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
 		POSTGRES_URL_NO_SSL: process.env.POSTGRES_URL_NO_SSL,
 		POSTGRES_USER: process.env.POSTGRES_USER,
-
-		ADMIN_EMAIL: process.env.ADMIN_EMAIL,
 	},
 });
