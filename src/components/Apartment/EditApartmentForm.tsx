@@ -23,14 +23,15 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Apartment } from '@/lib/drizzle/schema';
 import { EditRentFieldArray } from './EditRentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
-import { PencilOff, Save } from 'lucide-react';
+import { PencilOff, Save, Trash } from 'lucide-react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const editApartmentSchema = z.object({
 	rent: z
-		.object({ value: z.number() })
+		.object({ value: z.number().positive() })
 		.array()
-		.min(1, 'At least one value is required.'),
+		.min(1, 'At least one value greater than 0 is required.'),
 	tenant: z.string(),
 	paymentMethod: z.enum(['CHECK', 'MONEY ORDER', 'OTHER'], {
 		required_error: 'You need to select a payment method type.',
@@ -45,7 +46,8 @@ interface Props {
 }
 
 export function EditApartmentForm({ apartment, close }: Props) {
-	const { update } = useApartments(apartment.id.toString());
+	const { update, remove } = useApartments(apartment.id.toString());
+	const router = useRouter();
 
 	const form = useForm<EditedApartment>({
 		resolver: zodResolver(editApartmentSchema),
@@ -59,7 +61,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		},
 	});
 
-	const onSubmit: SubmitHandler<EditedApartment> = async (
+	const handleEdit: SubmitHandler<EditedApartment> = async (
 		values: EditedApartment
 	) => {
 		const newApartment: Apartment = {
@@ -82,6 +84,18 @@ export function EditApartmentForm({ apartment, close }: Props) {
 		close();
 	};
 
+	const handleDelete = async () => {
+		const promise = () => remove(apartment.id);
+
+		toast.promise(promise, {
+			loading: 'Deleting apartment...',
+			success: `Deleted Apartment #${apartment.number}`,
+			error: `Failed to delete Apartment #${apartment.number}`,
+		});
+
+		router.replace('/apartments');
+	};
+
 	return (
 		<Card className='w-full h-full'>
 			<CardHeader>
@@ -91,7 +105,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 			<CardContent>
 				<Form {...form}>
 					<form
-						onSubmit={form.handleSubmit(onSubmit)}
+						onSubmit={form.handleSubmit(handleEdit)}
 						className='space-y-8'>
 						<EditRentFieldArray
 							control={form.control}
@@ -155,7 +169,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 								</FormItem>
 							)}
 						/>
-						<div className='flex gap-2'>
+						<div className='flex justify-between items-center gap-2'>
 							<Button
 								variant='secondary'
 								type='button'
@@ -163,10 +177,19 @@ export function EditApartmentForm({ apartment, close }: Props) {
 								<PencilOff className='w-4 h-4 mr-2' />
 								Cancel
 							</Button>
-							<Button type='submit'>
-								<Save className='w-4 h-4 mr-2' />
-								Save
-							</Button>
+							<div className='grid grid-cols-2 gap-2'>
+								<Button
+									className='justify-self-end'
+									variant='destructive'
+									onClick={handleDelete}>
+									<Trash className='w-4 h-4 mr-2' />
+									Delete
+								</Button>
+								<Button type='submit'>
+									<Save className='w-4 h-4 mr-2' />
+									Save
+								</Button>
+							</div>
 						</div>
 					</form>
 				</Form>

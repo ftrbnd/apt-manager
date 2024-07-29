@@ -66,3 +66,17 @@ export const updateApartment = async (apartment: Apartment) => {
 		throw e;
 	}
 };
+
+export const deleteApartment = async (id?: number) => {
+	try {
+		if (!id) throw new Error('Apartment id is required');
+
+		const res = await fetch(`${APARTMENTS}/${id}`, {
+			method: 'DELETE',
+		});
+		if (!res.ok) throw new Error(`Failed to delete apartment with id ${id}`);
+	} catch (e) {
+		console.error(e);
+		throw e;
+	}
+};

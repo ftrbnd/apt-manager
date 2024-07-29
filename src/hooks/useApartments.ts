@@ -1,6 +1,7 @@
 import { Apartment } from '@/lib/drizzle/schema';
 import {
 	createApartment,
+	deleteApartment,
 	getApartmentById,
 	getApartments,
 	updateApartment,
@@ -106,6 +107,42 @@ export function useApartments(id?: string) {
 		},
 	});
 
+	const { mutateAsync: remove } = useMutation({
+		mutationFn: deleteApartment,
+		onMutate: async (apartmentId) => {
+			await queryClient.cancelQueries({
+				queryKey: [APARTMENTS],
+			});
+
+			const previousApartments = queryClient.getQueryData<Apartment[]>([
+				APARTMENTS,
+			]);
+
+			if (previousApartments) {
+				const filteredApartments = previousApartments.filter(
+					(apt) => apt.id !== apartmentId
+				);
+
+				queryClient.setQueryData<Apartment[]>([APARTMENTS], filteredApartments);
+			}
+
+			return { previousApartments };
+		},
+		onError: (_err, _variables, context) => {
+			if (context?.previousApartments) {
+				queryClient.setQueryData<Apartment[]>(
+					[APARTMENTS],
+					context.previousApartments
+				);
+			}
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				queryKey: [APARTMENTS],
+			});
+		},
+	});
+
 	return {
 		apartments: sortedApartments ?? [],
 		apartmentsLoading,
@@ -113,5 +150,6 @@ export function useApartments(id?: string) {
 		apartmentLoading,
 		create,
 		update,
+		remove,
 	};
 }

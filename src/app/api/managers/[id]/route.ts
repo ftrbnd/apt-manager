@@ -68,7 +68,7 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
 				{ status: 400 }
 			);
 
-		await db.delete(managers).where(eq(managers.id, params.id));
+		await db.delete(managers).where(eq(managers.id, id));
 
 		return NextResponse.json({ message: 'Deleted' }, { status: 200 });
 	} catch (error) {

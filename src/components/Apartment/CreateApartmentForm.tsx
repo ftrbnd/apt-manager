@@ -25,16 +25,20 @@ import { useBuildings } from '@/hooks/useBuildings';
 
 const createApartmentSchema = insertApartmentSchema.extend({
 	rent: z
-		.object({ value: z.number() })
+		.object({ value: z.number().positive('Cannot be zero') })
 		.array()
-		.min(1, 'At least one value is required.'),
+		.min(1, 'At least one value greater than 0 is required.'),
 	number: z.string().trim().min(1, 'Required'),
 	tenant: z.string().trim().min(1, 'Required'),
 });
 
 export type CreatedApartment = z.infer<typeof createApartmentSchema>;
 
-export function CreateApartmentForm() {
+interface Props {
+	hide: () => void;
+}
+
+export function CreateApartmentForm({ hide }: Props) {
 	const { create } = useApartments();
 	const { myBuilding } = useBuildings();
 
@@ -62,6 +66,8 @@ export function CreateApartmentForm() {
 			success: `Created Apartment #${newApartment.number}`,
 			error: `Failed to create Apartment #${newApartment.number}`,
 		});
+
+		hide();
 	};
 
 	return (

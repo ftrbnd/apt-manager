@@ -68,7 +68,7 @@ export function EditRentFieldArray({ control, register, errors }: Props) {
 			</FormDescription>
 			{errors?.rent && (
 				<p className='text-sm font-medium text-destructive'>
-					At least one value is required.
+					At least one value greater than 0 is required.
 				</p>
 			)}
 		</div>

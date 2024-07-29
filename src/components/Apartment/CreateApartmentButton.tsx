@@ -28,7 +28,7 @@ export function CreateApartmentButton({ buildingEmpty }: Props) {
 					New
 				</Button>
 			</div>
-			{showForm && <CreateApartmentForm />}
+			{showForm && <CreateApartmentForm hide={() => setShowForm(false)} />}
 		</div>
 	);
 }

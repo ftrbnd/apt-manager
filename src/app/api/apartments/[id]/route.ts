@@ -5,10 +5,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic'; // defaults to auto
 
-export async function GET(
-	_request: NextRequest,
-	{ params }: { params: { id: number } }
-) {
+interface Params {
+	params: {
+		id: number;
+	};
+}
+
+export async function GET(_request: NextRequest, { params }: Params) {
 	try {
 		const { id } = params;
 		if (!id)
@@ -36,10 +39,7 @@ export async function GET(
 	}
 }
 
-export async function PATCH(
-	request: NextRequest,
-	{ params }: { params: { id: number } }
-) {
+export async function PATCH(request: NextRequest, { params }: Params) {
 	try {
 		const { id } = params;
 		if (!id)
@@ -61,6 +61,23 @@ export async function PATCH(
 			{ apartment: updatedApartments[0] },
 			{ status: 200 }
 		);
+	} catch (error) {
+		return NextResponse.json({ error }, { status: 500 });
+	}
+}
+
+export async function DELETE(_request: NextRequest, { params }: Params) {
+	try {
+		const { id } = params;
+		if (!id)
+			return NextResponse.json(
+				{ error: 'Apartment id is required' },
+				{ status: 400 }
+			);
+
+		await db.delete(apartments).where(eq(apartments.id, id));
+
+		return NextResponse.json({ message: 'Deleted' }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}
