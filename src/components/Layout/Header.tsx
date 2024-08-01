@@ -7,6 +7,7 @@ import { HeaderLinks } from './HeaderLinks';
 import { ThemeToggle } from './ThemeToggle';
 import { NavSheet } from './NavSheet';
 import { APP_NAME } from '@/lib/constants';
+import { Logo } from './Logo';
 
 export function Header() {
 	const { userId } = auth();
@@ -17,7 +18,7 @@ export function Header() {
 				<Link
 					href='/'
 					className='flex items-center gap-2 text-lg font-semibold md:text-base'>
-					<Receipt className='w-6 h-6' />
+					<Logo />
 					<span className='sr-only'>{APP_NAME}</span>
 				</Link>
 				{userId ? (
