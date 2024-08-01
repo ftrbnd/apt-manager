@@ -6,6 +6,7 @@ import { auth } from '@clerk/nextjs/server';
 import { HeaderLinks } from './HeaderLinks';
 import { ThemeToggle } from './ThemeToggle';
 import { NavSheet } from './NavSheet';
+import { APP_NAME } from '@/lib/constants';
 
 export function Header() {
 	const { userId } = auth();
@@ -17,7 +18,7 @@ export function Header() {
 					href='/'
 					className='flex items-center gap-2 text-lg font-semibold md:text-base'>
 					<Receipt className='w-6 h-6' />
-					<span className='sr-only'>Rent Receipts</span>
+					<span className='sr-only'>{APP_NAME}</span>
 				</Link>
 				{userId ? (
 					<HeaderLinks />
@@ -25,7 +26,7 @@ export function Header() {
 					<Link
 						href='/'
 						className='transition-colors text-foreground hover:text-foreground'>
-						Rent Receipts
+						{APP_NAME}
 					</Link>
 				)}
 			</nav>

@@ -15,6 +15,7 @@ import {
 import { useAuth } from '@clerk/nextjs';
 import { useState } from 'react';
 import Link from 'next/link';
+import { APP_NAME } from '@/lib/constants';
 
 export function NavSheet() {
 	const { userId } = useAuth();
@@ -37,11 +38,11 @@ export function NavSheet() {
 				href='/'
 				className='flex items-center gap-2 text-lg font-semibold md:hidden'>
 				<Receipt className='w-6 h-6' />
-				Rent Receipts
+				{APP_NAME}
 			</Link>
 			<SheetContent side='left'>
 				<SheetHeader>
-					<SheetTitle>Rent Receipts</SheetTitle>
+					<SheetTitle>{APP_NAME}</SheetTitle>
 					<SheetDescription>Menu</SheetDescription>
 				</SheetHeader>
 
@@ -50,7 +51,7 @@ export function NavSheet() {
 						<Link
 							href='/'
 							className='flex items-center gap-2 text-lg font-semibold'>
-							<span className='sr-only'>Rent Receipts</span>
+							<span className='sr-only'>{APP_NAME}</span>
 						</Link>
 						<HeaderLinks closeSheet={() => setOpen(false)} />
 						<ThemeToggle onSheet />

@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import Providers from '@/providers';
 import { Header } from '@/components/Layout/Header';
 import { Toaster } from '@/components/ui/sonner';
+import { APP_NAME } from '@/lib/constants';
 
 const fontSans = FontSans({
 	subsets: ['latin'],
@@ -12,8 +13,8 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-	title: 'Rent Receipts',
-	description: 'Manage monthly rent receipts',
+	title: APP_NAME,
+	description: "Manage your building's apartments",
 };
 
 export default function RootLayout({
