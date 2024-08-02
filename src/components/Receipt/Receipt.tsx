@@ -6,6 +6,8 @@ import { useApartments } from '@/hooks/useApartments';
 import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
 import { useBuildings } from '@/hooks/useBuildings';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Loader2, Printer } from 'lucide-react';
 
 interface Props {
 	receipt: ReceiptType;
@@ -18,6 +20,10 @@ export function Receipt({ receipt, apartmentId }: Props) {
 
 	const { dollars, cents } = spellOutRent([receipt.value]);
 	const nextMonth = ((receipt.month + 1) % 12) + 1;
+
+	const printReceipt = () => {
+		console.log('TODO');
+	};
 
 	return (
 		<Card className='w-full'>
@@ -33,6 +39,12 @@ export function Receipt({ receipt, apartmentId }: Props) {
 					<p className='font-bold'>
 						No. <span className='ml-1 font-normal'>{receipt.id}</span>
 					</p>
+					<Button
+						variant='secondary'
+						onClick={printReceipt}>
+						<Printer className='w-4 h-4 mr-2' />
+						Print
+					</Button>
 				</div>
 			</CardHeader>
 			<CardContent className='flex flex-col gap-4'>
@@ -160,6 +172,12 @@ export function ReceiptSkeleton() {
 						No.
 						<Skeleton className='ml-1 h-4 w-[32px]' />
 					</div>
+					<Button
+						variant='secondary'
+						disabled>
+						<Loader2 className='w-4 h-4 mr-2 animate-spin' />
+						Print
+					</Button>
 				</div>
 			</CardHeader>
 			<CardContent className='flex flex-col gap-4'>
