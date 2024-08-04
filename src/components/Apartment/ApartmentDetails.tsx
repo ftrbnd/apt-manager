@@ -39,8 +39,8 @@ export function ApartmentDetails({
 		});
 
 	return (
-		<div className='flex flex-col justify-between w-full gap-8 md:flex-row'>
-			<Card className='h-full min-w-fit md:w-1/4'>
+		<div className='grid grid-cols-1 md:grid-cols-5 gap-y-4 md:gap-x-4 w-full'>
+			<Card className='md:col-span-2 h-min w-full md:w-3/4'>
 				<CardHeader>
 					<CardTitle>
 						Apartment #{isLoading ? '#' : apartment?.number}
@@ -62,7 +62,9 @@ export function ApartmentDetails({
 					{isLoading ? (
 						<Skeleton className='h-6 w-36' />
 					) : (
-						<p className='leading-7'>{apartment?.tenant}</p>
+						<p className='leading-7 text-muted-foreground'>
+							{apartment?.tenant}
+						</p>
 					)}
 					<h4 className='mt-4 text-xl font-semibold tracking-tight'>
 						Payment method
@@ -70,8 +72,22 @@ export function ApartmentDetails({
 					{isLoading ? (
 						<Skeleton className='w-24 h-6' />
 					) : (
-						<p className='leading-7'>
+						<p className='leading-7 text-muted-foreground'>
 							{apartment ? toCamelCase(apartment.paymentMethod) : ''}
+						</p>
+					)}
+					<h4 className='mt-4 text-xl font-semibold tracking-tight'>Note</h4>
+					{isLoading ? (
+						<div className='grid grid-rows-3 gap-2'>
+							<Skeleton className='w-48 h-6' />
+							<Skeleton className='w-48 h-6' />
+							<Skeleton className='w-48 h-6' />
+						</div>
+					) : (
+						<p className='leading-7 text-muted-foreground line-clamp-3'>
+							{apartment?.note && apartment.note !== ''
+								? apartment.note
+								: 'n/a'}
 						</p>
 					)}
 				</CardContent>
@@ -92,7 +108,7 @@ export function ApartmentDetails({
 				</CardFooter>
 			</Card>
 
-			<div className='flex flex-col max-w-screen-lg gap-4 md:w-3/4'>
+			<div className='col-span-3 flex flex-col gap-4'>
 				<h4 className='text-2xl font-semibold tracking-tight scroll-m-20'>
 					Receipts
 				</h4>
@@ -138,6 +154,6 @@ const RentDetails = ({ apartment }: { apartment?: Apartment }) => {
 			</table>
 		</div>
 	) : (
-		<p>{formatRentChecks(apartment.rent)}</p>
+		<p className='text-muted-foreground'>{formatRentChecks(apartment.rent)}</p>
 	);
 };
