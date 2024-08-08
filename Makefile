@@ -13,3 +13,12 @@ ngrok:
 .PHONY: db-studio
 db-studio:
 	yarn db:studio
+
+.PHONY: stop
+stop:
+	@echo "Stopping next-dev..."
+	@pkill -f "yarn dev" || true
+	@echo "Stopping ngrok..."
+	@pkill -f "yarn ngrok" || true
+	@echo "Stopping db-studio..."
+	@pkill -f "yarn db:studio" || true
