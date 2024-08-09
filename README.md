@@ -20,7 +20,7 @@
 <h3 align="center">Apt Manager</h3>
 
   <p align="center">
-    A for managing apartment buildings, their units and rent
+    A web app for managing apartment buildings, their units and rent
     <br />
     <a href="https://github.com/ftrbnd/apt-manager-server/issues">Report Bug</a>
     ·
