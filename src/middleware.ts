@@ -47,8 +47,8 @@ export default clerkMiddleware(async (auth, request) => {
 			return NextResponse.redirect(homeUrl);
 		}
 	} else {
-		if (isOnboardingRoute(request)) redirectToSignIn();
-		else if (!isPublicRoute(request)) protect();
+		if (onOnboardingPage) redirectToSignIn();
+		else if (onPrivatePage) protect();
 	}
 });
 
