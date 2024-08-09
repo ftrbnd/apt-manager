@@ -15,16 +15,17 @@ const isAccountRoute = createRouteMatcher(['/account(.*)']);
 const isApiRoute = createRouteMatcher('/api(.*)');
 
 export default clerkMiddleware(async (auth, request) => {
-	const { protect, userId, redirectToSignIn } = auth();
+	const { protect, userId } = auth();
 
-	const onOnboardingPage = isOnboardingRoute(request);
-	const onPrivatePage = !isPublicRoute(request) && !onOnboardingPage;
-	const onAccountPage = isAccountRoute(request);
-	const onApiRoute = isApiRoute(request);
-
-	if (onApiRoute) {
+	if (isApiRoute(request)) {
 		return NextResponse.next();
 	}
+
+	const onOnboardingPage = isOnboardingRoute(request);
+	const onPrivatePage = !isPublicRoute(request);
+	const onAccountPage = isAccountRoute(request);
+
+	const onAllowedPage = onOnboardingPage || onAccountPage;
 
 	if (userId) {
 		const [manager] = await db
@@ -33,13 +34,13 @@ export default clerkMiddleware(async (auth, request) => {
 			.where(eq(managers.clerkUserId, userId));
 
 		if (!manager) {
-			if (!onOnboardingPage && !onAccountPage) {
+			if (!onAllowedPage) {
 				const onboardingUrl = new URL('/onboarding', request.url);
-
 				return NextResponse.redirect(onboardingUrl);
 			}
+
 			return NextResponse.next();
-		} else if (onPrivatePage && !manager.approved) {
+		} else if (onPrivatePage && !onAllowedPage && !manager.approved) {
 			const onboardingUrl = new URL('/onboarding', request.url);
 			return NextResponse.redirect(onboardingUrl);
 		} else if (onOnboardingPage && manager.approved) {
@@ -47,11 +48,15 @@ export default clerkMiddleware(async (auth, request) => {
 			return NextResponse.redirect(homeUrl);
 		}
 	} else {
-		if (onOnboardingPage) redirectToSignIn();
-		else if (onPrivatePage) protect();
+		if (onPrivatePage || onOnboardingPage) protect();
 	}
 });
 
 export const config = {
-	matcher: ['/((?!.*\\..*|_next).*)', '/(trpc|api)(.*)'],
+	matcher: [
+		// Skip Next.js internals and all static files, unless found in search params
+		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+		// Always run for API routes
+		'/(api|trpc)(.*)',
+	],
 };
