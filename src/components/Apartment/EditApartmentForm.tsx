@@ -25,8 +25,8 @@ import { EditRentFieldArray } from './EditRentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
 import { PencilOff, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { DeleteApartmentButton } from './DeleteApartmentButton';
+import { Textarea } from '@/components/ui/textarea';
 
 const editApartmentSchema = z.object({
 	rent: z
@@ -37,6 +37,7 @@ const editApartmentSchema = z.object({
 	paymentMethod: z.enum(['CHECK', 'MONEY ORDER', 'OTHER'], {
 		required_error: 'You need to select a payment method type.',
 	}),
+	note: z.string().trim().optional(),
 });
 
 export type EditedApartment = z.infer<typeof editApartmentSchema>;
@@ -47,8 +48,7 @@ interface Props {
 }
 
 export function EditApartmentForm({ apartment, close }: Props) {
-	const { update, remove } = useApartments(apartment.id.toString());
-	const router = useRouter();
+	const { update } = useApartments(apartment.id.toString());
 
 	const form = useForm<EditedApartment>({
 		resolver: zodResolver(editApartmentSchema),
@@ -59,6 +59,7 @@ export function EditApartmentForm({ apartment, close }: Props) {
 			}),
 			tenant: apartment.tenant,
 			paymentMethod: apartment.paymentMethod,
+			note: apartment.note ?? undefined,
 		},
 	});
 
@@ -154,6 +155,26 @@ export function EditApartmentForm({ apartment, close }: Props) {
 											</FormItem>
 										</RadioGroup>
 									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name='note'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Note</FormLabel>
+									<FormControl>
+										<Textarea
+											placeholder='...'
+											className='resize-none'
+											{...field}
+										/>
+									</FormControl>
+									<FormDescription>
+										{'Extra information regarding this unit'}
+									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

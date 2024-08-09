@@ -31,6 +31,7 @@ export const apartments = pgTable('apartments', {
 	rent: real('rent').array().notNull(),
 	tenant: text('tenant').notNull(),
 	paymentMethod: paymentMethodEnum('payment_methods').notNull(),
+	note: text('note'),
 	buildingId: serial('building_id')
 		.notNull()
 		.references(() => buildings.id, { onDelete: 'cascade' }),

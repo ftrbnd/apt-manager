@@ -46,6 +46,7 @@ export function useApartments(id?: string) {
 					...newApartment,
 					id: Math.random(),
 					buildingId: Math.random(),
+					note: null,
 				};
 
 				queryClient.setQueryData<Apartment[]>(
