@@ -16,7 +16,7 @@ import { Manager } from '@/lib/drizzle/schema';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/hooks/useAuth';
 
 export function ManagersCard() {
 	const { myBuilding, buildingLoading } = useBuildings();
@@ -147,7 +147,7 @@ export function ManagersCard() {
 }
 
 function ManagerDetails({ manager }: { manager: Manager }) {
-	const { user } = useUser();
+	const { user } = useAuth();
 
 	return (
 		<div className='flex items-center gap-4'>

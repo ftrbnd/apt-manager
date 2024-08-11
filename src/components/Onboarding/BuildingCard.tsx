@@ -12,11 +12,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BuildingSelect } from './BuildingSelect';
 import { useManagers } from '@/hooks/useManagers';
 import { useBuildings } from '@/hooks/useBuildings';
-import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Props {
 	close: () => void;
@@ -26,7 +26,7 @@ export function BuildingCard({ close }: Props) {
 	const { create, remove, managersLoading, me } = useManagers();
 	const { building } = useBuildings(me?.buildingId);
 
-	const { user } = useUser();
+	const { user } = useAuth();
 
 	const [buildingId, setBuildingId] = useState<string | null>(null);
 	const [error, setError] = useState('');

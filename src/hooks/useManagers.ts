@@ -6,14 +6,14 @@ import {
 	getManagers,
 	createManager,
 } from '@/services/managers';
-import { useUser } from '@clerk/nextjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/useAuth';
 
 const MANAGERS = 'managers';
 
 export function useManagers(id?: string) {
 	const queryClient = useQueryClient();
-	const { user } = useUser();
+	const { user } = useAuth();
 
 	const { data: managers, isLoading: managersLoading } = useQuery({
 		queryKey: [MANAGERS],

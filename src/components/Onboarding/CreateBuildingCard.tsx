@@ -13,8 +13,8 @@ import { NewBuilding } from '@/lib/drizzle/schema';
 import { useBuildings } from '@/hooks/useBuildings';
 import { toast } from 'sonner';
 import { useManagers } from '@/hooks/useManagers';
-import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Props {
 	close: () => void;
@@ -24,7 +24,7 @@ export function CreateBuildingCard({ close }: Props) {
 	const { create: createBuilding } = useBuildings();
 	const { create: createManager } = useManagers();
 
-	const { user } = useUser();
+	const { user } = useAuth();
 	const router = useRouter();
 
 	const createBuildingAndAssignManager = async (building: NewBuilding) => {
