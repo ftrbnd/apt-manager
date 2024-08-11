@@ -1,17 +1,25 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { useTheme } from 'next-themes';
-import { ClerkProvider } from '@clerk/nextjs';
-import { dark } from '@clerk/themes';
+import { createContext, ReactNode } from 'react';
+import { useAuth, useUser } from '@clerk/nextjs';
+
+interface AuthContextProps {
+	user: any | null;
+	signOut: () => Promise<void>;
+}
+
+export const AuthContext = createContext<AuthContextProps>({
+	user: null,
+	signOut: async () => {},
+});
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const { resolvedTheme } = useTheme();
+	const { user } = useUser();
+	const { signOut } = useAuth();
 
 	return (
-		<ClerkProvider
-			appearance={{ baseTheme: resolvedTheme === 'dark' ? dark : undefined }}>
+		<AuthContext.Provider value={{ user, signOut }}>
 			{children}
-		</ClerkProvider>
+		</AuthContext.Provider>
 	);
 }

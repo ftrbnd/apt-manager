@@ -10,13 +10,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useAuth, useUser } from '@clerk/nextjs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CircleUser } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 export function UserMenu() {
-	const { signOut } = useAuth();
-	const { user } = useUser();
+	const { user, signOut } = useAuth();
 
 	return (
 		<DropdownMenu>

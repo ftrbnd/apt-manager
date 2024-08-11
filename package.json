@@ -11,7 +11,7 @@
 		"db:generate": "drizzle-kit generate",
 		"db:studio": "drizzle-kit studio",
 		"db:migrate": "tsx -r dotenv/config ./src/lib/drizzle/migrate.ts dotenv_config_path=.env",
-		"db:reset": "tsx -r dotenv/config ./src/lib/drizzle/reset.ts dotenv_config_path=.env",
+		"db:reset": "tsx -r dotenv/config ./sr;c/lib/drizzle/reset.ts dotenv_config_path=.env",
 		"db:seed": "tsx -r dotenv/config ./src/lib/drizzle/seed.ts dotenv_config_path=.env",
 		"ngrok": "ngrok http --domain=musical-panda-formerly.ngrok-free.app 3000",
 		"postinstall": "yarn db:generate && yarn db:migrate"
