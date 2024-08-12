@@ -1,16 +1,15 @@
 import Link from 'next/link';
-import { Receipt } from 'lucide-react';
 
 import { UserMenu } from './UserMenu';
-import { auth } from '@clerk/nextjs/server';
 import { HeaderLinks } from './HeaderLinks';
 import { ThemeToggle } from './ThemeToggle';
 import { NavSheet } from './NavSheet';
 import { APP_NAME } from '@/lib/constants';
 import { Logo } from './Logo';
+import { validateRequest } from '@/lib/auth/actions';
 
-export function Header() {
-	const { userId } = auth();
+export async function Header() {
+	const { user } = await validateRequest();
 
 	return (
 		<header className='sticky z-50 top-0 flex items-center justify-between h-16 gap-4 px-4 border-b bg-background md:px-6'>
@@ -21,7 +20,7 @@ export function Header() {
 					<Logo />
 					<span className='sr-only'>{APP_NAME}</span>
 				</Link>
-				{userId ? (
+				{user?.id ? (
 					<HeaderLinks />
 				) : (
 					<Link

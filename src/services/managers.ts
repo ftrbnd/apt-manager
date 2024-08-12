@@ -64,7 +64,7 @@ export const acceptManager = async (manager: Manager) => {
 	}
 };
 
-export const deleteManager = async (id?: number) => {
+export const deleteManager = async (id?: string) => {
 	try {
 		if (!id) throw new Error('Manager id is required');
 

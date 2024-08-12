@@ -38,7 +38,7 @@ export function useManagers(id?: string) {
 			if (previousManagers) {
 				const tempManager = {
 					...newManager,
-					id: Math.random(),
+					id: Math.random().toString(),
 					approved: false,
 				} as Manager;
 
@@ -133,7 +133,7 @@ export function useManagers(id?: string) {
 		},
 	});
 
-	const me = managers?.find((m) => m.clerkUserId === user?.id);
+	const me = managers?.find((m) => m.id === user?.id);
 
 	return {
 		managers,

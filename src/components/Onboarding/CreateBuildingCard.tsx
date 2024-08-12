@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { useManagers } from '@/hooks/useManagers';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { generateId } from 'lucia';
 
 interface Props {
 	close: () => void;
@@ -33,12 +34,12 @@ export function CreateBuildingCard({ close }: Props) {
 		const newBuilding = await createBuilding(building);
 
 		await createManager({
-			clerkUserId: user.id,
+			id: generateId(15),
 			buildingId: newBuilding.id,
 			firstName: user.firstName,
 			lastName: user.lastName,
-			email: user.primaryEmailAddress?.emailAddress,
-			avatar: user.imageUrl,
+			email: user.email,
+			avatar: user.avatar,
 			approved: true,
 		});
 

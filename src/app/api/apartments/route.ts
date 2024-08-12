@@ -1,10 +1,10 @@
+import { validateRequest } from '@/lib/auth/actions';
 import { db } from '@/lib/drizzle/db';
 import {
 	apartments,
 	insertApartmentSchema,
 	managers,
 } from '@/lib/drizzle/schema';
-import { currentUser } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -12,14 +12,14 @@ export const dynamic = 'force-dynamic'; // defaults to auto
 
 export async function GET() {
 	try {
-		const user = await currentUser();
+		const { user } = await validateRequest();
 		if (!user)
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
 		const [manager] = await db
 			.select()
 			.from(managers)
-			.where(eq(managers.clerkUserId, user.id));
+			.where(eq(managers.id, user.id));
 
 		const allApartments = await db
 			.select()

@@ -167,7 +167,7 @@ function ManagerDetails({ manager }: { manager: Manager }) {
 			<div className='grid gap-1'>
 				<p className='text-sm font-medium leading-none'>
 					{manager.firstName} {manager.lastName}
-					{manager.clerkUserId === user?.id && (
+					{manager.id === user?.id && (
 						<span className='text-muted-foreground'> (me)</span>
 					)}
 				</p>

@@ -3,7 +3,6 @@ import {
 	pgEnum,
 	pgTable,
 	real,
-	serial,
 	text,
 	timestamp,
 } from 'drizzle-orm/pg-core';
@@ -17,7 +16,7 @@ export const paymentMethodEnum = pgEnum('payment_method', [
 ]);
 
 export const buildings = pgTable('buildings', {
-	id: serial('id').primaryKey(),
+	id: text('id').primaryKey(),
 	landlord: text('landlord').notNull(),
 	street: text('street').notNull(),
 	city: text('city').notNull(),
@@ -26,20 +25,20 @@ export const buildings = pgTable('buildings', {
 });
 
 export const apartments = pgTable('apartments', {
-	id: serial('id').primaryKey(),
+	id: text('id').primaryKey(),
 	number: text('number').notNull(),
 	rent: real('rent').array().notNull(),
 	tenant: text('tenant').notNull(),
 	paymentMethod: paymentMethodEnum('payment_methods').notNull(),
 	note: text('note'),
-	buildingId: serial('building_id')
+	buildingId: text('building_id')
 		.notNull()
 		.references(() => buildings.id, { onDelete: 'cascade' }),
 });
 
 export const receipts = pgTable('receipts', {
-	id: serial('id').primaryKey(),
-	apartmentId: serial('apartment_id')
+	id: text('id').primaryKey(),
+	apartmentId: text('apartment_id')
 		.notNull()
 		.references(() => apartments.id, { onDelete: 'cascade' }),
 	month: real('month').notNull(),
@@ -53,10 +52,9 @@ export const receipts = pgTable('receipts', {
 	}).defaultNow(),
 });
 
-export const managers = pgTable('managers', {
-	id: serial('id').primaryKey(),
-	clerkUserId: text('clerk_user_id').notNull().unique(),
-	buildingId: serial('building_id')
+export const managers = pgTable('user', {
+	id: text('id').primaryKey(),
+	buildingId: text('building_id')
 		.references(() => buildings.id, {
 			onDelete: 'cascade',
 		})
@@ -70,6 +68,17 @@ export const managers = pgTable('managers', {
 		withTimezone: true,
 		mode: 'string',
 	}).defaultNow(),
+});
+
+export const sessions = pgTable('session', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => managers.id),
+	expiresAt: timestamp('expires_at', {
+		withTimezone: true,
+		mode: 'date',
+	}).notNull(),
 });
 
 export const selectApartmentSchema = createSelectSchema(apartments);

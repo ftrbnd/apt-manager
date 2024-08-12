@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
+import { generateId } from 'lucia';
 
 interface Props {
 	close: () => void;
@@ -49,12 +50,12 @@ export function BuildingCard({ close }: Props) {
 
 			const promise = () =>
 				create({
-					clerkUserId: user.id,
-					buildingId: parseInt(buildingId),
+					id: generateId(15),
+					buildingId,
 					firstName: user.firstName,
 					lastName: user.lastName,
-					email: user.primaryEmailAddress?.emailAddress,
-					avatar: user.imageUrl,
+					email: user.email,
+					avatar: user.avatar,
 				});
 
 			toast.promise(promise, {

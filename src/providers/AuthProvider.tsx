@@ -1,21 +1,29 @@
 'use client';
 
-import { createContext, ReactNode } from 'react';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { User } from 'lucia';
+import { getUser, signOut } from '@/lib/auth/actions';
 
 interface AuthContextProps {
-	user: any | null;
-	signOut: () => Promise<void>;
+	user: User | null;
+	signOut: () => Promise<{ error: string | null }>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
 	user: null,
-	signOut: async () => {},
+	signOut: async () => {
+		return {
+			error: null,
+		};
+	},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const { user } = useUser();
-	const { signOut } = useAuth();
+	const [user, setUser] = useState<User | null>(null);
+
+	useEffect(() => {
+		getUser().then((user) => setUser(user));
+	}, []);
 
 	return (
 		<AuthContext.Provider value={{ user, signOut }}>

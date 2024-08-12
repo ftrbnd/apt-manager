@@ -9,7 +9,7 @@ import { Building } from '@/lib/drizzle/schema';
 
 const BUILDINGS = 'buildings';
 
-export function useBuildings(id?: string | number) {
+export function useBuildings(id?: string | null) {
 	const queryClient = useQueryClient();
 	const { me } = useManagers();
 
@@ -28,8 +28,7 @@ export function useBuildings(id?: string | number) {
 		isPending: buildingPending,
 	} = useQuery({
 		queryKey: [BUILDINGS, id],
-		queryFn: () =>
-			getBuildingById(typeof id === 'string' ? id : id?.toString()),
+		queryFn: () => getBuildingById(id),
 		enabled: id !== undefined,
 	});
 
@@ -47,7 +46,7 @@ export function useBuildings(id?: string | number) {
 			if (previousBuildings) {
 				const tempBuilding: Building = {
 					...newBuilding,
-					id: Math.random(),
+					id: Math.random().toString(),
 				};
 
 				queryClient.setQueryData<Building[]>(
