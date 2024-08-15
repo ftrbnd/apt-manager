@@ -4,6 +4,10 @@ import { lucia } from '@/lib/auth/lucia';
 import type { Session, User } from 'lucia';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { db } from '../drizzle/db';
+import { managers } from '../drizzle/schema';
+import { UserFormValues } from '@/components/Authentication/ProfileForm';
+import { eq } from 'drizzle-orm';
 
 export const getUser = async () => {
 	const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
@@ -30,6 +34,23 @@ export const getUser = async () => {
 		// Next.js throws error when attempting to set cookies when rendering page
 	}
 	return user;
+};
+
+export const updateUser = async (values: UserFormValues) => {
+	const user = await getUser();
+	if (!user) throw new Error('Unauthorized');
+
+	await db
+		.update(managers)
+		.set({
+			firstName: values.firstName,
+			lastName: values.lastName,
+			email: values.email,
+		})
+		.where(eq(managers.id, user.id));
+
+	const newUser = await getUser();
+	return newUser;
 };
 
 export const validateRequest = async (): Promise<

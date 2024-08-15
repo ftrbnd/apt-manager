@@ -2,11 +2,13 @@
 
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { User } from 'lucia';
-import { getUser, signOut } from '@/lib/auth/actions';
+import { getUser, signOut, updateUser } from '@/lib/auth/actions';
+import { UserFormValues } from '@/components/Authentication/ProfileForm';
 
 interface AuthContextProps {
 	user: User | null;
 	signOut: () => Promise<{ error: string | null }>;
+	update: (values: UserFormValues) => Promise<User | null>;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
@@ -15,6 +17,9 @@ export const AuthContext = createContext<AuthContextProps>({
 		return {
 			error: null,
 		};
+	},
+	update: async () => {
+		return null;
 	},
 });
 
@@ -25,8 +30,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		getUser().then((user) => setUser(user));
 	}, []);
 
+	const update = async (values: UserFormValues) => {
+		const newUser = await updateUser(values);
+
+		setUser(newUser);
+		return newUser;
+	};
+
 	return (
-		<AuthContext.Provider value={{ user, signOut }}>
+		<AuthContext.Provider value={{ user, signOut, update }}>
 			{children}
 		</AuthContext.Provider>
 	);

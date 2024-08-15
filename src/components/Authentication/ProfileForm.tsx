@@ -16,18 +16,24 @@ import {
 } from '@/components/ui/form';
 import { useAuth } from '@/hooks/useAuth';
 import { Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
 	firstName: z.string().trim().min(1, 'Required'),
 	lastName: z.string().trim().min(1, 'Required'),
 	email: z.string().trim().min(1, 'Required'),
 });
-type FormValues = z.infer<typeof formSchema>;
 
-export function ProfileForm() {
-	const { user } = useAuth();
+export type UserFormValues = z.infer<typeof formSchema>;
 
-	const form = useForm<FormValues>({
+interface Props {
+	showHeader?: boolean;
+}
+
+export function ProfileForm({ showHeader = true }: Props) {
+	const { user, update } = useAuth();
+
+	const form = useForm<UserFormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			firstName: user?.firstName ?? undefined,
@@ -36,16 +42,26 @@ export function ProfileForm() {
 		},
 	});
 
-	function onSubmit(values: FormValues) {
-		console.log('TODO: submit handler');
-	}
+	const onSubmit = async (values: UserFormValues) => {
+		const promise = () => update(values);
+
+		toast.promise(promise, {
+			loading: 'Updating profile...',
+			success: (user) => {
+				return `Thank you ${user?.firstName}!`;
+			},
+			error: 'Failed to update your profile',
+		});
+	};
 
 	return (
 		<Card>
-			<CardHeader>
-				<CardTitle>Profile details</CardTitle>
-			</CardHeader>
-			<CardContent>
+			{showHeader && (
+				<CardHeader>
+					<CardTitle>Profile details</CardTitle>
+				</CardHeader>
+			)}
+			<CardContent className={showHeader ? '' : 'pt-6'}>
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}

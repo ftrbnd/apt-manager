@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CircleUser } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -26,7 +26,6 @@ export function UserMenu() {
 					className='rounded-full'>
 					{user ? (
 						<Avatar>
-							<AvatarImage src={user.imageUrl} />
 							<AvatarFallback>
 								{user.firstName ? user.firstName[0] : ''}
 								{user.lastName ? user.lastName[0] : ''}
