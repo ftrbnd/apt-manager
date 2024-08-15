@@ -37,11 +37,11 @@ export function ProfileForm() {
 	});
 
 	function onSubmit(values: FormValues) {
-		console.log(values);
+		console.log('TODO: submit handler');
 	}
 
 	return (
-		<Card x-chunk='dashboard-04-chunk-1'>
+		<Card>
 			<CardHeader>
 				<CardTitle>Profile details</CardTitle>
 			</CardHeader>

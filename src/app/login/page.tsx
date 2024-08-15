@@ -1,4 +1,4 @@
-import { Login } from '@/components/Authentiction/Login';
+import { Login } from '@/components/Authentication/Login';
 import { Footer } from '@/components/Layout/Footer';
 
 export default function Page() {
