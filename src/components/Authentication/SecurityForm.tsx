@@ -11,10 +11,22 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 export function SecurityForm() {
-	const deleteAccount = async () => {
-		console.log('TODO: delete account');
+	const { deleteAccount } = useAuth();
+
+	const handleDelete = async () => {
+		const promise = () => deleteAccount();
+
+		toast.promise(promise, {
+			loading: 'Deleting your account...',
+			success: () => {
+				return `Successfully deleted account`;
+			},
+			error: 'Failed to delete your account',
+		});
 	};
 
 	return (
@@ -45,7 +57,7 @@ export function SecurityForm() {
 								<AlertDialogAction asChild>
 									<Button
 										className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
-										onClick={deleteAccount}>
+										onClick={handleDelete}>
 										Delete account
 									</Button>
 								</AlertDialogAction>

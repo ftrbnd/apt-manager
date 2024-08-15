@@ -53,6 +53,13 @@ export const updateUser = async (values: UserFormValues) => {
 	return newUser;
 };
 
+export const deleteUser = async () => {
+	const user = await getUser();
+	if (!user) throw new Error('Unauthorized');
+
+	await db.delete(managers).where(eq(managers.id, user.id));
+};
+
 export const validateRequest = async (): Promise<
 	{ user: User; session: Session } | { user: null; session: null }
 > => {

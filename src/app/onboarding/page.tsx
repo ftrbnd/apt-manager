@@ -8,9 +8,7 @@ import { useState } from 'react';
 
 export default function Page() {
 	const [showForm, setShowForm] = useState(false);
-
 	const { user } = useAuth();
-	console.log(user);
 
 	const userFilledOutForm =
 		user?.firstName !== null && user?.lastName !== null && user?.email !== null;
