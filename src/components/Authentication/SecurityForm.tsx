@@ -13,9 +13,11 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export function SecurityForm() {
 	const { deleteAccount } = useAuth();
+	const router = useRouter();
 
 	const handleDelete = async () => {
 		const promise = () => deleteAccount();
@@ -23,6 +25,7 @@ export function SecurityForm() {
 		toast.promise(promise, {
 			loading: 'Deleting your account...',
 			success: () => {
+				router.refresh();
 				return `Successfully deleted account`;
 			},
 			error: 'Failed to delete your account',
