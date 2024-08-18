@@ -1,8 +1,4 @@
-import {
-	Apartment,
-	insertApartmentSchema,
-	NewApartment,
-} from '@/lib/drizzle/schema';
+import { insertApartmentSchema, NewApartment } from '@/lib/drizzle/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -47,19 +43,21 @@ export function CreateApartmentForm({ hide }: Props) {
 	});
 
 	const onSubmit = async (apartment: CreatedApartment) => {
-		if (!myBuilding) toast.error('A building is required');
+		console.log('WHAT');
+
+		if (!myBuilding) return toast.error('A building is required');
+
+		console.log(apartment);
 
 		const newApartment: NewApartment = {
 			...apartment,
-			buildingId: myBuilding?.id,
+			buildingId: myBuilding.id,
 			rent: apartment.rent.map((r) => r.value).filter((v) => v > 0),
 		};
 
-		const withoutId = insertApartmentSchema
-			.omit({ id: true })
-			.parse(newApartment);
+		console.log(newApartment);
 
-		const promise = () => create(withoutId);
+		const promise = () => create(newApartment);
 
 		toast.promise(promise, {
 			loading: 'Creating apartment...',

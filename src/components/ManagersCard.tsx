@@ -12,7 +12,7 @@ import { useManagers } from '@/hooks/useManagers';
 import { Check, Users, X } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Manager } from '@/lib/drizzle/schema';
+import { Manager, ManagerWithBuilding } from '@/lib/drizzle/schema';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,29 +23,33 @@ export function ManagersCard() {
 	const { managers, managersLoading, accept, remove } = useManagers();
 
 	const acceptedManagers = managers?.filter(
-		(manager) => manager.approved && myBuilding?.id === manager.buildingId
+		(manager) =>
+			manager?.managers_buildings.approved &&
+			myBuilding?.id === manager.managers_buildings.buildingId
 	);
 	const pendingManagers = managers?.filter(
-		(manager) => !manager.approved && myBuilding?.id === manager.buildingId
+		(manager) =>
+			!manager.managers_buildings.approved &&
+			myBuilding?.id === manager.managers_buildings.buildingId
 	);
 
-	const handleAccept = async (manager: Manager) => {
+	const handleAccept = async (manager: ManagerWithBuilding) => {
 		const promise = () => accept(manager);
 
 		toast.promise(promise, {
 			loading: 'Waiting...',
-			success: `Accepted ${manager.firstName} ${manager.lastName}`,
-			error: `Failed to accept ${manager.firstName} ${manager.lastName}`,
+			success: `Accepted ${manager.user.firstName} ${manager.user.lastName}`,
+			error: `Failed to accept ${manager.user.firstName} ${manager.user.lastName}`,
 		});
 	};
 
-	const handleReject = async (manager: Manager) => {
-		const promise = () => remove(manager.id);
+	const handleReject = async (manager: ManagerWithBuilding) => {
+		const promise = () => remove(manager.user.id);
 
 		toast.promise(promise, {
 			loading: 'Waiting...',
-			success: `Rejected ${manager.firstName} ${manager.lastName}`,
-			error: `Failed to reject ${manager.firstName} ${manager.lastName}`,
+			success: `Rejected ${manager.user.firstName} ${manager.user.lastName}`,
+			error: `Failed to reject ${manager.user.firstName} ${manager.user.lastName}`,
 		});
 	};
 
@@ -82,9 +86,9 @@ export function ManagersCard() {
 							  ))
 							: acceptedManagers.map((manager) => (
 									<div
-										key={manager.id}
+										key={manager.user.id}
 										className='flex flex-col gap-4 sm:flex-row'>
-										<ManagerDetails manager={manager} />
+										<ManagerDetails manager={manager.user} />
 									</div>
 							  ))}
 					</div>
@@ -115,9 +119,9 @@ export function ManagersCard() {
 						) : pendingManagers.length > 0 ? (
 							pendingManagers.map((manager) => (
 								<div
-									key={manager.id}
+									key={manager.user.id}
 									className='flex flex-col gap-4 sm:flex-row'>
-									<ManagerDetails manager={manager} />
+									<ManagerDetails manager={manager.user} />
 
 									<div className='flex justify-center gap-4'>
 										<Button

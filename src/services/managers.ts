@@ -1,4 +1,4 @@
-import { Manager, NewManager } from '@/lib/drizzle/schema';
+import { ManagerWithBuilding, NewManagerBuilding } from '@/lib/drizzle/schema';
 
 const MANAGERS = '/api/managers';
 
@@ -7,7 +7,7 @@ export const getManagers = async () => {
 		const res = await fetch(MANAGERS);
 		if (!res.ok) throw new Error('Failed to get managers');
 
-		const { managers }: { managers: Manager[] } = await res.json();
+		const { managers }: { managers: ManagerWithBuilding[] } = await res.json();
 		return managers;
 	} catch (e) {
 		console.error(e);
@@ -22,7 +22,7 @@ export const getManagerById = async (id?: string | null) => {
 		const res = await fetch(`${MANAGERS}/${id}`);
 		if (!res.ok) throw new Error(`Failed to get manager with id ${id}`);
 
-		const { manager }: { manager: Manager } = await res.json();
+		const { manager }: { manager: ManagerWithBuilding } = await res.json();
 		return manager;
 	} catch (e) {
 		console.error(e);
@@ -30,15 +30,15 @@ export const getManagerById = async (id?: string | null) => {
 	}
 };
 
-export const createManager = async (newManager: NewManager) => {
+export const createManager = async (newManagerBuilding: NewManagerBuilding) => {
 	try {
 		const res = await fetch(`${MANAGERS}`, {
 			method: 'POST',
-			body: JSON.stringify({ manager: newManager }),
+			body: JSON.stringify(newManagerBuilding),
 		});
 		if (!res.ok) throw new Error('Failed to create manager');
 
-		const { manager }: { manager: Manager } = await res.json();
+		const { manager }: { manager: ManagerWithBuilding } = await res.json();
 		return manager;
 	} catch (error) {
 		console.error(error);
@@ -46,17 +46,18 @@ export const createManager = async (newManager: NewManager) => {
 	}
 };
 
-export const acceptManager = async (manager: Manager) => {
+export const acceptManager = async (manager: ManagerWithBuilding) => {
 	try {
 		if (!manager) throw new Error('Manager body is required');
 
-		const res = await fetch(`${MANAGERS}/${manager.id}`, {
+		const res = await fetch(`${MANAGERS}/${manager.managers_buildings.id}`, {
 			method: 'PATCH',
 		});
 		if (!res.ok)
-			throw new Error(`Failed to accept manager with id ${manager.id}`);
+			throw new Error(`Failed to accept manager with id ${manager.user.id}`);
 
-		const { manager: updatedManager }: { manager: Manager } = await res.json();
+		const { manager: updatedManager }: { manager: ManagerWithBuilding } =
+			await res.json();
 		return updatedManager;
 	} catch (e) {
 		console.error(e);

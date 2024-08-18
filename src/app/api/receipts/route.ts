@@ -1,5 +1,6 @@
 import { db } from '@/lib/drizzle/db';
 import { insertApartmentSchema, Receipt, receipts } from '@/lib/drizzle/schema';
+import { generateId } from 'lucia';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
 				const [newReceipt] = await tx
 					.insert(receipts)
 					.values({
+						id: generateId(15),
 						apartmentId: apartment.id,
 						month,
 						year,

@@ -28,7 +28,7 @@ export function useApartments(id?: string) {
 
 	const sortedApartments = apartments
 		?.filter((a) => a.buildingId === myBuilding?.id)
-		.sort((a, b) => a.id - b.id);
+		.sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
 	const { mutateAsync: create } = useMutation({
 		mutationFn: createApartment,
@@ -44,8 +44,8 @@ export function useApartments(id?: string) {
 			if (previousApartments) {
 				const tempApartment: Apartment = {
 					...newApartment,
-					id: Math.random(),
-					buildingId: Math.random(),
+					id: Math.random().toString(),
+					buildingId: Math.random().toString(),
 					note: null,
 				};
 

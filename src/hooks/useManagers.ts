@@ -1,4 +1,4 @@
-import { Manager } from '@/lib/drizzle/schema';
+import { Manager, ManagerWithBuilding } from '@/lib/drizzle/schema';
 import {
 	acceptManager,
 	deleteManager,
@@ -33,16 +33,19 @@ export function useManagers(id?: string) {
 				queryKey: [MANAGERS],
 			});
 
-			const previousManagers = queryClient.getQueryData<Manager[]>([MANAGERS]);
+			const previousManagers = queryClient.getQueryData<ManagerWithBuilding[]>([
+				MANAGERS,
+			]);
 
 			if (previousManagers) {
 				const tempManager = {
-					...newManager,
-					id: Math.random().toString(),
-					approved: false,
-				} as Manager;
+					user: {
+						...newManager,
+					},
+					managers_buildings: { approved: true },
+				} as ManagerWithBuilding;
 
-				queryClient.setQueryData<Manager[]>(
+				queryClient.setQueryData<ManagerWithBuilding[]>(
 					[MANAGERS],
 					[...previousManagers, tempManager]
 				);
@@ -52,7 +55,7 @@ export function useManagers(id?: string) {
 		},
 		onError: (_err, _variables, context) => {
 			if (context?.previousManagers) {
-				queryClient.setQueryData<Manager[]>(
+				queryClient.setQueryData<ManagerWithBuilding[]>(
 					[MANAGERS],
 					context.previousManagers
 				);
@@ -69,19 +72,22 @@ export function useManagers(id?: string) {
 		mutationFn: acceptManager,
 		onMutate: async (manager) => {
 			await queryClient.cancelQueries({
-				queryKey: [MANAGERS, manager.id],
+				queryKey: [MANAGERS, manager.user.id],
 			});
 
-			const previousManager = queryClient.getQueryData<Manager>([
+			const previousManager = queryClient.getQueryData<ManagerWithBuilding>([
 				MANAGERS,
-				manager.id,
+				manager.user.id,
 			]);
 
-			const updatedManager: Manager = { ...manager, approved: true };
+			const updatedManager: ManagerWithBuilding = {
+				...manager,
+				managers_buildings: { ...manager.managers_buildings, approved: true },
+			};
 
 			if (previousManager) {
-				queryClient.setQueryData<Manager>(
-					[MANAGERS, manager.id],
+				queryClient.setQueryData<ManagerWithBuilding>(
+					[MANAGERS, manager.user.id],
 					updatedManager
 				);
 			}
@@ -90,8 +96,8 @@ export function useManagers(id?: string) {
 		},
 		onError: (_err, _variables, context) => {
 			if (context?.previousManager) {
-				queryClient.setQueryData<Manager>(
-					[MANAGERS, context.previousManager.id],
+				queryClient.setQueryData<ManagerWithBuilding>(
+					[MANAGERS, context.previousManager.user.id],
 					context.previousManager
 				);
 			}
@@ -108,21 +114,26 @@ export function useManagers(id?: string) {
 				queryKey: [MANAGERS],
 			});
 
-			const previousManagers = queryClient.getQueryData<Manager[]>([MANAGERS]);
+			const previousManagers = queryClient.getQueryData<ManagerWithBuilding[]>([
+				MANAGERS,
+			]);
 
 			if (previousManagers && managerId) {
 				const updatedManagers = previousManagers.filter(
-					(manager) => manager.id !== managerId
+					(manager) => manager.user.id !== managerId
 				);
 
-				queryClient.setQueryData<Manager[]>([MANAGERS], updatedManagers);
+				queryClient.setQueryData<ManagerWithBuilding[]>(
+					[MANAGERS],
+					updatedManagers
+				);
 			}
 
 			return { previousManagers };
 		},
 		onError: (_err, _variables, context) => {
 			if (context?.previousManagers) {
-				queryClient.setQueryData<Manager[]>(
+				queryClient.setQueryData<ManagerWithBuilding[]>(
 					[MANAGERS],
 					context.previousManagers
 				);
@@ -133,7 +144,7 @@ export function useManagers(id?: string) {
 		},
 	});
 
-	const me = managers?.find((m) => m.id === user?.id);
+	const me = managers?.find((m) => m.user.id === user?.id);
 
 	return {
 		managers,

@@ -35,11 +35,8 @@ export function CreateBuildingCard({ close }: Props) {
 
 		await createManager({
 			id: generateId(15),
+			managerId: user.id,
 			buildingId: newBuilding.id,
-			firstName: user.firstName,
-			lastName: user.lastName,
-			email: user.email,
-			avatar: user.avatar,
 			approved: true,
 		});
 

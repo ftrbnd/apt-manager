@@ -51,7 +51,6 @@ export async function POST(request: Request): Promise<Response> {
 
 		await db.insert(managers).values({
 			id: userId,
-			buildingId: '1',
 		});
 
 		const session = await lucia.createSession(userId, {});

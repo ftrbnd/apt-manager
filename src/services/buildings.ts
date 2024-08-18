@@ -1,4 +1,5 @@
 import { Building, NewBuilding } from '@/lib/drizzle/schema';
+import { generateId } from 'lucia';
 
 const BUILDINGS = '/api/buildings';
 
@@ -34,7 +35,9 @@ export const createBuilding = async (newBuilding: NewBuilding) => {
 	try {
 		const res = await fetch(`${BUILDINGS}`, {
 			method: 'POST',
-			body: JSON.stringify({ building: newBuilding }),
+			body: JSON.stringify({
+				building: { ...newBuilding, id: generateId(15) },
+			}),
 		});
 		if (!res.ok) throw new Error(`Failed to create new building`);
 

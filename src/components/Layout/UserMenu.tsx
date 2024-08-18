@@ -24,11 +24,11 @@ export function UserMenu() {
 					variant='secondary'
 					size='icon'
 					className='rounded-full'>
-					{user ? (
+					{user?.firstName && user.lastName ? (
 						<Avatar>
 							<AvatarFallback>
-								{user.firstName ? user.firstName[0] : ''}
-								{user.lastName ? user.lastName[0] : ''}
+								{user.firstName[0]}
+								{user.lastName[0]}
 							</AvatarFallback>
 						</Avatar>
 					) : (

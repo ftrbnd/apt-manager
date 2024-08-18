@@ -25,7 +25,7 @@ interface Props {
 
 export function BuildingCard({ close }: Props) {
 	const { create, remove, managersLoading, me } = useManagers();
-	const { building } = useBuildings(me?.buildingId);
+	const { building } = useBuildings(me?.managers_buildings.buildingId);
 
 	const { user } = useAuth();
 
@@ -36,7 +36,7 @@ export function BuildingCard({ close }: Props) {
 		if (!user) return setError('Unauthorized');
 
 		if (me) {
-			const promise = () => remove(me?.id);
+			const promise = () => remove(me?.user.id);
 
 			toast.promise(promise, {
 				loading: 'Removing...',
@@ -51,11 +51,8 @@ export function BuildingCard({ close }: Props) {
 			const promise = () =>
 				create({
 					id: generateId(15),
+					managerId: user.id,
 					buildingId,
-					firstName: user.firstName,
-					lastName: user.lastName,
-					email: user.email,
-					avatar: user.avatar,
 				});
 
 			toast.promise(promise, {

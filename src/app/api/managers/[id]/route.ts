@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { managers } from '@/lib/drizzle/schema';
+import { managers, managersBuildings } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'; // defaults to auto
 
 interface Params {
 	params: {
-		id: number;
+		id: string;
 	};
 }
 
@@ -23,7 +23,8 @@ export async function GET(_request: NextRequest, { params }: Params) {
 		const [manager] = await db
 			.select()
 			.from(managers)
-			.where(eq(managers.id, id));
+			.where(eq(managers.id, id))
+			.innerJoin(managersBuildings, eq(managers.id, id));
 		if (!manager)
 			return NextResponse.json({ error: 'Manager not found' }, { status: 404 });
 
@@ -42,13 +43,18 @@ export async function PATCH(_request: NextRequest, { params }: Params) {
 				{ status: 400 }
 			);
 
-		const [manager] = await db
-			.update(managers)
+		await db
+			.update(managersBuildings)
 			.set({
 				approved: true,
 			})
+			.where(eq(managersBuildings.managerId, id));
+
+		const [manager] = await db
+			.select()
+			.from(managers)
 			.where(eq(managers.id, id))
-			.returning();
+			.innerJoin(managersBuildings, eq(managers.id, id));
 
 		if (!manager)
 			return NextResponse.json({ error: 'Manager not found' }, { status: 404 });

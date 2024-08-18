@@ -17,8 +17,11 @@ export async function GET() {
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json();
+		console.log(body);
 
 		const parsedBuilding = insertBuildingSchema.parse(body.building);
+
+		console.log({ parsedBuilding });
 
 		const [building] = await db
 			.insert(buildings)
@@ -27,6 +30,8 @@ export async function POST(request: NextRequest) {
 
 		return NextResponse.json({ building }, { status: 200 });
 	} catch (error) {
+		console.log(error);
+
 		return NextResponse.json({ error }, { status: 500 });
 	}
 }

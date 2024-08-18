@@ -72,7 +72,9 @@ export function useBuildings(id?: string | null) {
 		},
 	});
 
-	const myBuilding = buildings?.find((b) => b.id === me?.buildingId);
+	const myBuilding = buildings?.find(
+		(b) => b.id === me?.managers_buildings.buildingId
+	);
 
 	return {
 		buildings: buildings ?? [],

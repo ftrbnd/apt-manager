@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { selectApartmentSchema, apartments } from '@/lib/drizzle/schema';
+import { apartments, insertApartmentSchema } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'; // defaults to auto
 
 interface Params {
 	params: {
-		id: number;
+		id: string;
 	};
 }
 
@@ -49,7 +49,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 			);
 
 		const body = await request.json();
-		const apartment = selectApartmentSchema.parse(body.apartment);
+		const apartment = insertApartmentSchema.parse(body.apartment);
 
 		const updatedApartments = await db
 			.update(apartments)

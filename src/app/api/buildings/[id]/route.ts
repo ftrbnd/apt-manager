@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'; // defaults to auto
 
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: { id: number } }
+	{ params }: { params: { id: string } }
 ) {
 	try {
 		const { id } = params;

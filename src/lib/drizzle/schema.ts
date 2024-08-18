@@ -54,12 +54,6 @@ export const receipts = pgTable('receipts', {
 
 export const managers = pgTable('user', {
 	id: text('id').primaryKey(),
-	buildingId: text('building_id')
-		.references(() => buildings.id, {
-			onDelete: 'cascade',
-		})
-		.notNull(),
-	approved: boolean('approved').default(false),
 	firstName: text('first_name'),
 	lastName: text('last_name'),
 	email: text('email'),
@@ -68,6 +62,17 @@ export const managers = pgTable('user', {
 		withTimezone: true,
 		mode: 'string',
 	}).defaultNow(),
+});
+
+export const managersBuildings = pgTable('managers_buildings', {
+	id: text('id').primaryKey(),
+	managerId: text('manager_id').references(() => managers.id, {
+		onDelete: 'cascade',
+	}),
+	buildingId: text('building_id').references(() => buildings.id, {
+		onDelete: 'cascade',
+	}),
+	approved: boolean('approved').default(false),
 });
 
 export const sessions = pgTable('session', {
@@ -91,12 +96,22 @@ export const insertManagerSchema = createInsertSchema(managers);
 export const selectReceiptSchema = createSelectSchema(receipts);
 export const insertReceiptSchema = createInsertSchema(receipts);
 
+export const insertManagerBuildingSchema =
+	createInsertSchema(managersBuildings);
+
 export type NewApartment = z.infer<typeof insertApartmentSchema>;
 export type NewBuilding = z.infer<typeof insertBuildingSchema>;
 export type NewManager = z.infer<typeof insertManagerSchema>;
 export type NewReceipt = z.infer<typeof insertReceiptSchema>;
+export type NewManagerBuilding = z.infer<typeof insertManagerBuildingSchema>;
 
 export type Apartment = typeof apartments.$inferSelect;
 export type Building = typeof buildings.$inferSelect;
 export type Manager = typeof managers.$inferSelect;
 export type Receipt = typeof receipts.$inferSelect;
+
+const managersBuildingsSchema = z.object({
+	user: createSelectSchema(managers),
+	managers_buildings: createSelectSchema(managersBuildings),
+});
+export type ManagerWithBuilding = z.infer<typeof managersBuildingsSchema>;

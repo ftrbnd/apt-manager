@@ -3,7 +3,7 @@ import { db } from '@/lib/drizzle/db';
 import {
 	apartments,
 	insertApartmentSchema,
-	managers,
+	managersBuildings,
 } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
@@ -18,8 +18,13 @@ export async function GET() {
 
 		const [manager] = await db
 			.select()
-			.from(managers)
-			.where(eq(managers.id, user.id));
+			.from(managersBuildings)
+			.where(eq(managersBuildings.managerId, user.id));
+		if (!manager.buildingId)
+			return NextResponse.json(
+				{ error: 'Manager has no building assigned' },
+				{ status: 500 }
+			);
 
 		const allApartments = await db
 			.select()
@@ -28,6 +33,8 @@ export async function GET() {
 
 		return NextResponse.json({ apartments: allApartments }, { status: 200 });
 	} catch (error) {
+		console.log(error);
+
 		return NextResponse.json({ error }, { status: 500 });
 	}
 }

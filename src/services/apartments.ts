@@ -1,12 +1,15 @@
 import { Apartment, NewApartment } from '@/lib/drizzle/schema';
+import { generateId } from 'lucia';
 
 const APARTMENTS = '/api/apartments';
 
-export const createApartment = async (apartment: NewApartment) => {
+export const createApartment = async (newApartment: NewApartment) => {
 	try {
 		const res = await fetch(`${APARTMENTS}`, {
 			method: 'POST',
-			body: JSON.stringify({ apartment }),
+			body: JSON.stringify({
+				apartment: { ...newApartment, id: generateId(15) },
+			}),
 		});
 		if (!res.ok) throw new Error('Failed to create new apartment');
 
@@ -67,7 +70,7 @@ export const updateApartment = async (apartment: Apartment) => {
 	}
 };
 
-export const deleteApartment = async (id?: number) => {
+export const deleteApartment = async (id?: string) => {
 	try {
 		if (!id) throw new Error('Apartment id is required');
 
