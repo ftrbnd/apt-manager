@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { apartments } from '@/lib/drizzle/schema/apartments';
+import { usersBuildings } from '@/lib/drizzle/schema/users_buildings';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -16,24 +16,21 @@ export async function GET(_request: NextRequest, { params }: Params) {
 		const { id } = params;
 		if (!id)
 			return NextResponse.json(
-				{ error: 'Apartment id is required' },
+				{ error: 'UserBuilding id is required' },
 				{ status: 400 }
 			);
 
-		const foundApartments = await db
+		const [userBuilding] = await db
 			.select()
-			.from(apartments)
-			.where(eq(apartments.id, id));
-		if (foundApartments.length === 0)
+			.from(usersBuildings)
+			.where(eq(usersBuildings.id, id));
+		if (!userBuilding)
 			return NextResponse.json(
-				{ error: 'No apartments found' },
+				{ error: 'UserBuilding not found' },
 				{ status: 404 }
 			);
 
-		return NextResponse.json(
-			{ apartment: foundApartments[0] },
-			{ status: 200 }
-		);
+		return NextResponse.json({ userBuilding }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}

@@ -36,6 +36,7 @@ export function BuildingCard({ close }: Props) {
 		if (!user) return setError('Unauthorized');
 
 		if (me) {
+			// TODO: remove manager-building pairing, not whole user
 			const promise = () => remove(me?.user.id);
 
 			toast.promise(promise, {

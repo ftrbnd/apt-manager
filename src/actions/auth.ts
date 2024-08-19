@@ -4,10 +4,10 @@ import { lucia } from '@/lib/auth/lucia';
 import type { Session, User } from 'lucia';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { db } from '../drizzle/db';
-import { managers } from '../drizzle/schema';
 import { UserFormValues } from '@/components/Authentication/ProfileForm';
 import { eq } from 'drizzle-orm';
+import { db } from '@/lib/drizzle/db';
+import { users } from '@/lib/drizzle/schema/users';
 
 export const getUser = async () => {
 	const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
@@ -41,13 +41,13 @@ export const updateUser = async (values: UserFormValues) => {
 	if (!user) throw new Error('Unauthorized');
 
 	await db
-		.update(managers)
+		.update(users)
 		.set({
 			firstName: values.firstName,
 			lastName: values.lastName,
 			email: values.email,
 		})
-		.where(eq(managers.id, user.id));
+		.where(eq(users.id, user.id));
 
 	const newUser = await getUser();
 	return newUser;
@@ -57,7 +57,7 @@ export const deleteUser = async () => {
 	const user = await getUser();
 	if (!user) throw new Error('Unauthorized');
 
-	await db.delete(managers).where(eq(managers.id, user.id));
+	await db.delete(users).where(eq(users.id, user.id));
 };
 
 export const validateRequest = async (): Promise<

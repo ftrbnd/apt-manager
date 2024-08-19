@@ -1,12 +1,9 @@
-import { validateRequest } from '@/lib/auth/actions';
+import { validateRequest } from '@/actions/auth';
 import { db } from '@/lib/drizzle/db';
-import {
-	apartments,
-	insertApartmentSchema,
-	managersBuildings,
-} from '@/lib/drizzle/schema';
+import { apartments } from '@/lib/drizzle/schema/apartments';
+import { usersBuildings } from '@/lib/drizzle/schema/users_buildings';
 import { eq } from 'drizzle-orm';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic'; // defaults to auto
 
@@ -18,8 +15,8 @@ export async function GET() {
 
 		const [manager] = await db
 			.select()
-			.from(managersBuildings)
-			.where(eq(managersBuildings.managerId, user.id));
+			.from(usersBuildings)
+			.where(eq(usersBuildings.userId, user.id));
 		if (!manager.buildingId)
 			return NextResponse.json(
 				{ error: 'Manager has no building assigned' },
@@ -32,26 +29,6 @@ export async function GET() {
 			.where(eq(apartments.buildingId, manager.buildingId));
 
 		return NextResponse.json({ apartments: allApartments }, { status: 200 });
-	} catch (error) {
-		console.log(error);
-
-		return NextResponse.json({ error }, { status: 500 });
-	}
-}
-
-export async function POST(request: NextRequest) {
-	try {
-		const body = await request.json();
-		const parsedApartment = insertApartmentSchema.parse(body.apartment);
-
-		console.log(parsedApartment);
-
-		const [apartment] = await db
-			.insert(apartments)
-			.values(parsedApartment)
-			.returning();
-
-		return NextResponse.json({ apartment }, { status: 200 });
 	} catch (error) {
 		console.log(error);
 

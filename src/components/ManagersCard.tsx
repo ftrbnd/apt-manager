@@ -44,6 +44,7 @@ export function ManagersCard() {
 	};
 
 	const handleReject = async (manager: ManagerWithBuilding) => {
+		// TODO: remove manager-building pairing, not whole user
 		const promise = () => remove(manager.user.id);
 
 		toast.promise(promise, {

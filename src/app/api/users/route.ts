@@ -1,14 +1,14 @@
 import { db } from '@/lib/drizzle/db';
-import { receipts } from '@/lib/drizzle/schema/receipts';
+import { users } from '@/lib/drizzle/schema/users';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic'; // defaults to auto
 
 export async function GET() {
 	try {
-		const allReceipts = await db.select().from(receipts);
+		const allUsers = await db.select().from(users);
 
-		return NextResponse.json({ receipts: allReceipts }, { status: 200 });
+		return NextResponse.json({ users: allUsers }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 });
 	}
