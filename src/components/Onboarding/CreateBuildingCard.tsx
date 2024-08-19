@@ -12,7 +12,7 @@ import { CreateBuildingForm } from './CreateBuildingForm';
 import { NewBuilding } from '@/lib/drizzle/schema';
 import { useBuildings } from '@/hooks/useBuildings';
 import { toast } from 'sonner';
-import { useManagers } from '@/hooks/useManagers';
+import { useManagers } from '@/hooks/useUsers';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { generateId } from 'lucia';

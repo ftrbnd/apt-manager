@@ -1,55 +1,21 @@
-import { Apartment, Receipt } from '@/lib/drizzle/schema';
+import { Receipt } from '@/lib/drizzle/schema/receipts';
 
 const RECEIPTS = '/api/receipts';
 
-interface CreateReceiptBody {
-	apartment?: Apartment;
-	month: number;
-	year: number;
-}
-
-export const createReceipt = async (body: CreateReceiptBody) => {
-	try {
-		if (!body.apartment) throw new Error('Apartment is required');
-
-		const res = await fetch(RECEIPTS, {
-			method: 'POST',
-			body: JSON.stringify(body),
-		});
-		if (!res.ok) throw new Error('Failed to get receipts');
-
-		const { receipts }: { receipts: Receipt[] } = await res.json();
-		return receipts;
-	} catch (e) {
-		console.error(e);
-		throw e;
-	}
-};
-
 export const getReceipts = async () => {
-	try {
-		const res = await fetch(RECEIPTS);
-		if (!res.ok) throw new Error('Failed to get receipts');
+	const res = await fetch(RECEIPTS);
+	if (!res.ok) throw new Error('Failed to get receipts');
 
-		const { receipts }: { receipts: Receipt[] } = await res.json();
-		return receipts;
-	} catch (e) {
-		console.error(e);
-		throw e;
-	}
+	const { receipts }: { receipts: Receipt[] } = await res.json();
+	return receipts;
 };
 
 export const getReceiptById = async (id?: string | null) => {
-	try {
-		if (!id) throw new Error('Receipt id is required');
+	if (!id) throw new Error('Receipt id is required');
 
-		const res = await fetch(`${RECEIPTS}/${id}`);
-		if (!res.ok) throw new Error(`Failed to get receipt with id ${id}`);
+	const res = await fetch(`${RECEIPTS}/${id}`);
+	if (!res.ok) throw new Error(`Failed to get receipt with id ${id}`);
 
-		const { receipt }: { receipt: Receipt } = await res.json();
-		return receipt;
-	} catch (e) {
-		console.error(e);
-		throw e;
-	}
+	const { receipt }: { receipt: Receipt } = await res.json();
+	return receipt;
 };

@@ -1,17 +1,14 @@
-import {
-	createBuilding,
-	getBuildingById,
-	getBuildings,
-} from '@/services/buildings';
+import { getBuildingById, getBuildings } from '@/services/buildings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useManagers } from './useManagers';
-import { Building } from '@/lib/drizzle/schema';
+import { useUsers } from './useUsers';
+import { Building } from '@/lib/drizzle/schema/buildings';
+import { createBuilding } from '@/actions/buildings';
 
 const BUILDINGS = 'buildings';
 
 export function useBuildings(id?: string | null) {
 	const queryClient = useQueryClient();
-	const { me } = useManagers();
+	const { me } = useUsers();
 
 	const {
 		data: buildings,

@@ -10,7 +10,7 @@ import { Loader2, Undo, CircleCheck, HousePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BuildingSelect } from './BuildingSelect';
-import { useManagers } from '@/hooks/useManagers';
+import { useManagers } from '@/hooks/useUsers';
 import { useBuildings } from '@/hooks/useBuildings';
 import { useState } from 'react';
 import { toast } from 'sonner';

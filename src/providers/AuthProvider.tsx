@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { User } from 'lucia';
-import { deleteUser, getUser, signOut, updateUser } from '@/lib/auth/actions';
+import { deleteUser, getUser, signOut, updateUser } from '@/actions/auth';
 import { UserFormValues } from '@/components/Authentication/ProfileForm';
 
 interface AuthContextProps {
