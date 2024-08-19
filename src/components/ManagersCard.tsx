@@ -8,11 +8,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { useManagers } from '@/hooks/useUsers';
+import { useUsers } from '@/hooks/useUsers';
 import { Check, Users, X } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Manager, ManagerWithBuilding } from '@/lib/drizzle/schema';
+import { User } from '@/lib/drizzle/schema/users';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -20,7 +20,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 export function ManagersCard() {
 	const { myBuilding, buildingLoading } = useBuildings();
-	const { managers, managersLoading, accept, remove } = useManagers();
+	const { managers, managersLoading, accept, remove } = useUsers();
 
 	const acceptedManagers = managers?.filter(
 		(manager) =>

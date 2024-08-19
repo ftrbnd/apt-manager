@@ -7,7 +7,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Dispatch, SetStateAction } from 'react';
-import { Receipt } from '@/lib/drizzle/schema';
+import { Receipt } from '@/lib/drizzle/schema/receipts';
 
 interface Props {
 	receipts: Receipt[];

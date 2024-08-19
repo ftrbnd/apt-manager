@@ -10,7 +10,7 @@ import { Loader2, Undo, CircleCheck, HousePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BuildingSelect } from './BuildingSelect';
-import { useManagers } from '@/hooks/useUsers';
+import { useUsers } from '@/hooks/useUsers';
 import { useBuildings } from '@/hooks/useBuildings';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -24,8 +24,9 @@ interface Props {
 }
 
 export function BuildingCard({ close }: Props) {
-	const { create, remove, managersLoading, me } = useManagers();
-	const { building } = useBuildings(me?.managers_buildings.buildingId);
+	const { create, remove, usersLoading, me } = useUsers();
+	const { building } = useBuildings();
+	// TODO: get user's requested building
 
 	const { user } = useAuth();
 
@@ -36,8 +37,8 @@ export function BuildingCard({ close }: Props) {
 		if (!user) return setError('Unauthorized');
 
 		if (me) {
-			// TODO: remove manager-building pairing, not whole user
-			const promise = () => remove(me?.user.id);
+			// TODO: use users_buildings table
+			const promise = () => remove(me);
 
 			toast.promise(promise, {
 				loading: 'Removing...',
@@ -52,9 +53,9 @@ export function BuildingCard({ close }: Props) {
 			const promise = () =>
 				create({
 					id: generateId(15),
-					managerId: user.id,
-					buildingId,
+					...me,
 				});
+			// TODO: use users_buildings table
 
 			toast.promise(promise, {
 				loading: 'Assigning...',
@@ -68,7 +69,7 @@ export function BuildingCard({ close }: Props) {
 
 	return (
 		<>
-			{managersLoading ? (
+			{usersLoading ? (
 				<Card className='w-full sm:max-w-sm'>
 					<CardHeader>
 						<Skeleton className='ml-1 underline h-6 w-[200px]' />

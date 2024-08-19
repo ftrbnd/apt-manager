@@ -3,7 +3,7 @@ import { formatRentChecks, spellOutRent } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useApartments } from '@/hooks/useApartments';
-import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
+import { Receipt as ReceiptType } from '@/lib/drizzle/schema/receipts';
 import { useBuildings } from '@/hooks/useBuildings';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { Loader2, Printer } from 'lucide-react';
 
 interface Props {
 	receipt: ReceiptType;
-	apartmentId?: number;
+	apartmentId?: string;
 }
 
 export function Receipt({ receipt, apartmentId }: Props) {

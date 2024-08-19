@@ -1,4 +1,4 @@
-import { Apartment } from '@/lib/drizzle/schema';
+import { Apartment } from '@/lib/drizzle/schema/apartments';
 import {
 	Card,
 	CardContent,

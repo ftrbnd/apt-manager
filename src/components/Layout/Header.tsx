@@ -6,7 +6,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { NavSheet } from './NavSheet';
 import { APP_NAME } from '@/lib/constants';
 import { Logo } from './Logo';
-import { validateRequest } from '@/lib/auth/actions';
+import { validateRequest } from '@/actions/auth';
 
 export async function Header() {
 	const { user } = await validateRequest();

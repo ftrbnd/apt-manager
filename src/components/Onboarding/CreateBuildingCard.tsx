@@ -9,10 +9,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { PencilOff, Save } from 'lucide-react';
 import { CreateBuildingForm } from './CreateBuildingForm';
-import { NewBuilding } from '@/lib/drizzle/schema';
+import { NewBuilding } from '@/lib/drizzle/schema/buildings';
 import { useBuildings } from '@/hooks/useBuildings';
 import { toast } from 'sonner';
-import { useManagers } from '@/hooks/useUsers';
+import { useUsers } from '@/hooks/useUsers';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { generateId } from 'lucia';
@@ -23,7 +23,7 @@ interface Props {
 
 export function CreateBuildingCard({ close }: Props) {
 	const { create: createBuilding } = useBuildings();
-	const { create: createManager } = useManagers();
+	const { create: createManager } = useUsers();
 
 	const { user } = useAuth();
 	const router = useRouter();
@@ -33,6 +33,7 @@ export function CreateBuildingCard({ close }: Props) {
 
 		const newBuilding = await createBuilding(building);
 
+		// TODO: use users_buildings table
 		await createManager({
 			id: generateId(15),
 			managerId: user.id,

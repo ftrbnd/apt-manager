@@ -1,4 +1,7 @@
-import { insertApartmentSchema, NewApartment } from '@/lib/drizzle/schema';
+import {
+	insertApartmentSchema,
+	NewApartment,
+} from '@/lib/drizzle/schema/apartments';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {

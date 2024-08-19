@@ -16,7 +16,7 @@ import {
 	AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Apartment } from '@/lib/drizzle/schema';
+import { Apartment } from '@/lib/drizzle/schema/apartments';
 
 interface Props {
 	apartment: Apartment;
@@ -27,7 +27,7 @@ export function DeleteApartmentButton({ apartment }: Props) {
 	const router = useRouter();
 
 	const handleDelete = async () => {
-		const promise = () => remove(apartment.id);
+		const promise = () => remove(apartment);
 
 		toast.promise(promise, {
 			loading: 'Deleting apartment...',

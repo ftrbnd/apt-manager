@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Apartment } from '@/lib/drizzle/schema';
+import { Apartment } from '@/lib/drizzle/schema/apartments';
 import { EditRentFieldArray } from './EditRentFieldArray';
 import { useApartments } from '@/hooks/useApartments';
 import { PencilOff, Save } from 'lucide-react';
