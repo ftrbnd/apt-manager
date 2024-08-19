@@ -1,9 +1,10 @@
 import { Lucia } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import { db } from '../drizzle/db';
-import { Manager, managers, sessions } from '@/lib/drizzle/schema';
+import { sessions } from '../drizzle/schema/sessions';
+import { User, users } from '../drizzle/schema/users';
 
-const adapter = new DrizzlePostgreSQLAdapter(db, sessions, managers);
+const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
@@ -23,4 +24,4 @@ declare module 'lucia' {
 	}
 }
 
-interface DatabaseUserAttributes extends Manager {}
+interface DatabaseUserAttributes extends User {}

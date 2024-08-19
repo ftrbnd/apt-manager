@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { Apartment, Receipt } from './drizzle/schema';
+import { Apartment } from './drizzle/schema/apartments';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));

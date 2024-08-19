@@ -2,10 +2,12 @@ import { verifyRequestOrigin } from 'lucia';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { db } from './lib/drizzle/db';
-import { managers, managersBuildings, sessions } from './lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { lucia } from './lib/auth/lucia';
+import { users } from './lib/drizzle/schema/users';
+import { sessions } from './lib/drizzle/schema/sessions';
+import { usersBuildings } from './lib/drizzle/schema/users_buildings';
 
 export async function middleware(request: NextRequest) {
 	const onApiRoute = request.nextUrl.pathname.startsWith('/api');
@@ -44,13 +46,13 @@ export async function middleware(request: NextRequest) {
 		.where(eq(sessions.id, sessionId));
 
 	if (session) {
-		const [manager] = await db
+		const [user] = await db
 			.select()
-			.from(managers)
-			.where(eq(managers.id, session.userId))
-			.innerJoin(managersBuildings, eq(managers.id, session.userId));
+			.from(users)
+			.where(eq(users.id, session.userId))
+			.innerJoin(usersBuildings, eq(users.id, session.userId));
 
-		if (!manager) {
+		if (!user) {
 			if (!onAllowedPage) {
 				return NextResponse.redirect(new URL('/onboarding', request.url));
 			}
@@ -59,10 +61,10 @@ export async function middleware(request: NextRequest) {
 		} else if (
 			!onLoginPage &&
 			!onAllowedPage &&
-			!manager.managers_buildings.approved
+			!user.users_buildings.approved
 		) {
 			return NextResponse.redirect(new URL('/onboarding', request.url));
-		} else if (onOnboardingPage && manager.managers_buildings.approved) {
+		} else if (onOnboardingPage && user.users_buildings.approved) {
 			return NextResponse.redirect(new URL('/', request.url));
 		} else if (onLoginPage) {
 			return NextResponse.redirect(new URL('/', request.url));
