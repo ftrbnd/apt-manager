@@ -1,14 +1,14 @@
 import { getBuildingById, getBuildings } from '@/services/buildings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useUsers } from './useUsers';
 import { Building } from '@/lib/drizzle/schema/buildings';
 import { createBuilding } from '@/actions/buildings';
+import { useUserBuildings } from './useUserBuildings';
 
 const BUILDINGS = 'buildings';
 
 export function useBuildings(id?: string | null) {
 	const queryClient = useQueryClient();
-	const { me } = useUsers();
+	const { myUserBuilding } = useUserBuildings();
 
 	const {
 		data: buildings,
@@ -70,7 +70,7 @@ export function useBuildings(id?: string | null) {
 	});
 
 	const myBuilding = buildings?.find(
-		(b) => b.id === me?.managers_buildings.buildingId
+		(b) => b.id === myUserBuilding?.buildingId
 	);
 
 	return {

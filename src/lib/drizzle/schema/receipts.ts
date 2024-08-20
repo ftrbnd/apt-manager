@@ -3,7 +3,7 @@ import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import { apartments } from './apartments';
 
-export const paymentMethodEnum = pgEnum('payment_method', [
+const paymentMethodEnum = pgEnum('payment_method', [
 	'CHECK',
 	'MONEY ORDER',
 	'OTHER',

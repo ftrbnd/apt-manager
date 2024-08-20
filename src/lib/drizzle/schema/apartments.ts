@@ -1,8 +1,13 @@
-import { pgTable, real, text } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, real, text } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 import { buildings } from './buildings';
-import { paymentMethodEnum } from './receipts';
+
+const paymentMethodEnum = pgEnum('payment_method', [
+	'CHECK',
+	'MONEY ORDER',
+	'OTHER',
+]);
 
 export const apartments = pgTable('apartments', {
 	id: text('id').primaryKey(),

@@ -2,10 +2,10 @@ import { cookies } from 'next/headers';
 import { AppleTokens, OAuth2RequestError } from 'arctic';
 import { apple } from '@/lib/auth/apple';
 import { db } from '@/lib/drizzle/db';
-import { managers } from '@/lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { lucia } from '@/lib/auth/lucia';
 import { parseJWT } from 'oslo/jwt';
+import { users } from '@/lib/drizzle/schema/users';
 
 export async function POST(request: Request): Promise<Response> {
 	const formData = await request.formData();
@@ -30,8 +30,8 @@ export async function POST(request: Request): Promise<Response> {
 
 		const [existingUser] = await db
 			.select()
-			.from(managers)
-			.where(eq(managers.id, userId));
+			.from(users)
+			.where(eq(users.id, userId));
 
 		if (existingUser) {
 			const session = await lucia.createSession(existingUser.id, {});
@@ -49,7 +49,7 @@ export async function POST(request: Request): Promise<Response> {
 			});
 		}
 
-		await db.insert(managers).values({
+		await db.insert(users).values({
 			id: userId,
 		});
 

@@ -6,6 +6,7 @@ import {
 	UserBuilding,
 	usersBuildings,
 } from '@/lib/drizzle/schema/users_buildings';
+import { eq } from 'drizzle-orm';
 
 export async function createUserBuilding(newUserBuilding: NewUserBuilding) {
 	const [userBuilding] = await db
@@ -23,4 +24,10 @@ export async function updateUserBuilding(userBuilding: UserBuilding) {
 		.returning();
 
 	return newUserBuilding;
+}
+
+export async function deleteUserBuilding(userBuilding?: UserBuilding) {
+	if (!userBuilding) throw new Error('User-building is undefined');
+
+	await db.delete(usersBuildings).where(eq(usersBuildings.id, userBuilding.id));
 }
