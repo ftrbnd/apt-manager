@@ -1,17 +1,52 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { useTheme } from 'next-themes';
-import { ClerkProvider } from '@clerk/nextjs';
-import { dark } from '@clerk/themes';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { User } from 'lucia';
+import { deleteUser, getUser, signOut, updateUser } from '@/actions/auth';
+import { UserFormValues } from '@/components/Authentication/ProfileForm';
+
+interface AuthContextProps {
+	user: User | null;
+	signOut: () => Promise<{ error: string | null }>;
+	update: (values: UserFormValues) => Promise<User | null>;
+	deleteAccount: () => Promise<void>;
+}
+
+export const AuthContext = createContext<AuthContextProps>({
+	user: null,
+	signOut: async () => {
+		return {
+			error: null,
+		};
+	},
+	update: async () => {
+		return null;
+	},
+	deleteAccount: async () => {},
+});
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-	const { resolvedTheme } = useTheme();
+	const [user, setUser] = useState<User | null>(null);
+
+	useEffect(() => {
+		getUser().then((user) => setUser(user));
+	}, []);
+
+	const update = async (values: UserFormValues) => {
+		const newUser = await updateUser(values);
+
+		setUser(newUser);
+		return newUser;
+	};
+
+	const deleteAccount = async () => {
+		await deleteUser();
+		setUser(null);
+	};
 
 	return (
-		<ClerkProvider
-			appearance={{ baseTheme: resolvedTheme === 'dark' ? dark : undefined }}>
+		<AuthContext.Provider value={{ user, signOut, update, deleteAccount }}>
 			{children}
-		</ClerkProvider>
+		</AuthContext.Provider>
 	);
 }

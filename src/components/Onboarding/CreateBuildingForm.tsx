@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { z } from 'zod';
-import { NewBuilding } from '@/lib/drizzle/schema';
+import { NewBuilding } from '@/lib/drizzle/schema/buildings';
 
 const formSchema = z.object({
 	landlord: z.string().trim().min(1, { message: 'Required' }),

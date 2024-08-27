@@ -1,62 +1,81 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { verifyRequestOrigin } from 'lucia';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { db } from './lib/drizzle/db';
-import { managers } from './lib/drizzle/schema';
 import { eq } from 'drizzle-orm';
+import { cookies } from 'next/headers';
+import { lucia } from './lib/auth/lucia';
+import { users } from './lib/drizzle/schema/users';
+import { sessions } from './lib/drizzle/schema/sessions';
+import { usersBuildings } from './lib/drizzle/schema/users_buildings';
 
-const isPublicRoute = createRouteMatcher([
-	'/sign-in(.*)',
-	'/sign-up(.*)',
-	'/api/webhooks',
-]);
+export async function middleware(request: NextRequest) {
+	const onApiRoute = request.nextUrl.pathname.startsWith('/api');
+	if (onApiRoute) {
+		if (request.method === 'GET') return NextResponse.next();
 
-const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
-const isAccountRoute = createRouteMatcher(['/account(.*)']);
-const isApiRoute = createRouteMatcher('/api(.*)');
+		const originHeader = request.headers.get('Origin');
+		const hostHeader = request.headers.get('Host');
+		if (
+			!originHeader ||
+			!hostHeader ||
+			!verifyRequestOrigin(originHeader, [hostHeader, 'appleid.apple.com'])
+		) {
+			return new NextResponse(null, {
+				status: 403,
+			});
+		}
+	}
 
-export default clerkMiddleware(async (auth, request) => {
-	const { protect, userId } = auth();
+	const onLoginPage = request.nextUrl.pathname.startsWith('/login');
+	const onOnboardingPage = request.nextUrl.pathname.startsWith('/onboarding');
+	const onAccountPage = request.nextUrl.pathname.startsWith('/account');
+	const onAllowedPage = onOnboardingPage || onAccountPage;
 
-	if (isApiRoute(request)) {
+	const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+	if (!sessionId) {
+		if (!onLoginPage) {
+			return NextResponse.redirect(new URL('/login', request.url));
+		}
 		return NextResponse.next();
 	}
 
-	const onOnboardingPage = isOnboardingRoute(request);
-	const onPrivatePage = !isPublicRoute(request);
-	const onAccountPage = isAccountRoute(request);
+	const [session] = await db
+		.select()
+		.from(sessions)
+		.where(eq(sessions.id, sessionId));
 
-	const onAllowedPage = onOnboardingPage || onAccountPage;
-
-	if (userId) {
-		const [manager] = await db
+	if (session) {
+		const [user] = await db
 			.select()
-			.from(managers)
-			.where(eq(managers.clerkUserId, userId));
+			.from(users)
+			.where(eq(users.id, session.userId))
+			.innerJoin(usersBuildings, eq(users.id, session.userId));
 
-		if (!manager) {
+		if (!user) {
 			if (!onAllowedPage) {
-				const onboardingUrl = new URL('/onboarding', request.url);
-				return NextResponse.redirect(onboardingUrl);
+				return NextResponse.redirect(new URL('/onboarding', request.url));
 			}
 
 			return NextResponse.next();
-		} else if (onPrivatePage && !onAllowedPage && !manager.approved) {
-			const onboardingUrl = new URL('/onboarding', request.url);
-			return NextResponse.redirect(onboardingUrl);
-		} else if (onOnboardingPage && manager.approved) {
-			const homeUrl = new URL('/', request.url);
-			return NextResponse.redirect(homeUrl);
+		} else if (
+			!onLoginPage &&
+			!onAllowedPage &&
+			!user.users_buildings.approved
+		) {
+			return NextResponse.redirect(new URL('/onboarding', request.url));
+		} else if (onOnboardingPage && user.users_buildings.approved) {
+			return NextResponse.redirect(new URL('/', request.url));
+		} else if (onLoginPage) {
+			return NextResponse.redirect(new URL('/', request.url));
 		}
 	} else {
-		if (onPrivatePage || onOnboardingPage) protect();
+		if (!onLoginPage || onOnboardingPage) {
+			return NextResponse.redirect(new URL('/login', request.url));
+		}
 	}
-});
+}
 
 export const config = {
-	matcher: [
-		// Skip Next.js internals and all static files, unless found in search params
-		'/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-		// Always run for API routes
-		'/(api|trpc)(.*)',
-	],
+	matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

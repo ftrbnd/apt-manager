@@ -1,11 +1,8 @@
-import { Receipt } from '@/lib/drizzle/schema';
-import {
-	createReceipt,
-	getReceiptById,
-	getReceipts,
-} from '@/services/receipts';
+import { Receipt } from '@/lib/drizzle/schema/receipts';
+import { getReceiptById, getReceipts } from '@/services/receipts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useApartments } from './useApartments';
+import { createReceipt } from '@/actions/receipts';
 
 const RECEIPTS = 'receipts';
 
@@ -42,8 +39,8 @@ export function useReceipts(id?: string) {
 			if (previousReceipts && body.apartment) {
 				const newReceipts: Receipt[] = body.apartment.rent.map((value) => {
 					return {
-						id: Math.random(),
-						apartmentId: body.apartment?.id ?? Math.random(),
+						id: Math.random().toString(),
+						apartmentId: body.apartment.id,
 						month: new Date().getMonth(),
 						year: new Date().getFullYear(),
 						value,

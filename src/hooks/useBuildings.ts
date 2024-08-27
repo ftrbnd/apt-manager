@@ -1,17 +1,14 @@
-import {
-	createBuilding,
-	getBuildingById,
-	getBuildings,
-} from '@/services/buildings';
+import { getBuildingById, getBuildings } from '@/services/buildings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useManagers } from './useManagers';
-import { Building } from '@/lib/drizzle/schema';
+import { Building } from '@/lib/drizzle/schema/buildings';
+import { createBuilding } from '@/actions/buildings';
+import { useUserBuildings } from './useUserBuildings';
 
 const BUILDINGS = 'buildings';
 
-export function useBuildings(id?: string | number) {
+export function useBuildings(id?: string | null) {
 	const queryClient = useQueryClient();
-	const { me } = useManagers();
+	const { myUserBuilding } = useUserBuildings();
 
 	const {
 		data: buildings,
@@ -28,8 +25,7 @@ export function useBuildings(id?: string | number) {
 		isPending: buildingPending,
 	} = useQuery({
 		queryKey: [BUILDINGS, id],
-		queryFn: () =>
-			getBuildingById(typeof id === 'string' ? id : id?.toString()),
+		queryFn: () => getBuildingById(id),
 		enabled: id !== undefined,
 	});
 
@@ -47,7 +43,7 @@ export function useBuildings(id?: string | number) {
 			if (previousBuildings) {
 				const tempBuilding: Building = {
 					...newBuilding,
-					id: Math.random(),
+					id: Math.random().toString(),
 				};
 
 				queryClient.setQueryData<Building[]>(
@@ -73,7 +69,9 @@ export function useBuildings(id?: string | number) {
 		},
 	});
 
-	const myBuilding = buildings?.find((b) => b.id === me?.buildingId);
+	const myBuilding = buildings?.find(
+		(b) => b.id === myUserBuilding?.buildingId
+	);
 
 	return {
 		buildings: buildings ?? [],

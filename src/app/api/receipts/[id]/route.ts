@@ -1,5 +1,5 @@
 import { db } from '@/lib/drizzle/db';
-import { receipts } from '@/lib/drizzle/schema';
+import { receipts } from '@/lib/drizzle/schema/receipts';
 import { eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'; // defaults to auto
 
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: { id: number } }
+	{ params }: { params: { id: string } }
 ) {
 	try {
 		const { id } = params;

@@ -10,13 +10,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useAuth, useUser } from '@clerk/nextjs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CircleUser } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 export function UserMenu() {
-	const { signOut } = useAuth();
-	const { user } = useUser();
+	const { user, signOut } = useAuth();
 
 	return (
 		<DropdownMenu>
@@ -25,12 +24,11 @@ export function UserMenu() {
 					variant='secondary'
 					size='icon'
 					className='rounded-full'>
-					{user ? (
+					{user?.firstName && user.lastName ? (
 						<Avatar>
-							<AvatarImage src={user.imageUrl} />
 							<AvatarFallback>
-								{user.firstName ? user.firstName[0] : ''}
-								{user.lastName ? user.lastName[0] : ''}
+								{user.firstName[0]}
+								{user.lastName[0]}
 							</AvatarFallback>
 						</Avatar>
 					) : (

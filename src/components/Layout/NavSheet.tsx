@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Receipt } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { HeaderLinks } from './HeaderLinks';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
@@ -12,14 +12,14 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/sheet';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/hooks/useAuth';
 import { useState } from 'react';
 import Link from 'next/link';
 import { APP_NAME } from '@/lib/constants';
 import { Logo } from './Logo';
 
 export function NavSheet() {
-	const { userId } = useAuth();
+	const { user } = useAuth();
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -47,7 +47,7 @@ export function NavSheet() {
 					<SheetDescription>Menu</SheetDescription>
 				</SheetHeader>
 
-				{userId && (
+				{user?.id && (
 					<nav className='grid gap-6 text-lg font-medium'>
 						<Link
 							href='/'

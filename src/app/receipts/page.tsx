@@ -18,7 +18,11 @@ export default function Page() {
 			(receipt) =>
 				receipt.month.toString() === month && receipt.year.toString() === year
 		)
-		.sort((a, b) => a.apartmentId - b.apartmentId);
+		.sort(
+			(a, b) =>
+				new Date(`${a.createdAt}`).getTime() -
+				new Date(`${b.createdAt}`).getTime()
+		);
 
 	return (
 		<div className='flex flex-col items-center w-full min-h-screen gap-4 p-4 bg-muted/40 md:p-8 md:gap-8'>

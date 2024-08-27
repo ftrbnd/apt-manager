@@ -1,13 +1,12 @@
-import { Apartment } from '@/lib/drizzle/schema';
+import { Apartment } from '@/lib/drizzle/schema/apartments';
+import { getApartmentById, getApartments } from '@/services/apartments';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useBuildings } from './useBuildings';
 import {
 	createApartment,
 	deleteApartment,
-	getApartmentById,
-	getApartments,
 	updateApartment,
-} from '@/services/apartments';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useBuildings } from './useBuildings';
+} from '@/actions/apartments';
 
 const APARTMENTS = 'apartments';
 
@@ -28,7 +27,7 @@ export function useApartments(id?: string) {
 
 	const sortedApartments = apartments
 		?.filter((a) => a.buildingId === myBuilding?.id)
-		.sort((a, b) => a.id - b.id);
+		.sort((a, b) => parseInt(a.id) - parseInt(b.id));
 
 	const { mutateAsync: create } = useMutation({
 		mutationFn: createApartment,
@@ -44,8 +43,8 @@ export function useApartments(id?: string) {
 			if (previousApartments) {
 				const tempApartment: Apartment = {
 					...newApartment,
-					id: Math.random(),
-					buildingId: Math.random(),
+					id: Math.random().toString(),
+					buildingId: Math.random().toString(),
 					note: null,
 				};
 
@@ -110,7 +109,7 @@ export function useApartments(id?: string) {
 
 	const { mutateAsync: remove } = useMutation({
 		mutationFn: deleteApartment,
-		onMutate: async (apartmentId) => {
+		onMutate: async (apartment) => {
 			await queryClient.cancelQueries({
 				queryKey: [APARTMENTS],
 			});
@@ -121,7 +120,7 @@ export function useApartments(id?: string) {
 
 			if (previousApartments) {
 				const filteredApartments = previousApartments.filter(
-					(apt) => apt.id !== apartmentId
+					(apt) => apt.id !== apartment.id
 				);
 
 				queryClient.setQueryData<Apartment[]>([APARTMENTS], filteredApartments);

@@ -10,23 +10,25 @@ import { Loader2, Undo, CircleCheck, HousePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BuildingSelect } from './BuildingSelect';
-import { useManagers } from '@/hooks/useManagers';
 import { useBuildings } from '@/hooks/useBuildings';
-import { useUser } from '@clerk/nextjs';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/hooks/useAuth';
+import { generateId } from 'lucia';
+import { useUserBuildings } from '@/hooks/useUserBuildings';
 
 interface Props {
 	close: () => void;
 }
 
 export function BuildingCard({ close }: Props) {
-	const { create, remove, managersLoading, me } = useManagers();
-	const { building } = useBuildings(me?.buildingId);
+	const { create, remove, myUserBuilding, userBuildingsLoading } =
+		useUserBuildings();
+	const { myBuilding } = useBuildings();
 
-	const { user } = useUser();
+	const { user } = useAuth();
 
 	const [buildingId, setBuildingId] = useState<string | null>(null);
 	const [error, setError] = useState('');
@@ -34,8 +36,8 @@ export function BuildingCard({ close }: Props) {
 	const handleSubmit = async () => {
 		if (!user) return setError('Unauthorized');
 
-		if (me) {
-			const promise = () => remove(me?.id);
+		if (myUserBuilding) {
+			const promise = () => remove(myUserBuilding);
 
 			toast.promise(promise, {
 				loading: 'Removing...',
@@ -49,12 +51,10 @@ export function BuildingCard({ close }: Props) {
 
 			const promise = () =>
 				create({
-					clerkUserId: user.id,
-					buildingId: parseInt(buildingId),
-					firstName: user.firstName,
-					lastName: user.lastName,
-					email: user.primaryEmailAddress?.emailAddress,
-					avatar: user.imageUrl,
+					id: generateId(15),
+					approved: false,
+					buildingId: buildingId,
+					userId: user.id,
 				});
 
 			toast.promise(promise, {
@@ -69,7 +69,7 @@ export function BuildingCard({ close }: Props) {
 
 	return (
 		<>
-			{managersLoading ? (
+			{userBuildingsLoading ? (
 				<Card className='w-full sm:max-w-sm'>
 					<CardHeader>
 						<Skeleton className='ml-1 underline h-6 w-[200px]' />
@@ -90,17 +90,19 @@ export function BuildingCard({ close }: Props) {
 			) : (
 				<Card className='w-full sm:max-w-sm'>
 					<CardHeader>
-						<CardTitle>{me ? 'Your request was sent' : 'Welcome!'}</CardTitle>
+						<CardTitle>
+							{myUserBuilding ? 'Your request was sent' : 'Welcome!'}
+						</CardTitle>
 						<CardDescription>
-							{me
+							{myUserBuilding
 								? 'Awaiting approval from another manager'
 								: "Let's get started"}
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						{me ? (
-							building ? (
-								<p>{`${building.street} (${building.city}, ${building.state})`}</p>
+						{myUserBuilding ? (
+							myBuilding ? (
+								<p>{`${myBuilding.street} (${myBuilding.city}, ${myBuilding.state})`}</p>
 							) : (
 								<Skeleton className='ml-1 h-6 w-full md:w-[300px]' />
 							)
@@ -115,13 +117,13 @@ export function BuildingCard({ close }: Props) {
 					<CardFooter className='grid grid-cols-3 gap-2'>
 						<Button
 							onClick={handleSubmit}
-							variant={me ? 'destructive' : 'default'}>
-							{me ? (
+							variant={myUserBuilding ? 'destructive' : 'default'}>
+							{myUserBuilding ? (
 								<Undo className='w-4 h-4 mr-2' />
 							) : (
 								<CircleCheck className='w-4 h-4 mr-2' />
 							)}
-							{me ? 'Undo' : 'Submit'}
+							{myUserBuilding ? 'Undo' : 'Submit'}
 						</Button>
 						<div className='flex items-center justify-center gap-2'>
 							<Separator className='w-4' />

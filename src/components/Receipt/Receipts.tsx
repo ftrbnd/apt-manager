@@ -1,4 +1,4 @@
-import { Receipt as ReceiptType } from '@/lib/drizzle/schema';
+import { Receipt as ReceiptType } from '@/lib/drizzle/schema/receipts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Receipt, ReceiptSkeleton } from './Receipt';
 import { Skeleton } from '@/components/ui/skeleton';

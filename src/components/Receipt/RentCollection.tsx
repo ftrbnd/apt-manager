@@ -1,4 +1,5 @@
-import { Apartment, Receipt } from '@/lib/drizzle/schema';
+import { Apartment } from '@/lib/drizzle/schema/apartments';
+import { Receipt } from '@/lib/drizzle/schema/receipts';
 import {
 	Accordion,
 	AccordionItem,

@@ -1,7 +1,7 @@
 import { useReceipts } from '@/hooks/useReceipts';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Apartment, Receipt as ReceiptType } from '@/lib/drizzle/schema';
+import { Receipt as ReceiptType } from '@/lib/drizzle/schema/receipts';
 import { Check, Loader2, Receipt } from 'lucide-react';
 import {
 	DropdownMenu,
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { RentMonthSelect } from './RentMonthSelect';
 import { useState } from 'react';
+import { Apartment } from '@/lib/drizzle/schema/apartments';
 
 interface Props {
 	apartment: Apartment;
