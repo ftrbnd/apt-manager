@@ -1,3 +1,5 @@
+'use server';
+
 import { db } from '@/lib/drizzle/db';
 import { Apartment } from '@/lib/drizzle/schema/apartments';
 import { Receipt, receipts } from '@/lib/drizzle/schema/receipts';
