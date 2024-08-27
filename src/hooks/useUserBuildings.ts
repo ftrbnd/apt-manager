@@ -8,7 +8,7 @@ import { getUserBuildings } from '@/services/users_buildings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from './useAuth';
 
-const USERS_BUILDINGS = 'users';
+const USERS_BUILDINGS = 'users_buildings';
 
 export function useUserBuildings() {
 	const queryClient = useQueryClient();

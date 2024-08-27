@@ -18,12 +18,19 @@ export async function createUserBuilding(newUserBuilding: NewUserBuilding) {
 }
 
 export async function updateUserBuilding(userBuilding: UserBuilding) {
-	const [newUserBuilding] = await db
-		.update(usersBuildings)
-		.set(userBuilding)
-		.returning();
+	if (!userBuilding.approved) {
+		await db
+			.delete(usersBuildings)
+			.where(eq(usersBuildings.id, userBuilding.id));
+	} else {
+		const [newUserBuilding] = await db
+			.update(usersBuildings)
+			.set(userBuilding)
+			.where(eq(usersBuildings.id, userBuilding.id))
+			.returning();
 
-	return newUserBuilding;
+		return newUserBuilding;
+	}
 }
 
 export async function deleteUserBuilding(userBuilding?: UserBuilding) {

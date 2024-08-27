@@ -32,15 +32,8 @@ export function ManagersCard() {
 		(ub) => !ub.approved && myBuilding?.id === ub.buildingId
 	);
 
-	console.log({ acceptedUserBuildings });
-	console.log({ users });
-	// TODO: WHY DOES USERS HAVE A USERBUILDING?
-
 	const getUser = (userBuilding: UserBuilding) => {
-		console.log({ userBuilding });
-
 		const user = users?.find((user) => user.id === userBuilding.userId);
-		console.log({ user });
 
 		return user;
 	};
@@ -172,8 +165,6 @@ export function ManagersCard() {
 
 function ManagerDetails({ manager }: { manager?: User }) {
 	const { user } = useAuth();
-
-	console.log({ manager });
 
 	return (
 		<div className='flex items-center gap-4'>
