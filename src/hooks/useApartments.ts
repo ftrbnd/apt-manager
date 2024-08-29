@@ -27,7 +27,12 @@ export function useApartments(id?: string) {
 
 	const sortedApartments = apartments
 		?.filter((a) => a.buildingId === myBuilding?.id)
-		.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+		.sort((a, b) =>
+			a.number.localeCompare(b.number, undefined, {
+				numeric: true,
+				sensitivity: 'base',
+			})
+		);
 
 	const { mutateAsync: create } = useMutation({
 		mutationFn: createApartment,

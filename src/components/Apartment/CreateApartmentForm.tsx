@@ -1,3 +1,5 @@
+'use client';
+
 import {
 	insertApartmentSchema,
 	NewApartment,
@@ -21,15 +23,18 @@ import { z } from 'zod';
 import { useApartments } from '@/hooks/useApartments';
 import { toast } from 'sonner';
 import { useBuildings } from '@/hooks/useBuildings';
+import { generateId } from 'lucia';
 
-const createApartmentSchema = insertApartmentSchema.extend({
-	rent: z
-		.object({ value: z.number().positive('Cannot be zero') })
-		.array()
-		.min(1, 'At least one value greater than 0 is required.'),
-	number: z.string().trim().min(1, 'Required'),
-	tenant: z.string().trim().min(1, 'Required'),
-});
+const createApartmentSchema = insertApartmentSchema
+	.extend({
+		rent: z
+			.object({ value: z.number().positive('Cannot be zero') })
+			.array()
+			.min(1, 'At least one value greater than 0 is required.'),
+		number: z.string().trim().min(1, 'Required'),
+		tenant: z.string().trim().min(1, 'Required'),
+	})
+	.omit({ buildingId: true, id: true });
 
 export type CreatedApartment = z.infer<typeof createApartmentSchema>;
 
@@ -45,20 +50,17 @@ export function CreateApartmentForm({ hide }: Props) {
 		resolver: zodResolver(createApartmentSchema),
 	});
 
+	console.log(form.formState.errors);
+
 	const onSubmit = async (apartment: CreatedApartment) => {
-		console.log('WHAT');
-
 		if (!myBuilding) return toast.error('A building is required');
-
-		console.log(apartment);
 
 		const newApartment: NewApartment = {
 			...apartment,
+			id: generateId(15),
 			buildingId: myBuilding.id,
 			rent: apartment.rent.map((r) => r.value).filter((v) => v > 0),
 		};
-
-		console.log(newApartment);
 
 		const promise = () => create(newApartment);
 
