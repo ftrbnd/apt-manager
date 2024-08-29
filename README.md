@@ -63,7 +63,7 @@ This management app was created to help with my own apartment building to make m
 
 - [![Typescript][Typescript]][Typescript-url]
 - [![Next.js][Next.js]][Next-url]
-- [![Clerk][Clerk]][Clerk-url]
+- [![Lucia][Lucia]][Lucia-url]
 - [![Shadcn][Shadcn]][Shadcn-url]
 - [![Tailwind][Tailwind]][Tailwind-url]
 - [![Drizzle][Drizzle]][Drizzle-url]
@@ -77,9 +77,9 @@ This management app was created to help with my own apartment building to make m
 
 ### Prerequisites
 
-- [Clerk](https://clerk.com) secrets and tokens
+- [Apple](https://developer.apple.com/) client id, team id, key id, and certificate
 - Database urls and key from [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
-- Ngrok auth token to handle [webhooks from Clerk](https://clerk.com/docs/integrations/webhooks/sync-data#set-up-ngrok)
+- Ngrok auth token to test Sign in with Apple in development
 
 ### Installation
 
@@ -110,14 +110,13 @@ This management app was created to help with my own apartment building to make m
 Create a `.env` file at the root and fill out the values:
 
 ```env
-  CLERK_SECRET_KEY=
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-  WEBHOOK_SECRET=
+  NEXT_PUBLIC_AUTH_REDIRECT_URI="https://{{ NGROK_URL }}/login/apple/callback"
+  AUTH_REDIRECT_URI="https://{{ NGROK_URL }}/login/apple/callback"
 
-  NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
-  NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
-  NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL="/"
-  NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL="/onboarding"
+  APPLE_CERTIFICATE=
+  APPLE_KEY_ID=
+  APPLE_TEAM_ID=
+  APPLE_CLIENT_ID=
 
   POSTGRES_DATABASE="verceldb"
   POSTGRES_HOST=
@@ -167,8 +166,8 @@ Project Link: [https://github.com/ftrbnd/apt-manager](https://github.com/ftrbnd/
 [Typescript-url]: https://www.typescriptlang.org/
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
-[Clerk]: https://img.shields.io/badge/clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=fff
-[Clerk-url]: https://clerk.com/
+[Lucia]: https://img.shields.io/badge/lucia-5F57FF?style=for-the-badge&logo=lucia&logoColor=fff
+[Lucia-url]: https://lucia.com/
 [Shadcn]: https://img.shields.io/badge/-shadcn/ui-000000?style=for-the-badge&logo=shadcnui&logoColor=fff
 [Shadcn-url]: https://ui.shadcn.com/
 [Tailwind]: https://img.shields.io/badge/tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white
