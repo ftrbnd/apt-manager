@@ -3,20 +3,20 @@ import { z } from 'zod';
 
 export const serverEnv = createEnv({
 	server: {
-		POSTGRES_DATABASE: z.string(),
-		POSTGRES_HOST: z.string(),
-		POSTGRES_PASSWORD: z.string(),
-		POSTGRES_PRISMA_URL: z.string(),
-		POSTGRES_URL: z.string(),
-		POSTGRES_URL_NON_POOLING: z.string(),
-		POSTGRES_URL_NO_SSL: z.string(),
-		POSTGRES_USER: z.string(),
+		POSTGRES_DATABASE: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_HOST: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_PASSWORD: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_PRISMA_URL: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_URL: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_URL_NON_POOLING: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_URL_NO_SSL: z.string().optional().default('PLACEHOLDER'),
+		POSTGRES_USER: z.string().optional().default('PLACEHOLDER'),
 
-		AUTH_REDIRECT_URI: z.string(),
-		APPLE_CLIENT_ID: z.string(),
-		APPLE_TEAM_ID: z.string(),
-		APPLE_KEY_ID: z.string(),
-		APPLE_CERTIFICATE: z.string(),
+		AUTH_REDIRECT_URI: z.string().optional().default('PLACEHOLDER'),
+		APPLE_CLIENT_ID: z.string().optional().default('PLACEHOLDER'),
+		APPLE_TEAM_ID: z.string().optional().default('PLACEHOLDER'),
+		APPLE_KEY_ID: z.string().optional().default('PLACEHOLDER'),
+		APPLE_CERTIFICATE: z.string().optional().default('PLACEHOLDER'),
 	},
 	runtimeEnv: {
 		POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
