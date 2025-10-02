@@ -50,8 +50,6 @@ export function CreateApartmentForm({ hide }: Props) {
 		resolver: zodResolver(createApartmentSchema),
 	});
 
-	console.log(form.formState.errors);
-
 	const onSubmit = async (apartment: CreatedApartment) => {
 		if (!myBuilding) return toast.error('A building is required');
 
