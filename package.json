@@ -16,6 +16,7 @@
 		"ngrok": "ngrok http --domain=musical-panda-formerly.ngrok-free.app 3000",
 		"postinstall": "yarn db:generate && yarn db:migrate",
 		"build:worker": "opennextjs-cloudflare build",
+		"deploy:worker": "opennextjs-cloudflare deploy",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
 		"upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
