@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, real, text, timestamp } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { apartments } from './apartments';
 
 const paymentMethodEnum = pgEnum('payment_method', [

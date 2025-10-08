@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CreateRentFieldArray } from './CreateRentFieldArray';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { useApartments } from '@/hooks/useApartments';
 import { toast } from 'sonner';
 import { useBuildings } from '@/hooks/useBuildings';

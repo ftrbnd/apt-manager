@@ -9,7 +9,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { NewBuilding } from '@/lib/drizzle/schema/buildings';
 
 const formSchema = z.object({

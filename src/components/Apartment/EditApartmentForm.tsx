@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -35,7 +35,7 @@ const editApartmentSchema = z.object({
 		.min(1, 'At least one value greater than 0 is required.'),
 	tenant: z.string(),
 	paymentMethod: z.enum(['CHECK', 'MONEY ORDER', 'OTHER'], {
-		required_error: 'You need to select a payment method type.',
+		error: 'You need to select a payment method type.',
 	}),
 	note: z.string().trim().optional(),
 });
