@@ -3,14 +3,7 @@ import { z } from 'zod';
 
 export const serverEnv = createEnv({
 	server: {
-		POSTGRES_DATABASE: z.string().optional().default('PLACEHOLDER'),
-		POSTGRES_HOST: z.string().optional().default('PLACEHOLDER'),
-		POSTGRES_PASSWORD: z.string().optional().default('PLACEHOLDER'),
-		POSTGRES_PRISMA_URL: z.string().optional().default('PLACEHOLDER'),
 		POSTGRES_URL: z.string().optional().default('PLACEHOLDER'),
-		POSTGRES_URL_NON_POOLING: z.string().optional().default('PLACEHOLDER'),
-		POSTGRES_URL_NO_SSL: z.string().optional().default('PLACEHOLDER'),
-		POSTGRES_USER: z.string().optional().default('PLACEHOLDER'),
 
 		AUTH_REDIRECT_URI: z.string().optional().default('PLACEHOLDER'),
 		APPLE_CLIENT_ID: z.string().optional().default('PLACEHOLDER'),
@@ -19,14 +12,7 @@ export const serverEnv = createEnv({
 		APPLE_CERTIFICATE: z.string().optional().default('PLACEHOLDER'),
 	},
 	runtimeEnv: {
-		POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
-		POSTGRES_HOST: process.env.POSTGRES_HOST,
-		POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
-		POSTGRES_PRISMA_URL: process.env.POSTGRES_PRISMA_URL,
 		POSTGRES_URL: process.env.POSTGRES_URL,
-		POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
-		POSTGRES_URL_NO_SSL: process.env.POSTGRES_URL_NO_SSL,
-		POSTGRES_USER: process.env.POSTGRES_USER,
 
 		AUTH_REDIRECT_URI: process.env.AUTH_REDIRECT_URI,
 		APPLE_CLIENT_ID: process.env.APPLE_CLIENT_ID,

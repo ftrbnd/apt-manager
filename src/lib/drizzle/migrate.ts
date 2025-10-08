@@ -1,9 +1,8 @@
-import { migrate } from 'drizzle-orm/vercel-postgres/migrator';
-import { db } from './db';
+import { readMigrationFiles } from 'drizzle-orm/migrator';
 
 const main = async () => {
 	try {
-		await migrate(db, { migrationsFolder: './drizzle' });
+		readMigrationFiles({ migrationsFolder: './drizzle' });
 
 		console.log('Migration successful');
 	} catch (e) {

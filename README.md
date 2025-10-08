@@ -67,7 +67,7 @@ This management app was created to help with my own apartment building to make m
 - [![Shadcn][Shadcn]][Shadcn-url]
 - [![Tailwind][Tailwind]][Tailwind-url]
 - [![Drizzle][Drizzle]][Drizzle-url]
-- [![VercelPg][VercelPg]][VercelPg-url]
+- [![NeonDb][NeonDb]][NeonDb-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -78,7 +78,7 @@ This management app was created to help with my own apartment building to make m
 ### Prerequisites
 
 - [Apple](https://developer.apple.com/) client id, team id, key id, and certificate
-- Database urls and key from [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres)
+- Database urls and key from [NeonDb][NeonDb-url]
 - Ngrok auth token to test Sign in with Apple in development
 
 ### Installation
@@ -118,14 +118,7 @@ Create a `.env` file at the root and fill out the values:
   APPLE_TEAM_ID=
   APPLE_CLIENT_ID=
 
-  POSTGRES_DATABASE="verceldb"
-  POSTGRES_HOST=
-  POSTGRES_PASSWORD=
-  POSTGRES_PRISMA_URL=
   POSTGRES_URL=
-  POSTGRES_URL_NON_POOLING=
-  POSTGRES_URL_NO_SSL=
-  POSTGRES_USER=
 
   NGROK_AUTHTOKEN=
 ```
@@ -174,5 +167,5 @@ Project Link: [https://github.com/ftrbnd/apt-manager](https://github.com/ftrbnd/
 [Tailwind-url]: https://tailwindcss.com/
 [Drizzle]: https://img.shields.io/badge/drizzle-000000?style=for-the-badge&logo=drizzle&logoColor=C5F74F
 [Drizzle-url]: https://orm.drizzle.team/
-[VercelPg]: https://img.shields.io/badge/vercel-000?style=for-the-badge&logo=vercel&logoColor=fff
-[VercelPg-url]: https://vercel.com/docs/storage/vercel-postgres
+[NeonDb]: https://img.shields.io/badge/neon-00e599?style=for-the-badge
+[NeonDb-url]: https://neon.tech/
